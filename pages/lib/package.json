@@ -1,0 +1,20 @@
+{
+  "name": "tradingview-chart",
+  "version": "1.0.0",
+  "description": "",
+  "main": "11095.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clamp": "^1.0.1",
+    "create-color": "^2.0.4",
+    "formatter": "^0.4.2",
+    "i18next": "^23.2.11",
+    "lodash": "^4.17.21",
+    "log": "^6.3.1",
+    "mobx": "^6.10.0"
+  }
+}

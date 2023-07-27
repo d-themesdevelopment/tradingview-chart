@@ -1,0 +1,2 @@
+export const HEADER_TOOLBAR_HEIGHT_EXPANDED = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--css-value-header-toolbar-height"));
+export const HEADER_TOOLBAR_HEIGHT_COLLAPSED = 3;

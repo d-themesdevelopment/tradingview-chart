@@ -1,0 +1,288 @@
+
+
+
+
+"use strict";
+
+const utils = (e, t, i) => {
+  i.r(t);
+  i.d(t, {
+    QUOTE_FIELDS: () => QUOTE_FIELDS,
+    QUOTE_FIELDS_CACHE: () => QUOTE_FIELDS_CACHE,
+    QuoteCache: () => QuoteCache,
+  });
+
+  const s = i(50151);
+
+  class QuoteCache {
+    constructor(e) {
+      this._cache = new Map();
+      this._fields = [...e.fields];
+    }
+
+    update(e, t, i) {
+      const symbolName = s.ensureDefined(e.symbolname);
+      if (!this._cache.has(symbolName)) {
+        this._cache.set(symbolName, {
+          symbolname: symbolName,
+          status: e.status,
+          values: {},
+        });
+      }
+
+      if (e.status === "error") return;
+
+      const quote = s.ensureDefined(this._cache.get(symbolName));
+      quote.status = e.status;
+
+      for (const field of this._fields) {
+        if (t.has(field) && (i || e.values[field] !== undefined)) {
+          quote.values[field] = e.values[field];
+        }
+      }
+    }
+
+    get(symbolName) {
+      return this._cache.get(symbolName) || null;
+    }
+
+    fields() {
+      return this._fields;
+    }
+  }
+
+  const QUOTE_FIELDS = new Set([
+    "pro_name",
+    "base_name",
+    "logoid",
+    "currency-logoid",
+    "base-currency-logoid",
+    "source-logoid",
+    "short_name",
+    "timezone",
+    "current_session",
+    "lp_time",
+    "open_price",
+    "high_price",
+    "low_price",
+    "price_52_week_high",
+    "price_52_week_low",
+    "ask",
+    "ask_size",
+    "bid",
+    "bid_size",
+    "rch",
+    "rchp",
+    "rtc",
+    "business_description",
+    "web_site_url",
+    "number_of_employees",
+    "float_shares_outstanding",
+    "earnings_release_next_calendar_date",
+    "root",
+    "description",
+    "exchange",
+    "listed_exchange",
+    "type",
+    "country_code",
+    "provider_id",
+    "sector",
+    "typespecs",
+    "industry",
+    "currency_id",
+    "last_price",
+    "fractional",
+    "minmov",
+    "minmove2",
+    "pricescale",
+    "change",
+    "change_percent",
+    "volume",
+    "average_volume",
+    "market_cap_basic",
+    "total_revenue",
+    "earnings_per_share_basic_ttm",
+    "price_earnings_ttm",
+    "beta_1_year",
+    "dps_common_stock_prim_issue_fy",
+    "dividends_yield",
+    "earnings_release_next_date",
+    "earnings_per_share_forecast_next_fq",
+    "earnings_release_date",
+    "earnings_per_share_fq",
+    "fundamental_currency_code",
+    "number_of_employees",
+    "web_site_url",
+    "business_description",
+    "founded",
+    "ceo",
+    "float_shares_outstanding",
+    "total_shares_outstanding",
+    "dividend_payout_ratio_ttm",
+    "dividends_yield_current",
+    "dividend_ex_date_upcoming",
+    "dividend_amount_upcoming",
+    "dividend_amount_recent",
+    "dividend_ex_date_recent",
+    "total_revenue_fq_h",
+    "total_revenue_fy_h",
+    "net_income_fy_h",
+    "net_income_fq_h",
+    "total_assets_fy_h",
+    "total_assets_fq_h",
+    "total_liabilities_fy_h",
+    "total_liabilities_fq_h",
+    "cash_f_operating_activities_fy_h",
+    "cash_f_operating_activities_fq_h",
+    "cash_f_investing_activities_fy_h",
+    "cash_f_investing_activities_fq_h",
+    "cash_f_financing_activities_fy_h",
+    "cash_f_financing_activities_fq_h",
+    "fiscal_period_fy_h",
+    "fiscal_period_fq_h",
+    "earnings_release_date_fq_h",
+    "earnings_release_next_date_fq",
+    "earnings_per_share_forecast_next_fq",
+    "earnings_per_share_forecast_fq_h",
+    "earnings_per_share_fq_h",
+    "earnings_fiscal_period_fq_h",
+    "next_earnings_fiscal_period_fq",
+    "earnings_release_next_time",
+    "is_next_earnings_release_date_estimated",
+    "symbol-primaryname",
+    "currency_code",
+    "rates_mc",
+    "rates_fy",
+    "rates_ttm",
+    "value_unit_id",
+    "update_mode",
+    "language",
+    "local_description",
+    "short_description",
+    "source",
+    "source2",
+    "format",
+    "recommendation_mark",
+    "last_report_frequency",
+    "price_target_estimates_num",
+    "price_target_average",
+    "update_mode_seconds",
+    "recommendation_total",
+    "recommendation_buy",
+    "recommendation_over",
+    "recommendation_hold",
+    "recommendation_under",
+    "recommendation_sell",
+    "recommendation_total",
+    "price_target_high",
+    "price_target_low",
+    "rates_pt",
+    "rates_pt",
+    "total_revenue_fy_h",
+    "total_revenue_fq_h",
+    "total_revenue_fh_h",
+    "net_income_fy_h",
+    "net_income_fq_h",
+    "net_income_fh_h",
+    "total_assets_fy_h",
+    "total_assets_fq_h",
+    "total_assets_fh_h",
+    "total_liabilities_fy_h",
+    "total_liabilities_fq_h",
+    "total_liabilities_fh_h",
+    "cash_f_operating_activities_fy_h",
+    "cash_f_operating_activities_fq_h",
+    "cash_f_operating_activities_fh_h",
+    "cash_f_investing_activities_fy_h",
+    "cash_f_investing_activities_fq_h",
+    "cash_f_investing_activities_fh_h",
+    "cash_f_financing_activities_fy_h",
+    "cash_f_financing_activities_fq_h",
+    "cash_f_financing_activities_fh_h",
+    "fiscal_period_fy_h",
+    "fiscal_period_fq_h",
+    "fiscal_period_fh_h",
+    "earnings_release_date_fq_h",
+    "earnings_release_date_fy_h",
+    "earnings_release_date_fh_h",
+    "earnings_release_next_date_fq",
+    "earnings_release_next_date_fy",
+    "earnings_release_next_date_fh",
+    "earnings_release_next_time",
+    "is_next_earnings_release_date_estimated",
+    "earnings_per_share_forecast_next_fq",
+    "earnings_per_share_forecast_next_fy",
+    "earnings_per_share_forecast_next_fh",
+    "earnings_per_share_forecast_fq_h",
+    "earnings_per_share_forecast_fy_h",
+    "earnings_per_share_forecast_fh_h",
+    "earnings_per_share_fq_h",
+    "earnings_per_share_fy_h",
+    "earnings_per_share_fh_h",
+    "earnings_fiscal_period_fq_h",
+    "earnings_fiscal_period_fy_h",
+    "earnings_fiscal_period_fh_h",
+    "next_earnings_fiscal_period_fq",
+    "next_earnings_fiscal_period_fy",
+    "next_earnings_fiscal_period_fh",
+    "revenue_fq_h",
+    "revenue_fy_h",
+    "revenue_fh_h",
+    "revenue_forecast_fq_h",
+    "revenue_forecast_fy_h",
+    "revenue_forecast_fh_h",
+    "revenue_forecast_next_fq",
+    "revenue_forecast_next_fy",
+    "revenue_forecast_next_fh",
+    "revenue_seg_by_business_h",
+    "revenue_seg_by_region_h",
+    "dividend_payout_ratio_ttm",
+    "dividends_yield_current",
+    "dividend_ex_date_upcoming",
+    "dividend_amount_upcoming",
+    "dividend_amount_recent",
+    "dividend_ex_date_recent",
+    "dividend_amount_h",
+    "total_revenue_fy",
+    "gross_profit_fy",
+    "ebitda_fy",
+    "ebit_fy",
+    "net_income_fy",
+    "total_debt_fy_h",
+    "free_cash_flow_fy_h",
+    "cash_n_equivalents_fy_h",
+    "total_current_assets_fy",
+    "total_current_liabilities_fy",
+    "total_non_current_assets_fy",
+    "total_non_current_liabilities_fy",
+    "price_sales_fy_h",
+    "price_earnings_fy_h",
+    "diluted_net_income_ttm",
+    "total_revenue_ttm",
+    "price_earnings_current",
+    "price_sales_current",
+    "isin",
+    "website",
+    "doc",
+    "reddit",
+    "twitter",
+    "facebook",
+    "telegram",
+    "forum",
+    "explorer",
+    "sources",
+    "contracts",
+    "crypto_common_categories",
+    "crypto_asset",
+  ]);
+
+  const QUOTE_FIELDS_CACHE = new QuoteCache({
+    fields: QUOTE_FIELDS,
+  });
+
+  return {
+    QUOTE_FIELDS,
+    QUOTE_FIELDS_CACHE,
+    QuoteCache,
+  };
+};

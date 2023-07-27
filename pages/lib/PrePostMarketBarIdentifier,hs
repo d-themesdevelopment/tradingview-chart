@@ -1,0 +1,80 @@
+export class PrePostMarketBarIdentifier {
+  constructor(timezone, preMarketSessionSpec, postMarketSessionSpec) {
+    this._timezone = timezone;
+    this._preMarketSessionSpec = preMarketSessionSpec;
+    this._postMarketSessionSpec = postMarketSessionSpec;
+  }
+
+  getPreAndPostMarketTimes(times) {
+    if (times.length === 0) {
+      return {
+        preMarket: [],
+        postMarket: [],
+      };
+    }
+
+    const preMarketTimes = [];
+    const postMarketTimes = [];
+    let preMarketStart = null;
+    let postMarketStart = null;
+    let previousTime = times[0];
+    let previousCalTime = utc_to_cal(this._timezone, previousTime);
+
+    if (this._isInPreMarketSession(previousCalTime)) {
+      preMarketStart = previousTime;
+    }
+
+    if (this._isInPostMarketSession(previousCalTime)) {
+      postMarketStart = previousTime;
+    }
+
+    for (let i = 1; i < times.length; i++) {
+      const currentTime = times[i];
+      const currentCalTime = utc_to_cal(this._timezone, currentTime);
+
+      if (postMarketStart !== null && this._isInPostMarketSession(previousCalTime) && !this._isInPostMarketSession(currentCalTime)) {
+        postMarketTimes.push({ start: postMarketStart, stop: previousTime });
+        postMarketStart = null;
+      }
+
+      if (preMarketStart === null && this._isInPreMarketSession(currentCalTime)) {
+        preMarketStart = currentTime;
+      }
+
+      if (postMarketStart === null && this._isInPostMarketSession(currentCalTime)) {
+        postMarketStart = currentTime;
+      }
+
+      if (preMarketStart !== null && this._isInPreMarketSession(previousCalTime) && !this._isInPreMarketSession(currentCalTime)) {
+        preMarketTimes.push({ start: preMarketStart, stop: previousTime });
+        preMarketStart = null;
+      }
+
+      previousTime = currentTime;
+      previousCalTime = currentCalTime;
+    }
+
+    if (preMarketStart !== null) {
+      preMarketTimes.push({ start: preMarketStart, stop: times[times.length - 1] });
+    }
+
+    if (postMarketStart !== null) {
+      postMarketTimes.push({ start: postMarketStart, stop: times[times.length - 1] });
+    }
+
+    return {
+      preMarket: preMarketTimes,
+      postMarket: postMarketTimes,
+    };
+  }
+
+  _isInPreMarketSession(time) {
+    return isWithinSession(time, this._preMarketSessionSpec.bordersOfDailyBar(time));
+  }
+
+  _isInPostMarketSession(time) {
+    return isWithinSession(time, this._postMarketSessionSpec.bordersOfDailyBar(time));
+  }
+}
+
+
