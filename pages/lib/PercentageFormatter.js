@@ -1,6 +1,6 @@
 
-import { PriceFormatter } from '<path_to_PriceFormatter_module>';
-import { forceLTRStr } from '<path_to_forceLTRStr_module>';
+import { PriceFormatter } from './61146.js';
+import { forceLTRStr } from './38223.js';
 
 export class PercentageFormatter extends PriceFormatter {
   constructor(priceScale) {

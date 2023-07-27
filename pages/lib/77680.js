@@ -1,4 +1,4 @@
-import { ThemedDefaultProperty, extractState } from 'some-library';
+import { ThemedDefaultProperty, extractState } from './13637.js';
 
 class LineDataSourceThemedProperty extends ThemedDefaultProperty {
   template() {

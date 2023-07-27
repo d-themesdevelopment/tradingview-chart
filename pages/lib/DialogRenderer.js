@@ -1,9 +1,9 @@
-import { writable } from 'svelte/store';
+import { WatchedValue } from 'svelte/store';
 
 export class DialogRenderer {
   constructor() {
     this._container = document.createElement("div");
-    this._visibility = writable(false);
+    this._visibility = WatchedValue(false);
     //this._visibility = new(r())(!1)
   }
   

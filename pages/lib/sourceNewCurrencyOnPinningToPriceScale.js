@@ -1,8 +1,8 @@
 "use strict";
 
-const {
+import {
   isActingAsSymbolSource,
-} = require("path/to/is-acting-as-symbol-source-module");
+} from "./18611.js";
 
 function sourceNewCurrencyOnPinningToPriceScale(e, t, i, r) {
   let newCurrency = null;

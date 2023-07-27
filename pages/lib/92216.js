@@ -1,7 +1,7 @@
 
 
 
-import { twelveHourMinuteFormat, hourMinuteFormat, twelveHourMinuteSecondFormat, hourMinuteSecondFormat } from '<path_to_timeFormat_module>';
+import { twelveHourMinuteFormat, hourMinuteFormat, twelveHourMinuteSecondFormat, hourMinuteSecondFormat } from './79206.js';
 
 export function getHourMinuteFormat(format) {
   return format === "12-hours" ? twelveHourMinuteFormat : hourMinuteFormat;

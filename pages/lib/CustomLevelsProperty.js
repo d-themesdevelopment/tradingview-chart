@@ -1,6 +1,6 @@
 
 
-import { isSameType } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { isSameType } from './1722.js'; // Replace 'some-library' with the actual library you're using
 
 function fillPropertiesObject(object, typecheck, tpl, names) {
   for (const key of Object.keys(object.levels)) {

@@ -1,6 +1,5 @@
 import { enabled } from "./helpers";
-import "../../94025";
-import "../../82992"; // ! not correct
+
 
 new RegExp("^quandl", "i");
 

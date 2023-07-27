@@ -1,6 +1,6 @@
 
 
-import { createPrimitiveProperty } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { createPrimitiveProperty } from './createPrimitiveProperty.js'; // Replace 'some-library' with the actual library you're using
 
 function combineProperty(combineFn, ...properties) {
   const initialValue = combineFn(...properties.map((property) => property.value()));

@@ -1,7 +1,7 @@
 
-import { IntervalsVisibilitiesProperty as BaseIntervalsVisibilitiesProperty } from 59452;
+import { CustomData } from "./59452.js";
 
-class IntervalsVisibilitiesProperty extends BaseIntervalsVisibilitiesProperty {
+class IntervalsVisibilitiesProperty extends CustomData {
   state(state) {
     return super.state(state);
   }

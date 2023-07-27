@@ -1,5 +1,5 @@
 "use strict";
-
+import {LineToolTrendLine} from "./47246.js";
 class LineToolArrow extends LineToolTrendLine {
   constructor(chartWidget, priceScale, points, options) {
     super(chartWidget, priceScale, points, options || LineToolArrow.createProperties());

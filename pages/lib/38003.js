@@ -2,13 +2,13 @@
 
 const { HorizontalLineRenderer } = require("./74997");
 const { LINESTYLE_SOLID } = require("./79849");
-const { rgba } = require("./79849"); // ! not correct
+// const { rgba } = require("./79849"); // ! not correct
 
 class HorizontalLinePaneView {
   constructor() {
     this._lineRendererData = {
       y: 0,
-      color: rgba(0, 0, 0, 0),
+      color: "rgba(0, 0, 0, 0)",
       linewidth: 1,
       linestyle: LINESTYLE_SOLID,
       visible: false,

@@ -1,4 +1,4 @@
-import { LineToolTrendLine, createProperties } from 'some-library';
+import { LineToolTrendLine } from './47246.js';
 
 class LineToolExtended extends LineToolTrendLine {
   constructor(model, chartApi, series, properties) {
@@ -10,7 +10,7 @@ class LineToolExtended extends LineToolTrendLine {
   }
 
   static createProperties(defaults) {
-    const properties = createProperties(defaults, 'linetoolextended');
+    const properties = LineToolTrendLine.createProperties(defaults, 'linetoolextended');
     LineToolExtended._configureProperties(properties);
     return properties;
   }

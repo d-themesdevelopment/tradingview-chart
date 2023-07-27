@@ -1,5 +1,10 @@
-var StoriesTimeLineItemType;
-(function (StoriesTimeLineItemType) {
-  StoriesTimeLineItemType[(StoriesTimeLineItemType["Image"] = 0)] = "Image";
-  StoriesTimeLineItemType[(StoriesTimeLineItemType["Emoji"] = 1)] = "Emoji";
-})(StoriesTimeLineItemType || (StoriesTimeLineItemType = {}));
+"use strict";
+
+const StoriesTimeLineItemType = {
+  Image: 0,
+  Emoji: 1,
+};
+
+Object.freeze(StoriesTimeLineItemType);
+
+export default StoriesTimeLineItemType;

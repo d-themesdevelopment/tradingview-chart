@@ -1,15 +1,18 @@
 "use strict";
 
-var s = i(56840);
-var r = i(14483);
-var n = i(58275);
-var o = i.n(n);
+// Import required modules
+import { isEnabled as isHideLeftToolbarByDefaultEnabled } from './14483.js';
+import { getBool } from './56840.js';
+import { createObservable }from './58275';
 
-const defaultVisible = !r.enabled("hide_left_toolbar_by_default");
-const storedVisible = s.getBool(
-  "ChartDrawingToolbarWidget.visible",
-  defaultVisible
-);
-const isDrawingToolbarVisible = new (o())(storedVisible);
+// Determine if the default state of the toolbar should be visible or hidden
+const isDefaultToolbarVisible = !isHideLeftToolbarByDefaultEnabled("hide_left_toolbar_by_default");
 
-export { isDrawingToolbarVisible };
+// Get the visibility status of the ChartDrawingToolbarWidget
+const isChartDrawingToolbarWidgetVisible = getBool("ChartDrawingToolbarWidget.visible", isDefaultToolbarVisible);
+
+// Create an observable for the visibility status
+const observableVisible = new createObservable(isChartDrawingToolbarWidgetVisible);
+
+// Export the observable
+export { observableVisible as isDrawingToolbarVisible };

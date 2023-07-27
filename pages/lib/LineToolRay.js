@@ -1,5 +1,5 @@
 
-const { LineToolTrendLine } = require(47246);
+import { LineToolTrendLine } from "./47246.js";
 
 class LineToolRay extends LineToolTrendLine {
   constructor(chartModel, properties, options, inputObject) {

@@ -1,5 +1,5 @@
-const { getValue, remove, onSync, setValue } = require("./56840"); // ! not correct
-const { createPrimitiveProperty } = require("./createPrimitiveProperty");
+const { getValue, remove, onSync, setValue } = require("./56840.js"); // ! not correct
+const { createPrimitiveProperty } = require("./createPrimitiveProperty.js");
 
 export const timeHoursFormatProperty = createPrimitiveProperty(
   getValue("time_hours_format", "24-hours")

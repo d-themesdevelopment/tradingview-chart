@@ -1,11 +1,10 @@
-import { SpreadRatioBase } from "./87302";
-
 import {
+  SpreadRatioBase,
   spreadRatioDefaults,
+  spreadRatioPlots,
   spreadRatioStyles,
   spreadRatioInputs,
-  spreadRatioPlots,
-} from "./87302";
+} from "./87302.js";
 
 class SpreadStudyItem extends SpreadRatioBase {
   _doCalculation(a, b, c, d) {

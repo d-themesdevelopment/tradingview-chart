@@ -1,4 +1,4 @@
-import { colorsPalette } from 'path/to/some/module';
+import { colorsPalette } from './48891.js';
 
 const sessionsPreferencesDefault = {
   graphics: {

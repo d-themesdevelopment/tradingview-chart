@@ -1,6 +1,6 @@
 
 
-const isAbortError = require(45884).isAbortError;
+import isAbortError from "./45884";
 
 class ChunkLoader {
   constructor() {

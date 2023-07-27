@@ -1,5 +1,4 @@
-import { assert } from "<path_to_utils_module>";
-import { createVisibilityController } from "<path_to_createVisibilityController_module>";
+import { createVisibilityController } from "./29542.js";
 
 export const navigationButtonsVisibilityKey = "NavigationButtons.visibility";
 

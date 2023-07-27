@@ -1,5 +1,5 @@
 
-import { TranslatedString } from '36298';
+import { TranslatedString } from './TranslatedString.js';
 
 export class UndoCommand {
   constructor(text, executeOnPush = true) {

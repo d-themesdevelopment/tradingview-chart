@@ -1,7 +1,6 @@
 
 
-import { UndoMacroCommand } from '<path_to_UndoMacroCommand_module>';
-import { UndoCommand } from '<path_to_UndoCommand_module>';
+import { UndoCommand } from './UndoCommand.js';
 
 class UndoMacroCommand extends UndoCommand {
   constructor(name) {

@@ -1,5 +1,5 @@
 
-import { HorizontalLinePaneView } from '38003';
+import { HorizontalLinePaneView } from './38003.js';
 
 class SeriesHorizontalLinePaneView extends HorizontalLinePaneView {
   constructor(series) {

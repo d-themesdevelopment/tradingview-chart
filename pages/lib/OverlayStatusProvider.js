@@ -1,5 +1,5 @@
 
-import { StudyStatusProvider as _StudyStatusProvider } from '6892';
+import { StudyStatusProvider as _StudyStatusProvider } from './6892.js';
 
 class OverlayStatusProvider extends _StudyStatusProvider {
   getSplitTitle() {

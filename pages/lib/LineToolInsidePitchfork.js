@@ -1,5 +1,5 @@
-import { LevelsProperty } from '<path_to_LevelsProperty_module>';
-import { LineToolPitchfork } from '<path_to_LineToolPitchfork_module>';
+import { LevelsProperty } from './53801.js';
+import { LineToolPitchfork } from './70309.js';
 
 export class LineToolInsidePitchfork extends LineToolPitchfork {
   constructor(chartWidget, propertyCategory, propertyKey, priceDataSource) {

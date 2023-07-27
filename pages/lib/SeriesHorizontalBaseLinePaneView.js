@@ -1,5 +1,5 @@
 
-import { SeriesHorizontalLinePaneView } from 'path/to/SeriesHorizontalLinePaneView';
+import { SeriesHorizontalLinePaneView } from './SeriesHorizontalLinePaneView.js';
 
 class SeriesHorizontalBaseLinePaneView extends SeriesHorizontalLinePaneView {
   constructor(series) {

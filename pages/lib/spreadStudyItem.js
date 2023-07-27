@@ -1,6 +1,6 @@
 "use strict";
 
-const { SpreadRatioBase, spreadRatioDefaults, spreadRatioPlots, spreadRatioStyles, spreadRatioInputs } = require('path/to/spread-ratio-base-module');
+import { SpreadRatioBase, spreadRatioDefaults, spreadRatioPlots, spreadRatioStyles, spreadRatioInputs } from ('./87302js');
 
 class SpreadStudyItem extends SpreadRatioBase {
   _doCalculation(e, t, i, s) {

@@ -1,18 +1,24 @@
-import { timeStamp as consoleTimeStamp } from "console"; // ! not correct
+function addPerfMark(markName) {
+    "use strict";
 
-function emptyFunction() {}
+    // Function to create a timestamp with the provided markName
+    function timeStamp(markName) {
+        if (console.timeStamp) {
+            console.timeStamp(markName);
+        }
+    }
 
-function addPerfMark(mark) {
-  const timeStamp = consoleTimeStamp
-    ? consoleTimeStamp.bind(console)
-    : emptyFunction;
-  const markFunction =
-    window.performance && performance.mark
-      ? performance.mark.bind(performance)
-      : emptyFunction;
+    // Function to create a performance mark with the provided markName
+    function performanceMark(markName) {
+        if (window.performance && performance.mark) {
+            performance.mark(markName);
+        }
+    }
 
-  timeStamp(mark);
-  markFunction(mark);
+    // Call the timeStamp and performanceMark functions with the given markName
+    timeStamp(markName);
+    performanceMark(markName);
 }
 
-export { addPerfMark };
+// Export the addPerfMark function
+export default addPerfMark;
