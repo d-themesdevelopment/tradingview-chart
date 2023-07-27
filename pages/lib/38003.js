@@ -1,7 +1,8 @@
 "use strict";
 
-const { HorizontalLineRenderer, LINESTYLE_SOLID } = i(74997);
-const { rgba } = i(79849);
+const { HorizontalLineRenderer } = require("./74997");
+const { LINESTYLE_SOLID } = require("./79849");
+const { rgba } = require("./79849"); // ! not correct
 
 class HorizontalLinePaneView {
   constructor() {

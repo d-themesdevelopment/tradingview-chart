@@ -1,24 +1,27 @@
-
 "use strict";
 
-const { supportTouch } = require('path/to/support-touch-module');
+const { supportTouch } = require("path/to/support-touch-module"); // ! not correct
 
-let lastMouseOrTouchEventInfo = supportTouch() ? {
-  isTouch: true,
-  stylus: false
-} : {
-  isTouch: false
-};
+let lastMouseOrTouchEventInfo = supportTouch()
+  ? {
+      isTouch: true,
+      stylus: false,
+    }
+  : {
+      isTouch: false,
+    };
 
 function getLastMouseOrTouchEventInfo() {
   return lastMouseOrTouchEventInfo;
 }
 
 function setLastMouseOrTouchEventInfo(info) {
-  lastMouseOrTouchEventInfo = info.isTouch ? {
-    isTouch: true,
-    stylus: info.stylus
-  } : {
-    isTouch: false
-  };
+  lastMouseOrTouchEventInfo = info.isTouch
+    ? {
+        isTouch: true,
+        stylus: info.stylus,
+      }
+    : {
+        isTouch: false,
+      };
 }
