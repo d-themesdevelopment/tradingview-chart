@@ -1,13 +1,13 @@
 "use strict";
 
-const { HorizontalLineRenderer, LINESTYLE_SOLID } = i(74997);
-const { rgba } = i(79849);
+import { HorizontalLineRenderer, LINESTYLE_SOLID } = from "./74997.js";
+import { LINESTYLE_SOLID } from "./79849.js";
 
 class HorizontalLinePaneView {
   constructor() {
     this._lineRendererData = {
       y: 0,
-      color: rgba(0, 0, 0, 0),
+      color: "rgba(0, 0, 0, 0)",
       linewidth: 1,
       linestyle: LINESTYLE_SOLID,
       visible: false,

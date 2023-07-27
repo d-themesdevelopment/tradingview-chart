@@ -1,5 +1,5 @@
-import { hourMinuteSecondFormat } from '79206';
-import { DateFormatter, TimeFormatter } from '53741';
+import { hourMinuteSecondFormat } from './79206.js';
+import { DateFormatter, TimeFormatter } from './DateFormatter.js';
 
 const defaultOptions = {
   dateFormat: 'yyyy-MM-dd',
