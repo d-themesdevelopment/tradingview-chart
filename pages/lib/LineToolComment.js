@@ -1,10 +1,5 @@
-
-
-
-
-import { LineToolComment } from '<path_to_LineToolComment_module>';
-import { LineToolBalloon } from '<path_to_LineToolBalloon_module>';
-import { DefaultProperty } from '<path_to_DefaultProperty_module>';
+import { LineToolBalloon } from './38440.js';
+import { DefaultProperty } from './46100.js';
 
 class LineToolComment extends LineToolBalloon {
   constructor(model, lineOptions, text, callback) {

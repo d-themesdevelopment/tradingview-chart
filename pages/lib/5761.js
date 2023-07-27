@@ -1,5 +1,5 @@
-import { LevelsProperty } from "some-library"; // ! Replace 'some-library' with the actual library you're using
-import { LineToolPitchfork } from "some-library"; // ! Replace 'some-library' with the actual library you're using
+import { LevelsProperty } from "./53801.js"; // ! Replace 'some-library' with the actual library you're using
+import { LineToolPitchfork } from "./70309.js"; // ! Replace 'some-library' with the actual library you're using
 
 class LineToolSchiffPitchfork extends LineToolPitchfork {
   constructor(name, properties, model, options) {

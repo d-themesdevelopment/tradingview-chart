@@ -1,6 +1,6 @@
 
-import { createPrimitiveProperty } from '<path_to_createPrimitiveProperty_module>';
-import { getBool, remove, setValue, onSync } from '<path_to_sync_module>';
+import { createPrimitiveProperty } from './createPrimitiveProperty.js';
+import { getBool, remove, setValue, onSync } from './56840.js';
 
 const CHART_MARKET_OPEN_STATUS_PROPERTY = "Chart.ShowMarketOpenStatus";
 
