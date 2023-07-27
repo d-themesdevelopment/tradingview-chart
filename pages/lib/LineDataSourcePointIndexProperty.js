@@ -1,7 +1,6 @@
 
 
-import { DataValue } from '<path_to_DataValue_module>';
-import { ensureDefined } from '<path_to_ensureDefined_module>';
+import { DataValue } from './59452.js';
 
 class LineDataSourcePointIndexProperty extends DataValue {
   constructor(lineSource, pointIndex) {

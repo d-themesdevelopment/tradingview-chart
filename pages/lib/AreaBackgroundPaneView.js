@@ -1,5 +1,5 @@
-import { ensureDefined } from '<path_to_ensureDefined_module>';
-import { AbstractFilledAreaPaneView } from '<path_to_AbstractFilledAreaPaneView_module>';
+import { ensureDefined } from './assertions.js';
+import { AbstractFilledAreaPaneView } from './70044.js';
 
 export class AreaBackgroundPaneView extends AbstractFilledAreaPaneView {
   constructor(source, priceScale) {

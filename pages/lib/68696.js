@@ -2,8 +2,7 @@
 
 
 
-import { getLogger } from '<path_to_getLogger_module>';
-import { ensureNotNull } from '<path_to_ensureNotNull_module>';
+import { ensureNotNull } from './assertions.js';
 
 function dematerializeVertLine(vertLine, invalidTimePoints) {
   if (vertLine.index >= invalidTimePoints.length) {
