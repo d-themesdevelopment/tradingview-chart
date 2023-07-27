@@ -5,8 +5,8 @@ const ReplayStatus = {
     Pause: 3
   };
 
-import { LineTool5PointsPattern } from '<path_to_LineTool5PointsPattern_module>';
-import { DefaultProperty } from '<path_to_DefaultProperty_module>';
+import { LineTool5PointsPattern } from './71902.js';
+import { DefaultProperty } from './46100.js';
 
 export class LineToolCypherPattern extends LineTool5PointsPattern {
   constructor(chartWidget, propertyCategory, propertyKey, priceDataSource) {

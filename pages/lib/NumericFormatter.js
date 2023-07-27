@@ -1,6 +1,6 @@
 
-import { LineDataSource } from '<path_to_LineDataSource_module>';
-import { alignToStep } from '<path_to_alignToStep_module>';
+import { formatterOptions  } from './61146.js';
+import { Big } from 'BigJS';
 
 class NumericFormatter {
   constructor(precision) {
