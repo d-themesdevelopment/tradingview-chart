@@ -1,7 +1,7 @@
 
 "use strict";
 
-const { UndoCommand } = require('path/to/undo-command-module');
+const { UndoCommand } = require('./UndoCommand.js');
 
 class ApplyLineToolTemplateUndoCommand extends UndoCommand {
   constructor(source, newState, id) {

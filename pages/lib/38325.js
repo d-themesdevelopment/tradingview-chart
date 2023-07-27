@@ -1,7 +1,7 @@
 
 "use strict";
 
-const { supportTouch } = require('path/to/support-touch-module');
+import { supportTouch } from ('./49483.js');
 
 let lastMouseOrTouchEventInfo = supportTouch() ? {
   isTouch: true,

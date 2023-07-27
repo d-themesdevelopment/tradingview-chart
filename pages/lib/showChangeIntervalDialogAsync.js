@@ -1,6 +1,6 @@
 
 
-import { loadChangeIntervalDialog } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { loadChangeIntervalDialog } from './loadChangeIntervalDialog.js'; // Replace 'some-library' with the actual library you're using
 
 let dialogPromise = null;
 

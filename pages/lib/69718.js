@@ -1,7 +1,7 @@
 
 
 
-import { UndoCommand } from '<path_to_UndoCommand_module>';
+import { UndoCommand } from './UndoCommand.js';
 
 class SetWatchedValueCommand extends UndoCommand {
   constructor(watchedValue, newValue, commandName) {

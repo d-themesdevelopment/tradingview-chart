@@ -1,4 +1,4 @@
-import { barFunction } from '<path_to_barFunction_module>';
+import { barFunction } from './13497.js';
 
 function barFunctionByStyle(style, name = null) {
   switch (style) {

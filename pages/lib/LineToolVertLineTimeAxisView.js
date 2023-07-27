@@ -1,8 +1,8 @@
 
 
-import { LineDataSourceTimeAxisView as _LineDataSourceTimeAxisView } from '95977';
+import { LineDataSourceTimeAxisView } from './LineDataSourceTimeAxisView.js';
 
-class LineToolVertLineTimeAxisView extends _LineDataSourceTimeAxisView {
+class LineToolVertLineTimeAxisView extends LineDataSourceTimeAxisView {
   constructor(source) {
     super(source, 0);
   }
