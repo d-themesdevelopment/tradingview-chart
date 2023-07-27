@@ -7,15 +7,16 @@ import { isPriceSourceStyle } from "./42960";
 
 import { DataSource } from "./14292";
 
-import { enabled, getValue, setValue } from "./helpers";
+import { enabled, setValue } from "./helpers"; // ! not correct
+import { getValue } from "./PlotList";
 
-import { BarFunction } from "lib/models/bar-function";
-import { sourceChangeEvent } from "lib/model-event";
+// import { BarFunction } from "lib/models/bar-function";
+import { sourceChangeEvent } from "./28558";
 import { isNumber } from "lodash";
-import { PriceScale } from "lib/models/price-scale";
-import { timePointToIndex } from "lib/timescale/indexes-range";
-import { firstValue } from "lib/timescale/time-series-data";
-import { default as PlateViewData } from "lib/models/plate-view-data";
+// import { PriceScale } from "lib/models/price-scale";
+import { timePointToIndex } from "lib/timescale/indexes-range"; // ! not correct
+import { firstValue } from "lib/timescale/time-series-data"; // ! not correct
+// import { default as PlateViewData } from "lib/models/plate-view-data";
 
 const logger = getLogger("Chart.BarsMarksContainer");
 const END_OF_TIME = Math.round(new Date(2037, 0, 1).getTime() / 1e3);

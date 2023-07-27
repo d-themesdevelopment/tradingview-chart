@@ -1,5 +1,4 @@
-
-import { assert as _assert } from '50151';
+import { assert as _assert } from "./assertions";
 
 class Version {
   constructor(major, minor) {
@@ -20,7 +19,7 @@ class Version {
   }
 
   toString() {
-    return this._major + '.' + this._minor;
+    return this._major + "." + this._minor;
   }
 
   compareTo(other) {
@@ -60,26 +59,29 @@ class Version {
   static parse(version) {
     if (version instanceof Version) {
       return new Version(version.major(), version.minor());
-    } else if (typeof version === 'number') {
-      _assert(Math.floor(version) === version, 'Version should not be a float number');
+    } else if (typeof version === "number") {
+      _assert(
+        Math.floor(version) === version,
+        "Version should not be a float number"
+      );
       return new Version(version, 0);
-    } else if (typeof version === 'string') {
-      const parts = version.split('.');
+    } else if (typeof version === "string") {
+      const parts = version.split(".");
       if (parts.length === 1) {
         const major = parseInt(parts[0], 10);
-        _assert(!isNaN(major), 'Bad version string: ' + version);
+        _assert(!isNaN(major), "Bad version string: " + version);
         return new Version(major, 0);
       } else if (parts.length === 2) {
         const major = parseInt(parts[0], 10);
-        _assert(!isNaN(major), 'Bad version string: ' + version);
+        _assert(!isNaN(major), "Bad version string: " + version);
         const minor = parseInt(parts[1], 10);
-        _assert(!isNaN(minor), 'Bad version string: ' + version);
+        _assert(!isNaN(minor), "Bad version string: " + version);
         return new Version(major, minor);
       } else {
-        throw new Error('Bad version string (one dot expected): ' + version);
+        throw new Error("Bad version string (one dot expected): " + version);
       }
     } else {
-      throw new Error('Bad version: ' + version);
+      throw new Error("Bad version: " + version);
     }
   }
 }
