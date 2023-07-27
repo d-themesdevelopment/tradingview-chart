@@ -1,10 +1,10 @@
-import { setTooltipData, getTooltipData } from 'tooltip-utils';
-import { parseHtmlElement } from 'html-utils';
-import { clamp } from 'math-utils';
-import { CheckMobile, supportTouch, isMac } from 'device-utils';
-import { preventDefault } from 'event-utils';
-import { createGroup } from 'performance-utils';
-import { ensureNotNull } from 'null-utils';
+import { setTooltipData, getTooltipData } from "./getTooltipData";
+// import { parseHtmlElement } from 'html-utils';
+// import { clamp } from 'math-utils';
+// import { CheckMobile, supportTouch, isMac } from 'device-utils';
+// import { preventDefault } from 'event-utils';
+import { createGroup } from "./4741";
+import { ensureNotNull } from "./assertions";
 
 const hide = () => {
   clearTimeout(r);
@@ -33,7 +33,7 @@ const show = (e) => {
   } else {
     const { tooltipDebounce: r } = e;
 
-    if (typeof r === 'number' && !isNaN(r)) {
+    if (typeof r === "number" && !isNaN(r)) {
       l(() => q(s), r);
     } else {
       q(s);
@@ -72,117 +72,126 @@ const R = (e, t) => {
 };
 
 const N = createGroup({
-  desc: 'Tooltip',
+  desc: "Tooltip",
 });
 
 let O = false;
 let F = null;
 let W = null;
 
-s.mobiletouch || document.addEventListener('mouseover', (e) => {
-  if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) {
-    return;
-  }
-
-  const target = e.target;
-  const currentTarget = e.currentTarget;
-
-  const applyTooltipElements = function (e, t, i) {
-    const s = [];
-
-    while (e && e !== t) {
-      if (e.classList && e.classList.contains(i)) {
-        s.push(e);
-      }
-      e = e.parentElement || $(e.parentNode);
+s.mobiletouch ||
+  document.addEventListener("mouseover", (e) => {
+    if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) {
+      return;
     }
 
-    return s;
-  }(target, currentTarget, 'apply-common-tooltip');
+    const target = e.target;
+    const currentTarget = e.currentTarget;
 
-  const tooltipHandler = () => {
-    showOnElement(tooltipElement);
-  };
+    const applyTooltipElements = (function (e, t, i) {
+      const s = [];
 
-  for (const tooltipElement of applyTooltipElements) {
-    if ('buttons' in e) {
-      if (e.buttons & 1) {
+      while (e && e !== t) {
+        if (e.classList && e.classList.contains(i)) {
+          s.push(e);
+        }
+        e = e.parentElement || $(e.parentNode);
+      }
+
+      return s;
+    })(target, currentTarget, "apply-common-tooltip");
+
+    const tooltipHandler = () => {
+      showOnElement(tooltipElement);
+    };
+
+    for (const tooltipElement of applyTooltipElements) {
+      if ("buttons" in e) {
+        if (e.buttons & 1) {
+          continue;
+        }
+      } else if (e.which === 1) {
         continue;
       }
-    } else if (e.which === 1) {
-      continue;
-    }
 
-    const updateTooltip = () => {
-      tooltipElement.removeEventListener('common-tooltip-update', tooltipHandler);
-      tooltipElement.removeEventListener('mouseleave', removeTooltip);
-      tooltipElement.removeEventListener('mousedown', removeTooltip);
-      document.removeEventListener('scroll', scrollListener, { capture: true });
+      const updateTooltip = () => {
+        tooltipElement.removeEventListener(
+          "common-tooltip-update",
+          tooltipHandler
+        );
+        tooltipElement.removeEventListener("mouseleave", removeTooltip);
+        tooltipElement.removeEventListener("mousedown", removeTooltip);
+        document.removeEventListener("scroll", scrollListener, {
+          capture: true,
+        });
 
-      if (tooltipElement === F.options.target) {
-        G();
-      }
-    };
-
-    const removeTooltip = (immediate, keepTarget = false) => {
-      tooltipElement.removeEventListener('mouseleave', removeTooltip);
-      tooltipElement.removeEventListener('mousedown', removeTooltip);
-      document.removeEventListener('scroll', scrollListener, { capture: true });
-
-      if (immediate) {
-        G();
-      } else {
-        if (!O) {
-          I(tooltipElement);
-          j();
+        if (tooltipElement === F.options.target) {
+          G();
         }
+      };
 
-        if (F && F.options.target === tooltipElement) {
-          n = setTimeout(() => {
-            G();
-          }, 250);
+      const removeTooltip = (immediate, keepTarget = false) => {
+        tooltipElement.removeEventListener("mouseleave", removeTooltip);
+        tooltipElement.removeEventListener("mousedown", removeTooltip);
+        document.removeEventListener("scroll", scrollListener, {
+          capture: true,
+        });
+
+        if (immediate) {
+          G();
+        } else {
+          if (!O) {
+            I(tooltipElement);
+            j();
+          }
+
+          if (F && F.options.target === tooltipElement) {
+            n = setTimeout(() => {
+              G();
+            }, 250);
+          }
         }
+      };
+
+      const scrollListener = (event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.contains(tooltipElement)
+        ) {
+          removeTooltip(false, true);
+        }
+      };
+
+      tooltipElement.addEventListener("common-tooltip-update", tooltipHandler);
+      tooltipElement.addEventListener("mouseleave", removeTooltip);
+      tooltipElement.addEventListener("mousedown", removeTooltip);
+      document.addEventListener("scroll", scrollListener, { capture: true });
+
+      if (!W) {
+        W = createGroup({ desc: "Tooltip" });
+        W.add({
+          desc: "Hide",
+          hotkey: 27,
+          handler: removeTooltip.bind(null, true),
+        });
       }
-    };
 
-    const scrollListener = (event) => {
-      if (event.target instanceof Element && event.target.contains(tooltipElement)) {
-        removeTooltip(false, true);
-      }
-    };
-
-    tooltipElement.addEventListener('common-tooltip-update', tooltipHandler);
-    tooltipElement.addEventListener('mouseleave', removeTooltip);
-    tooltipElement.addEventListener('mousedown', removeTooltip);
-    document.addEventListener('scroll', scrollListener, { capture: true });
-
-    if (!W) {
-      W = createGroup({ desc: 'Tooltip' });
-      W.add({
-        desc: 'Hide',
-        hotkey: 27,
-        handler: removeTooltip.bind(null, true),
-      });
+      break;
     }
-
-    break;
-  }
-});
+  });
 
 const Y = (options) => {
-  if ('content' in options) {
+  if ("content" in options) {
     return options;
   }
 
   const { inner, html, text, ...rest } = options;
-  let content = { type: 'none' };
+  let content = { type: "none" };
 
   if (inner) {
-    content = { type: 'element', data: inner };
-  }
-
- else if (text) {
-    content = { type: html ? 'html' : 'text', data: text };
+    content = { type: "element", data: inner };
+  } else if (text) {
+    content = { type: html ? "html" : "text", data: text };
   }
 
   return { content, ...rest };
@@ -192,10 +201,4 @@ const $ = (e) => {
   return e && e.nodeType === Node.ELEMENT_NODE ? e : null;
 };
 
-export {
-  hide,
-  show,
-  showOnElement,
-  setTooltipData,
-  getTooltipData,
-};
+export { hide, show, showOnElement, setTooltipData, getTooltipData };

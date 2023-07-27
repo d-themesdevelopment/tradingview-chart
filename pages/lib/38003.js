@@ -1,7 +1,8 @@
 "use strict";
 
-import { HorizontalLineRenderer, LINESTYLE_SOLID } = from "./74997.js";
-import { LINESTYLE_SOLID } from "./79849.js";
+const { HorizontalLineRenderer } = require("./74997");
+const { LINESTYLE_SOLID } = require("./79849");
+// const { rgba } = require("./79849"); // ! not correct
 
 class HorizontalLinePaneView {
   constructor() {

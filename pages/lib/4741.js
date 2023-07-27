@@ -215,7 +215,7 @@ const keyboardManager = new (class {
   }
 })();
 
-function createGroup(options) {
+export function createGroup(options) {
   return new HotkeyActionGroup(keyboardManager, options);
 }
 

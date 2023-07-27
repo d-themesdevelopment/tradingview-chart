@@ -1,15 +1,15 @@
-import { assert } from 'assert-utils';
-import { createEventEmitter } from 'event-utils';
-import { humanReadableHash } from 'hash-utils';
-import { guid } from 'guid-utils';
+import { assert } from "./assertions";
+import { createEventEmitter } from "event-utils"; // ! not correct
+import { humanReadableHash } from "./3343";
+import { guid } from "./36174";
 
 class Action {
   constructor(options, id = guid()) {
-    this.type = 'action';
+    this.type = "action";
     this._destroyed = false;
     this._binding = null;
 
-    assert(options.actionId !== undefined, 'actionId must be defined');
+    assert(options.actionId !== undefined, "actionId must be defined");
 
     this.id = id;
     this._onUpdate = createEventEmitter();
@@ -29,7 +29,7 @@ class Action {
   }
 
   getLabel() {
-    return this._options.label || '';
+    return this._options.label || "";
   }
 
   getSubItems() {
@@ -57,7 +57,7 @@ class Action {
   }
 
   getSize() {
-    return this._options.size ?? 'normal';
+    return this._options.size ?? "normal";
   }
 
   getPayload() {
@@ -141,7 +141,10 @@ class Action {
       return;
     }
 
-    const label = typeof this._options.label === 'string' ? this._options.label : this._options.name;
+    const label =
+      typeof this._options.label === "string"
+        ? this._options.label
+        : this._options.name;
 
     this._hotkeyAction = this._options.hotkeyGroup.add({
       hotkey: this._options.hotkeyHash,
@@ -195,7 +198,7 @@ class ActionAsync extends Action {
 
 class Separator {
   constructor(hint) {
-    this.type = 'separator';
+    this.type = "separator";
     this.id = guid();
     this._hint = hint;
   }
@@ -215,7 +218,7 @@ class Loader extends Action {
   }
 
   getSize() {
-    return 'big';
+    return "big";
   }
 }
 
