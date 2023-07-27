@@ -1,5 +1,5 @@
 
-const { CanvasRenderingTarget2D, size } = require('27714');
+const { CanvasRenderingTarget2D, size } = require('fancy-canvas');
 
 class MediaCoordinatesPaneRenderer {
   draw(canvasElement, dimensions) {

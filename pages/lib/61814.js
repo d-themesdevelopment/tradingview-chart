@@ -1,5 +1,5 @@
 
-import { clean } from '54358';
+import { clean } from './54358.js';
 
 export function hotKeySerialize(key) {
   return clean(JSON.stringify(key));

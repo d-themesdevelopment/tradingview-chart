@@ -1,6 +1,5 @@
 
-export var StdTheme;
-(function (StdTheme) {
-    StdTheme.Light = "light";
-    StdTheme.Dark = "dark";
-})(StdTheme || (StdTheme = {}));
+export const StdTheme = {
+  Light: "light",
+  Dark: "dark",
+};

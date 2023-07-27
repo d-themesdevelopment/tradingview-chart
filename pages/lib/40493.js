@@ -1,6 +1,6 @@
 "use strict";
 
-const { hasService, service } = require("path/to/trading-service-module");
+const { hasService, service } = require("./16216.js");
 
 export const tradingService = {
   id: "TradingService",
