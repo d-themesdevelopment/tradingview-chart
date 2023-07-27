@@ -1,6 +1,6 @@
 "use strict";
 
-import {assert} from ("./50151.js");
+import {assert} from ("./assertions.js");
 import {INVALID_TIME_POINT_INDEX} from ("./61401.js");
 import { ensureTimePointIndexIndex } from ("./1115.js");
 
