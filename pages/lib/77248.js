@@ -1,6 +1,6 @@
 
 
-import { assert } from '<path_to_utils_module>';
+import { assert } from './assertions.js';
 
 function firstReplacedByBatsExchange(e) {
   return null;
