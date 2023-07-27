@@ -1,4 +1,4 @@
-import { isNumber } from "lodash"; // Replace 'your-module-path' with the actual module path
+import { isNumber } from "./1722.js"; // Replace 'your-module-path' with the actual module path
 
 class LimitedPrecisionNumericFormatter {
   constructor(precision = 1) {

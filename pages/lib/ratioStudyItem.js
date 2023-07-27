@@ -1,5 +1,5 @@
 
-import { SpreadRatioBase } from '<path_to_SpreadRatioBase_module>';
+import { SpreadRatioBase } from './87302.js';
 
 class ratioStudyItemCalc extends SpreadRatioBase {
     _doCalculation(v1, v2, v3, v4) {

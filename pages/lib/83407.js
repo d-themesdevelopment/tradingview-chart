@@ -1,9 +1,9 @@
 "use strict";
 
 // Import dependencies
-const { getValue, setValue, remove, onSync } = i(56840);
-const { createPrimitiveProperty } = i(59680);
-const { defaultDateFormat } = i(15879);
+import { getValue, setValue, remove, onSync } from "./56840.js";
+import { createPrimitiveProperty } from "./createPrimitiveProperty.js";
+import { defaultDateFormat } from ("./15879.js");
 
 const dateFormatKey = "date_format";
 
