@@ -1,13 +1,13 @@
 "use strict";
 
-const { t } = i(44352);
+import { translateMessage } from ("./44352.js");
 
 const sessionDescriptionMap = new Map([
-  ["Premarket", t(null, { context: "sessions" }, i(56935))],
-  ["Postmarket", t(null, { context: "sessions" }, i(98801))],
-  ["Regular Trading Hours", t(null, { context: "sessions" }, i(24380))],
-  ["Extended Trading Hours", t(null, { context: "sessions" }, i(97442))],
-  ["Electronic Trading Hours", t(null, { context: "sessions" }, i(75610))],
+  ["Premarket", translateMessage(null, { context: "sessions" }, "Premarket")],
+  ["Postmarket", translateMessage(null, { context: "sessions" }, "Postmarket")],
+  ["Regular Trading Hours", translateMessage(null, { context: "sessions" }, "Regular trading hours")],
+  ["Extended Trading Hours", translateMessage(null, { context: "sessions" }, "Extended trading hours")],
+  ["Electronic Trading Hours", translateMessage(null, { context: "sessions" }, "Electronic trading hours")],
 ]);
 
 function translateSessionDescription(session) {
@@ -15,11 +15,11 @@ function translateSessionDescription(session) {
 }
 
 const sessionShortDescriptionMap = new Map([
-  ["Premarket", t(null, { context: "sessions" }, i(56137))],
-  ["Postmarket", t(null, { context: "sessions" }, i(32929))],
-  ["Regular Trading Hours", t(null, { context: "sessions" }, i(63798))],
-  ["Extended Trading Hours", t(null, { context: "sessions" }, i(33021))],
-  ["Electronic Trading Hours", t(null, { context: "sessions" }, i(33021))],
+  ["Premarket", translateMessage(null, { context: "sessions" }, "PRE")],
+  ["Postmarket", translateMessage(null, { context: "sessions" }, "POST")],
+  ["Regular Trading Hours", translateMessage(null, { context: "sessions" }, "RTH")],
+  ["Extended Trading Hours", translateMessage(null, { context: "sessions" }, "ETH")],
+  ["Electronic Trading Hours", translateMessage(null, { context: "sessions" }, "ETH")],
 ]);
 
 function translateSessionShortDescription(session) {

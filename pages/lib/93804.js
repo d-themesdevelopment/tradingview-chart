@@ -2,7 +2,7 @@
 
 import {assert} from ("./50151.js");
 import {INVALID_TIME_POINT_INDEX} from ("./61401.js");
-const { ensureTimePointIndexIndex } = require("./1115.js");
+import { ensureTimePointIndexIndex } from ("./1115.js");
 
 export function materializeBackground(e, t) {
   if (e.start >= t.length || e.stop >= t.length) {

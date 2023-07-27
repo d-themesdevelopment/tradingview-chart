@@ -2,8 +2,8 @@
 
 
 
-import { customFormatters } from 'some-library'; // Replace 'some-library' with the actual library you're using
-import { getDateFormatWithWeekday, dateFormatFunctions } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { customFormatters } from './customFormatters.js'; // Replace 'some-library' with the actual library you're using
+import { getDateFormatWithWeekday, dateFormatFunctions } from './15879.js'; // Replace 'some-library' with the actual library you're using
 
 class DateFormatter {
   constructor(format = 'yyyy-MM-dd', useWeekday = false) {

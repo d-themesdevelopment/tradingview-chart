@@ -1,8 +1,8 @@
 "use strict";
-const { HorizontalLinePaneView } = require("./38003");
-const { PaneCursorType } = require("./PaneCursorType");
-const { HitTestResult, HitTarget } = require("./18807");
-const { LINESTYLE_SPARSE_DOTTED } = require("./79849");
+const { HorizontalLinePaneView } = require("./38003.js");
+const { PaneCursorType } = require("./PaneCursorType.js");
+const { HitTestResult, HitTarget } = require("./18807.js");
+const { LINESTYLE_SPARSE_DOTTED } = require("./79849.js");
 
 class SeriesWaterlinePaneView extends HorizontalLinePaneView {
   constructor(getters) {

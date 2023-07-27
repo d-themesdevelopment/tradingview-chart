@@ -1,5 +1,5 @@
 
-import { isMac } from 'some-module'; // Replace 'some-module' with the actual module name
+import { isMac } from './49483.js'; // Replace 'some-module' with the actual module name
 
 export class EnvironmentState {
   constructor(e, t = false) {

@@ -1,7 +1,7 @@
 
 
-import { LineToolBrushBase } from '46235';
-import { DefaultProperty } from '46100';
+import { LineToolBrushBase } from './LineToolBrushBase.js';
+import { DefaultProperty } from './46100.js';
 import { e } from '<some module>';
 
 class LineToolHighlighter extends LineToolBrushBase {

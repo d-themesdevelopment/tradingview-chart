@@ -1,4 +1,4 @@
-const { assert } = require("./assertions");
+const { assert } = require("./assertions.js");
 
 class BarsRange {
   constructor(firstBar, lastBar) {
