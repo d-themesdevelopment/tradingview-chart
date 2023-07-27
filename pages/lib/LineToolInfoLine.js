@@ -1,7 +1,7 @@
 
 
 "use strict";
-import { LineToolTrendLine } from "path/to/LineToolTrendLine";
+import { LineToolTrendLine } from "./47246.js";
 
 class LineToolInfoLine extends LineToolTrendLine {
   constructor(id, properties, model, options) {

@@ -1,7 +1,7 @@
-import { t } from "i18next";
+import { translateMessage } from "./44352.js";
 import { StudyStatusProviderBase } from "./code2";
 
-t(null, void 0, import(47542));
+translateMessage(null, void 0, "Fundamental studies are no longer available on charts");
 
 class StudyStatusProvider extends StudyStatusProviderBase {
   constructor(study, model) {

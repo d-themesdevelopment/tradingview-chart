@@ -1,4 +1,4 @@
-const { getTranslatedResolutionModel } = require("94025");
+const { getTranslatedResolutionModel } = require("./94025.js");
 
 function translatedIntervalString(e) {
   const resolutionModel = getTranslatedResolutionModel(e, true);

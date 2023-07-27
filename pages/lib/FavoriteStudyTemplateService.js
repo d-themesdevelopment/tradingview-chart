@@ -1,7 +1,7 @@
 
 "use strict";
 
-const { CommonJsonStoreService } = require(68456);
+import { CommonJsonStoreService } from "./68456.js";
 
 class FavoriteStudyTemplateService extends CommonJsonStoreService {
   constructor(storageKey, eventEmitter) {
