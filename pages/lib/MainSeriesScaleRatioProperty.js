@@ -1,10 +1,10 @@
 
-import { EventDispatcher } from '<path_to_EventDispatcher_module>';
-import { ensureDefined } from '<path_to_ensureDefined_module>';
+import { Delegate  } from './57898.js';
+import { ensureDefined } from './assertions.js';
 
 export class MainSeriesScaleRatioProperty {
   constructor(model) {
-    this._changed = new EventDispatcher();
+    this._changed = new Delegate ();
     this._model = model;
   }
 

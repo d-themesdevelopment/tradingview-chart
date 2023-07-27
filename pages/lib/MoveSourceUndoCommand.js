@@ -1,7 +1,7 @@
 
 
-import { ensureNotNull } from 50151;
-import { UndoCommand } from 62591;
+import { ensureNotNull } from './assertions.js';
+import { UndoCommand } from './UndoCommand.js';
 
 class MoveSourceUndoCommand extends UndoCommand {
   constructor(chartModel, source, id) {
