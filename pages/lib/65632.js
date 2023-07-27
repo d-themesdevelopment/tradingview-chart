@@ -1,6 +1,6 @@
 
 
-import { getJSON, setJSON, onSync } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { getJSON, setJSON, onSync } from './56840.js'; // Replace 'some-library' with the actual library you're using
 
 const watermarkPropertyDefaults = {
   visibility: false,

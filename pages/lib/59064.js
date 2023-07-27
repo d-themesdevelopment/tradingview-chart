@@ -1,7 +1,7 @@
 
-import CloseDelegate from './closeDelegate';
+import Delegate from './57898.js';
 
-const globalCloseDelegate = new CloseDelegate();
+const globalCloseDelegate = new Delegate();
 
 function globalCloseMenu() {
   globalCloseDelegate.fire();

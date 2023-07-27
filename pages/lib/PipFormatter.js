@@ -1,8 +1,8 @@
 
 
 
-import { isCFDSymbol } from 'some-library'; // Replace 'some-library' with the actual library you're using
-import { PriceFormatter } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { isCFDSymbol } from './91349.js'; // Replace 'some-library' with the actual library you're using
+import { PriceFormatter } from './61146.js'; // Replace 'some-library' with the actual library you're using
 
 class PipFormatter extends PriceFormatter {
   constructor(pipPriceScale, pipMinMove, symbol, currencyCode, locale) {

@@ -1,7 +1,6 @@
 
 
-import { ensureNotNull } from '<path_to_ensureNotNull_module>';
-import { TimeAxisView } from '<path_to_TimeAxisView_module>';
+import { TimeAxisView } from './TimeAxisView.js';
 
 export class LineDataSourceTimeAxisView extends TimeAxisView {
   constructor(source, pointIndex) {

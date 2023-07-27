@@ -1,8 +1,8 @@
 "use strict";
 
-const s = require("./50151");
-const r = require("./61401");
-const { ensureTimePointIndexIndex } = require("./1115");
+import {assert} from ("./50151.js");
+import {INVALID_TIME_POINT_INDEX} from ("./61401.js");
+import { ensureTimePointIndexIndex } from ("./1115.js");
 
 export function materializeBackground(e, t) {
   if (e.start >= t.length || e.stop >= t.length) {
@@ -12,17 +12,17 @@ export function materializeBackground(e, t) {
   const start = t[e.start];
   const stop = t[e.stop];
 
-  if (stop === r.INVALID_TIME_POINT_INDEX) {
+  if (stop === INVALID_TIME_POINT_INDEX) {
     return null;
   }
 
-  s.assert(
-    start === r.INVALID_TIME_POINT_INDEX || start <= stop,
+  assert(
+    start === INVALID_TIME_POINT_INDEX || start <= stop,
     "start should not exceed stop"
   );
 
   return {
-    start: start === r.INVALID_TIME_POINT_INDEX ? null : start,
+    start: start === INVALID_TIME_POINT_INDEX ? null : start,
     stop: stop,
   };
 }
@@ -31,7 +31,7 @@ export function dematerializeBackground(e, t, i) {
   return {
     id: t,
     start: ensureTimePointIndexIndex(
-      i.indexOf(e.start !== null ? e.start : r.INVALID_TIME_POINT_INDEX)
+      i.indexOf(e.start !== null ? e.start : INVALID_TIME_POINT_INDEX)
     ),
     stop: ensureTimePointIndexIndex(i.indexOf(e.stop)),
   };

@@ -1,8 +1,8 @@
 "use strict";
 
-import { StudyValuesProvider } from "./54303";
-import { HHistBasedValuesProvider } from "./40484";
-import { StudyBaseWindowView } from "./StudyBaseWindowView";
+import { StudyValuesProvider } from "./54303.js";
+import { HHistBasedValuesProvider } from "./40484.js";
+import { StudyBaseWindowView } from "./StudyBaseWindowView.js";
 
 class ValuesProvider {
   constructor(e, t) {

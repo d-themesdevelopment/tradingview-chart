@@ -1,5 +1,5 @@
 
-import { CanvasRenderingTarget2D, size } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { CanvasRenderingTarget2D, size } from 'fancy-canvas'; // Replace 'some-library' with the actual library you're using
 
 class BitmapCoordinatesPaneRenderer {
   draw(context, dimensions) {

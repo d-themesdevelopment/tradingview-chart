@@ -1,6 +1,6 @@
 "use strict";
 
-import { enabled } from "./helpers";
+import { enabled } from "./helpers.js";
 
 window.onload = function () {
   if (location.hostname.indexOf(".") >= 0 && !isLocalhost()) {

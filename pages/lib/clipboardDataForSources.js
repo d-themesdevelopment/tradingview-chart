@@ -1,8 +1,8 @@
 
 
 
-import { ensureNotNull } from '<path_to_ensureNotNull_module>';
-import { isLineTool } from '<path_to_isLineTool_module>';
+import { ensureNotNull } from './assertions.js';
+import { isLineTool } from './18341.js';
 
 function clipboardDataForSources(modelId, sources) {
   if (sources.length === 1 && isStudy(sources[0])) {

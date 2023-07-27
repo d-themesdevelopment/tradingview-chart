@@ -1,6 +1,6 @@
-const createVisibilityController = require(29542).createVisibilityController;
-const storage = require(56840);
-const storageInstance = storage.n();
+import { createVisibilityController } from ("./29542.js");
+import { storage } from ("./56840.js");
+const storageInstance = storage();
 const {
   property: currencyUnitVisibilityProperty,
   availableValues: currencyUnitVisibilityOptions,

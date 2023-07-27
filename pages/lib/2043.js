@@ -1,4 +1,4 @@
-import { t } from 'TranslationLibraryName';
+import { translateMessage } from './44352.js';
 
 class TimeSpanFormatter {
   format(time) {
@@ -12,16 +12,16 @@ class TimeSpanFormatter {
     time -= 60 * minutes;
     let formattedTime = "";
     if (days) {
-      formattedTime += days + t(null, { context: "dates" }, 'days') + " ";
+      formattedTime += days + translateMessage(null, { context: "dates" }, 'days') + " ";
     }
     if (hours) {
-      formattedTime += hours + t(null, { context: "dates" }, 'hours') + " ";
+      formattedTime += hours + translateMessage(null, { context: "dates" }, 'hours') + " ";
     }
     if (minutes) {
-      formattedTime += minutes + t(null, { context: "dates" }, 'minutes') + " ";
+      formattedTime += minutes + translateMessage(null, { context: "dates" }, 'minutes') + " ";
     }
     if (time) {
-      formattedTime += time + t(null, { context: "dates" }, 'seconds') + " ";
+      formattedTime += time + translateMessage(null, { context: "dates" }, 'seconds') + " ";
     }
     if (isNegative) {
       formattedTime = "-" + formattedTime;
