@@ -1,12 +1,24 @@
-import { ensure, ensureDefined, assert } from 'util-module';
-import { numofSubHists, maxHHistItems, HHistDirection, HHistLocation } from 'histogram-module';
-import { GraphicsList, GraphicsListColl, EraseObj } from 'graphics-module';
-import { JStudyDataUpdate, StudyGraphicsData, Container, StudyGraphicsUpdate } from 'study-module';
-import { Std } from 'std-module';
-import { VbPCheckHaveVolumeExpr } from 'expr-module';
-import { VolumeByPriceExpr } from 'expr-module';
-import { VolumeProfileBase } from 'profile-module';
-import { VolumeProfileOutputSeries } from 'output-module';
+import { ensure, ensureDefined, assert } from "./assertions";
+import { numOfSubHists, maxHHistItems } from "./19762";
+import { HHistDirection, HHistLocation } from "./90164";
+import { GraphicsList } from "./GraphicsList";
+import { GraphicsListColl } from "./GraphicsListColl";
+
+import { EraseObj } from "./43945";
+
+import { JStudyDataUpdate } from "./1386";
+
+import {
+  StudyGraphicsData,
+  Container,
+  // StudyGraphicsUpdate,
+} from "./748";
+
+import { Std } from "std-module"; // ! not correct
+import { VbPCheckHaveVolumeExpr } from "./VbPCheckHaveVolumeExpr";
+import { VolumeByPriceExpr } from "./89529";
+import { VolumeProfileBase } from "./19762";
+import { VolumeProfileOutputSeries } from "./VolumeProfileOutputSeries";
 
 class VolumeProfileVisibleRangeStudyItem extends VolumeProfileBase {
   constructor() {
@@ -42,10 +54,16 @@ class VolumeProfileVisibleRangeStudyItem extends VolumeProfileBase {
     this._valueAreaHists = new GraphicsListColl();
 
     const studyGraphicsData = new StudyGraphicsData();
-    studyGraphicsData.getObjsContainer("hhists").push(new Container("histBars2", this._hists));
-    studyGraphicsData.getObjsContainer("hhists").push(new Container("histBarsVA", this._valueAreaHists));
-    studyGraphicsData.getObjsContainer("horizlines").push(new Container("pocLines", this._pocLines));
-    
+    studyGraphicsData
+      .getObjsContainer("hhists")
+      .push(new Container("histBars2", this._hists));
+    studyGraphicsData
+      .getObjsContainer("hhists")
+      .push(new Container("histBarsVA", this._valueAreaHists));
+    studyGraphicsData
+      .getObjsContainer("horizlines")
+      .push(new Container("pocLines", this._pocLines));
+
     this._studyDataUpdate.init(studyGraphicsData);
     this._rowsLayout = t(0);
     this._rowSize = t(1);
@@ -55,17 +73,28 @@ class VolumeProfileVisibleRangeStudyItem extends VolumeProfileBase {
     this._vaVolumePercent = t(5);
 
     this.verifyRowSizeInput(this._rowSize, this._rowsLayout);
-    this._originalResolution = Interval.parse(e.symbol.interval + e.symbol.resolution);
+    this._originalResolution = Interval.parse(
+      e.symbol.interval + e.symbol.resolution
+    );
 
-    const n = this._lastBarTime + this._originalResolution.inMilliseconds(this._lastBarTime);
+    const n =
+      this._lastBarTime +
+      this._originalResolution.inMilliseconds(this._lastBarTime);
 
     if (this._firstBarTime === 0 && this._lastBarTime === 0) {
       this._basicResolution = this._originalResolution;
     } else {
-      this._basicResolution = this.findBasicResolutionForFromTo(this._originalResolution, this._firstBarTime, n, ensureDefined(e.symbol.info));
+      this._basicResolution = this.findBasicResolutionForFromTo(
+        this._originalResolution,
+        this._firstBarTime,
+        n,
+        ensureDefined(e.symbol.info)
+      );
     }
 
-    this._hasSecondarySymbol = !this._originalResolution.isEqualTo(this._basicResolution);
+    this._hasSecondarySymbol = !this._originalResolution.isEqualTo(
+      this._basicResolution
+    );
     if (this._hasSecondarySymbol) {
       e.new_sym(e.symbol.tickerid, this._basicResolution.value());
     }
@@ -74,7 +103,7 @@ class VolumeProfileVisibleRangeStudyItem extends VolumeProfileBase {
 
     this._vbPCheckHaveVolumeExpr = new VbPCheckHaveVolumeExpr(this);
     this._volumeByPriceExpr = new VolumeByPriceExpr(
-      numofSubHists(this._volume),
+      numOfSubHists(this._volume),
       e,
       this,
       this._firstBarTime,
@@ -107,7 +136,7 @@ class VolumeProfileVisibleRangeStudyItem extends VolumeProfileBase {
 
     const r = {
       type: "composite",
-      data: []
+      data: [],
     };
 
     if (i && i.period === this._basicResolution.value()) {
@@ -122,9 +151,7 @@ class VolumeProfileVisibleRangeStudyItem extends VolumeProfileBase {
       this._developingVAHighSeries.addHist(Std.time(e));
       this._developingVALowSeries.addHist(Std.time(e));
 
-      this._vbPCheckHaveVolumeExpr.update(0, e.symbol.is
-
-LastBar);
+      this._vbPCheckHaveVolumeExpr.update(0, e.symbol.isLastBar);
       this._volumeByPriceExpr.update(0);
 
       this._developingPocSeries.removeLastIfNaN();
@@ -140,7 +167,7 @@ LastBar);
           r.data.push({
             nonseries: true,
             type: "study_graphics",
-            data: studyGraphicsUpdate.json
+            data: studyGraphicsUpdate.json,
           });
         }
 
@@ -148,7 +175,7 @@ LastBar);
           r.data.push({
             nonseries: true,
             type: "study_graphics",
-            data: studyGraphicsUpdate.jsonUpdate
+            data: studyGraphicsUpdate.jsonUpdate,
           });
         }
       }
@@ -224,7 +251,7 @@ const volumeProfileVisibleRangeStudyItem = {
     description: "Volume Profile Visible Range",
     shortDescription: "VPVR",
     format: {
-      type: "volume"
+      type: "volume",
     },
     is_price_study: true,
     linkedToSeries: true,
@@ -235,7 +262,7 @@ const volumeProfileVisibleRangeStudyItem = {
         name: "Rows Layout",
         defval: "Number Of Rows",
         options: ["Number Of Rows", "Ticks Per Row"],
-        type: "text"
+        type: "text",
       },
       {
         id: "rows",
@@ -243,14 +270,14 @@ const volumeProfileVisibleRangeStudyItem = {
         defval: 24,
         max: 1000000,
         min: 1,
-        type: "integer"
+        type: "integer",
       },
       {
         id: "volume",
         name: "Volume",
         defval: "Up/Down",
         options: ["Up/Down", "Total", "Delta"],
-        type: "text"
+        type: "text",
       },
       {
         id: "first_visible_bar_time",
@@ -259,7 +286,7 @@ const volumeProfileVisibleRangeStudyItem = {
         isHidden: true,
         max: 253370764800,
         min: -253370764800,
-        type: "time"
+        type: "time",
       },
       {
         id: "last_visible_bar_time",
@@ -268,7 +295,7 @@ const volumeProfileVisibleRangeStudyItem = {
         isHidden: true,
         max: 253370764800,
         min: -253370764800,
-        type: "time"
+        type: "time",
       },
       {
         id: "vaVolume",
@@ -276,42 +303,42 @@ const volumeProfileVisibleRangeStudyItem = {
         defval: 70,
         max: 100,
         min: 0,
-        type: "integer"
-      }
+        type: "integer",
+      },
     ],
     plots: [
       {
         id: "developingPoc",
-        type: "line"
+        type: "line",
       },
       {
         id: "developingVAHigh",
-        type: "line"
+        type: "line",
       },
       {
         id: "developingVALow",
-        type: "line"
-      }
+        type: "line",
+      },
     ],
     graphics: {
       hhists: {
         histBars2: {
           location: HHistLocation.Relative,
           title: "Volume Profile",
-          titles: ["Up Volume", "Down Volume"]
+          titles: ["Up Volume", "Down Volume"],
         },
         histBarsVA: {
           location: HHistLocation.Relative,
           title: "Value Area",
-          titles: ["Value Area Up", "Value Area Down"]
-        }
+          titles: ["Value Area Up", "Value Area Down"],
+        },
       },
       horizlines: {
         pocLines: {
           name: "POC",
-          showPrice: true
-        }
-      }
+          showPrice: true,
+        },
+      },
     },
     defaults: {
       graphics: {
@@ -323,7 +350,7 @@ const volumeProfileVisibleRangeStudyItem = {
             showValues: false,
             transparencies: [76, 76],
             valuesColor: "#424242",
-            visible: true
+            visible: true,
           },
           histBarsVA: {
             colors: ["#1592e6", "#fbc123"],
@@ -332,17 +359,17 @@ const volumeProfileVisibleRangeStudyItem = {
             showValues: false,
             transparencies: [30, 30],
             valuesColor: "#424242",
-            visible: true
-          }
+            visible: true,
+          },
         },
         horizlines: {
           pocLines: {
             color: "#ff0000",
             style: 0,
             visible: true,
-            width: 2
-          }
-        }
+            width: 2,
+          },
+        },
       },
       inputs: {
         first_visible_bar_time: 0,
@@ -350,7 +377,7 @@ const volumeProfileVisibleRangeStudyItem = {
         rows: 24,
         rowsLayout: "Number Of Rows",
         vaVolume: 70,
-        volume: "Up/Down"
+        volume: "Up/Down",
       },
       styles: {
         developingPoc: {
@@ -360,7 +387,7 @@ const volumeProfileVisibleRangeStudyItem = {
           plottype: 9,
           trackPrice: false,
           transparency: 0,
-          display: 0
+          display: 0,
         },
         developingVAHigh: {
           color: "#0000ff",
@@ -369,7 +396,7 @@ const volumeProfileVisibleRangeStudyItem = {
           plottype: 9,
           trackPrice: false,
           transparency: 0,
-          display: 0
+          display: 0,
         },
         developingVALow: {
           color: "#0000ff",
@@ -378,25 +405,23 @@ const volumeProfileVisibleRangeStudyItem = {
           plottype: 9,
           trackPrice: false,
           transparency: 0,
-          display: 0
-        }
-      }
+          display: 0,
+        },
+      },
     },
     styles: {
       developingPoc: {
         histogramBase: 0,
-        title: "Developing Poc"
+        title: "Developing Poc",
       },
       developingVAHigh: {
         histogramBase: 0,
-        title: "Developing VA High
-
-"
+        title: "Developing VA High",
       },
       developingVALow: {
         histogramBase: 0,
-        title: "Developing VA Low"
-      }
-    }
-  }
+        title: "Developing VA Low",
+      },
+    },
+  },
 };

@@ -1,11 +1,11 @@
-import { nmd } from "some-module";
-import "some-other-module";
-import { fetch } from "fetch-module";
-import { regExpEscape } from "regexp-module";
-import { TVXWindowEvents } from "window-events-module";
-import { TVLocalStorage } from "local-storage-module";
-import { enabled } from "enabled-module";
-import { onWidget, IS_DEMO_PAGE } from "parent-module";
+// import { nmd } from "some-module";
+// import "some-other-module";
+// import { fetch } from "fetch-module";
+// import { regExpEscape } from "regexp-module";
+import { TVXWindowEvents } from "window-events-module"; // ! not correct
+import { TVLocalStorage } from "./TVLocalStorage";
+import { enabled } from "./helpers";
+import { onWidget, IS_DEMO_PAGE } from "parent-module"; // ! not correct
 
 const allowedDomains = ["s.tradingview.com", "betacdn.tradingview.com"];
 const useLocalStorage = enabled("use_localstorage_for_settings");

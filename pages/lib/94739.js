@@ -1,30 +1,24 @@
 "use strict";
 
-const { EventEmitter } = require("events");
-const assert = require("assert");
-const r = require("lodash");
-const PlotList = require("97034").PlotList;
-const {
-  unpackNonSeriesData,
-  ensureDefined,
-  ensureNotNull,
-} = require("./1115");
-const { LiveStudyGraphics } = require("60393");
-const {
-  StudyStatusType,
-  studyPlotFunctionMap,
-  studyEmptyPlotValuePredicate,
-} = require("75319");
+import PlotList from "./PlotList";
+const { EventEmitter } = require("events"); // ! not correct
+const assert = require("./assertions");
+// const r = require("lodash");
+const { ensureDefined, ensureNotNull } = require("./assertions");
+const { LiveStudyGraphics } = require("60393"); // ! not correct
+
+import { StudyStatusType } from "./StudyStatusType";
+import { studyPlotFunctionMap, studyEmptyPlotValuePredicate } from "./72007";
 
 const logger = getLogger("Chart.StudyDataSource");
 
+// ! not correct
 let DataSourceStatus;
 (function (DataSourceStatus) {
   DataSourceStatus[(DataSourceStatus["Idle"] = 0)] = "Idle";
   DataSourceStatus[(DataSourceStatus["AwaitingConnection"] = 1)] =
     "AwaitingConnection";
-  DataSourceStatus[(DataSourceStatus["AwaitingParent"] = 2)] =
-    "AwaitingParent";
+  DataSourceStatus[(DataSourceStatus["AwaitingParent"] = 2)] = "AwaitingParent";
   DataSourceStatus[(DataSourceStatus["AwaitingFirstDataUpdate"] = 3)] =
     "AwaitingFirstDataUpdate";
   DataSourceStatus[(DataSourceStatus["Active"] = 4)] = "Active";
@@ -41,9 +35,8 @@ class StudyDataSource {
     this._graphics = new LiveStudyGraphics();
     this._dataCleared = new EventEmitter();
     this._dataUpdated = new EventEmitter();
-    this._boundOnGatewayIsConnectedChanged = this._onGatewayIsConnectedChanged.bind(
-      this
-    );
+    this._boundOnGatewayIsConnectedChanged =
+      this._onGatewayIsConnectedChanged.bind(this);
     this._ongoingDataUpdate = Promise.resolve();
     this._gateway = gateway;
     this._metaInfo = metaInfo;
@@ -268,7 +261,9 @@ class StudyDataSource {
 
   _onSeriesCompleted() {
     if (this._status === DataSourceStatus.AwaitingParent) {
-      this._createStudyUsingParentId(ensureNotNull(this._seriesSource.instanceId()));
+      this._createStudyUsingParentId(
+        ensureNotNull(this._seriesSource.instanceId())
+      );
     }
   }
 
@@ -286,10 +281,7 @@ class StudyDataSource {
   _onMessage(message) {
     if (message.method === "data_update") {
       const { customId, turnaround, plots, nonseries } = message.params;
-      if (
-        customId === this._studyId &&
-        this._checkTurnaround(turnaround)
-      ) {
+      if (customId === this._studyId && this._checkTurnaround(turnaround)) {
         this._onDataUpdate(plots, ensureDefined(nonseries));
       }
     } else if (message.method === "study_loading") {

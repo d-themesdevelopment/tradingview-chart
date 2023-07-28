@@ -1,9 +1,8 @@
-
 "use strict";
 
-const { UndoCommand } = require('./UndoCommand.js');
+const { UndoCommand } = require("./UndoCommand.js");
 
-class ApplyLineToolTemplateUndoCommand extends UndoCommand {
+export class ApplyLineToolTemplateUndoCommand extends UndoCommand {
   constructor(source, newState, id) {
     super(id);
     this._source = source;
@@ -19,5 +18,3 @@ class ApplyLineToolTemplateUndoCommand extends UndoCommand {
     this._source.applyTemplate(this._oldState);
   }
 }
-
-

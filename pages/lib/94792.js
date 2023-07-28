@@ -1,70 +1,73 @@
 "use strict";
 
-const TranslatedString = require("36298").TranslatedString;
-const doAnimate = require("88275").doAnimate;
-const ChartUndoModelBase = require("45446").ChartUndoModelBase;
-const saveDefaultProperties = require("46100").saveDefaultProperties;
-const UndoCommand = require("./62591").UndoCommand;
-const ApplyLineToolTemplateUndoCommand =
-  require("37846").ApplyLineToolTemplateUndoCommand;
+const TranslatedString = require("./TranslatedString");
+const doAnimate = require("./Animation");
+const ChartUndoModelBase = require("./45446").ChartUndoModelBase; // ! not correct
+// const saveDefaultProperties = require("./46100").saveDefaultProperties;
+// const UndoCommand = require("./62591").UndoCommand;
+const ApplyLineToolTemplateUndoCommand = require("./ApplyLineToolTemplateUndoCommand");
 const SetPriceScaleSelectionStrategyCommand =
-  require("53051").SetPriceScaleSelectionStrategyCommand;
+  require("./53051").SetPriceScaleSelectionStrategyCommand;
 const SetScaleRatioPropertiesCommand =
-  require("610").SetScaleRatioPropertiesCommand;
-const trackEvent = require("51768").trackEvent;
-const RestoreDefaultsPreferencesUndoCommand =
-  require("4505").RestoreDefaultsPreferencesUndoCommand;
-const SetPriceScaleModeCommand = require("95367").SetPriceScaleModeCommand;
-const PriceScaleChangeUndoCommand =
-  require("67521").PriceScaleChangeUndoCommand;
+  require("./610").SetScaleRatioPropertiesCommand;
+const trackEvent = require("./51768").trackEvent; // ! not correct
 
+const RestoreDefaultsPreferencesUndoCommand =
+  require("./4505").RestoreDefaultsPreferencesUndoCommand;
+
+const SetPriceScaleModeCommand = require("./95367").SetPriceScaleModeCommand; // ! not correct
+
+const PriceScaleChangeUndoCommand =
+  require("./67521").PriceScaleChangeUndoCommand;
+
+// ! not correct parts
 const moveLeftString = new TranslatedString(
   "move left",
-  require("44352").t(null, void 0, require("15086"))
+  require("./44352").t(null, void 0, require("./15086"))
 );
 const moveRightString = new TranslatedString(
   "move right",
-  require("44352").t(null, void 0, require("61711"))
+  require("./44352").t(null, void 0, require("./61711"))
 );
 const toggleAutoScaleString = new TranslatedString(
   "toggle auto scale",
-  require("44352").t(null, void 0, require("63060"))
+  require("./44352").t(null, void 0, require("./63060"))
 );
 const toggleLockScaleString = new TranslatedString(
   "toggle lock scale",
-  require("44352").t(null, void 0, require("21203"))
+  require("./44352").t(null, void 0, require("./21203"))
 );
 const toggleRegularScaleString = new TranslatedString(
   "toggle regular scale",
-  require("44352").t(null, void 0, require("33714"))
+  require("./44352").t(null, void 0, require("./33714"))
 );
 const toggleIndexedTo100ScaleString = new TranslatedString(
   "toggle indexed to 100 scale",
-  require("44352").t(null, void 0, require("98860"))
+  require("./44352").t(null, void 0, require("./98860"))
 );
 const togglePercentageScaleString = new TranslatedString(
   "toggle percentage scale",
-  require("44352").t(null, void 0, require("68642"))
+  require("./44352").t(null, void 0, require("./68642"))
 );
 const toggleLogScaleString = new TranslatedString(
   "toggle log scale",
-  require("44352").t(null, void 0, require("60166"))
+  require("./44352").t(null, void 0, require("./60166"))
 );
 const invertScaleString = new TranslatedString(
   "invert scale",
-  require("44352").t(null, void 0, require("94245"))
+  require("./44352").t(null, void 0, require("./94245"))
 );
 const removePaneString = new TranslatedString(
   "remove pane",
-  require("44352").t(null, void 0, require("47637"))
+  require("./44352").t(null, void 0, require("./47637"))
 );
 const applyAllChartPropertiesString = new TranslatedString(
   "apply all chart properties",
-  require("44352").t(null, void 0, require("64034"))
+  require("./44352").t(null, void 0, require("./64034"))
 );
 const setPriceScaleSelectionStrategyString = new TranslatedString(
   "set price scale selection strategy to {title}",
-  require("44352").t(null, void 0, require("69485"))
+  require("./44352").t(null, void 0, require("./69485"))
 );
 
 class ChartUndoModel extends ChartUndoModelBase {

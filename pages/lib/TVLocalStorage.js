@@ -1,12 +1,11 @@
+const { getLogger } = require("your-module-path"); // Replace 'your-module-path' with the actual module path
 
-const { getLogger } = require('your-module-path'); // Replace 'your-module-path' with the actual module path
-
-class TVLocalStorage {
+export class TVLocalStorage {
   constructor() {
     try {
       this.isAvailable = true;
       this.localStorage = window.localStorage;
-      this.localStorage.setItem('tvlocalstorage.available', 'true');
+      this.localStorage.setItem("tvlocalstorage.available", "true");
     } catch (e) {
       delete this.isAvailable;
       delete this.localStorage;
@@ -25,20 +24,30 @@ class TVLocalStorage {
         const key = this.key(i);
         longestValueKeys.push({
           key: key,
-          length: String(this.getItem(key)).length
+          length: String(this.getItem(key)).length,
         });
       }
       longestValueKeys.sort((a, b) => b.length - a.length);
       const topLongestValues = longestValueKeys.slice(0, maxKeys);
       longestValueKeys.sort((a, b) => b.key.length - a.key.length);
       const topLongestKeys = longestValueKeys.slice(0, maxKeys);
-      getLogger('TVLocalStorage').logNormal(`Total amount of keys in Local Storage: ${this.length}`);
-      getLogger('TVLocalStorage').logNormal(`Top ${maxKeys} keys with longest values: ${JSON.stringify(topLongestValues)}`);
-      getLogger('TVLocalStorage').logNormal(`Top ${maxKeys} longest key names: ${JSON.stringify(topLongestKeys)}`);
+      getLogger("TVLocalStorage").logNormal(
+        `Total amount of keys in Local Storage: ${this.length}`
+      );
+      getLogger("TVLocalStorage").logNormal(
+        `Top ${maxKeys} keys with longest values: ${JSON.stringify(
+          topLongestValues
+        )}`
+      );
+      getLogger("TVLocalStorage").logNormal(
+        `Top ${maxKeys} longest key names: ${JSON.stringify(topLongestKeys)}`
+      );
       try {
         if (navigator.storage && navigator.storage.estimate) {
           navigator.storage.estimate().then((estimate) => {
-            getLogger('TVLocalStorage').logNormal(`Storage estimate: ${JSON.stringify(estimate)}`);
+            getLogger("TVLocalStorage").logNormal(
+              `Storage estimate: ${JSON.stringify(estimate)}`
+            );
           });
         }
       } catch (e) {}
@@ -60,11 +69,17 @@ class TVLocalStorage {
   }
 
   key(index) {
-    return this.isAvailable ? this.localStorage.key(index) : Object.keys(this.localStorage)[index];
+    return this.isAvailable
+      ? this.localStorage.key(index)
+      : Object.keys(this.localStorage)[index];
   }
 
   getItem(key) {
-    return this.isAvailable ? this.localStorage.getItem(key) : this.localStorage[key] === undefined ? null : this.localStorage[key];
+    return this.isAvailable
+      ? this.localStorage.getItem(key)
+      : this.localStorage[key] === undefined
+      ? null
+      : this.localStorage[key];
   }
 
   setItem(key, value) {

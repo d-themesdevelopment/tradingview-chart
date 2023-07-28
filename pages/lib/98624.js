@@ -1,11 +1,21 @@
 "use strict";
 
-const { t } = require(44352);
-const { DefaultProperty, LineToolColorsProperty } = require(46100);
-const { LineDataSource, ensureNotNull, ensureDefined } = require(13087);
-const { SignpostPaneView } = require(59452);
-const { positionToCoordinate, positionVisualDirection, seriesPrice, seriesBasePosition, noDataBasePosition } = require(85573);
-const { changeLineStyle } = require(88348);
+const { t } = require(44352); // ! not correct
+const { DefaultProperty } = require("./46100");
+const { LineToolColorsProperty } = require("./68806");
+const { LineDataSource } = require("./13087");
+const { ensureNotNull, ensureDefined } = require("./assertions");
+// const { SignpostPaneView } = require(59452);
+
+const {
+  positionToCoordinate,
+  positionVisualDirection,
+  seriesPrice,
+  seriesBasePosition,
+  noDataBasePosition,
+} = require("./85573");
+
+const { changeLineStyle } = require("./88348");
 
 class SignpostPositionProperty extends ensureNotNull() {
   constructor(source) {
@@ -24,7 +34,7 @@ class SignpostPositionProperty extends ensureNotNull() {
     this.listeners().fire(this);
     this._source.syncMultichartState({
       pricesChanged: false,
-      indexesChanged: false
+      indexesChanged: false,
     });
   }
 }
@@ -51,16 +61,31 @@ class SignpostLineDataSource extends LineDataSource {
   }
 
   addPoint(time, price, index) {
-    return super.addPoint(this._updatePositionAndCorrectPoint(time), price, index);
+    return super.addPoint(
+      this._updatePositionAndCorrectPoint(time),
+      price,
+      index
+    );
   }
 
   setPoint(index, time, price) {
-    super.setPoint(index, this._updatePositionAndCorrectPoint(time, !this.isPhantom() && !this._allowChangeAnchorHorizontally()), price);
+    super.setPoint(
+      index,
+      this._updatePositionAndCorrectPoint(
+        time,
+        !this.isPhantom() && !this._allowChangeAnchorHorizontally()
+      ),
+      price
+    );
     this._syncPosition();
   }
 
   setPointAndChangeIndex(index, time, price) {
-    super.setPoint(index, this._updatePositionAndCorrectPoint(time, false), price);
+    super.setPoint(
+      index,
+      this._updatePositionAndCorrectPoint(time, false),
+      price
+    );
     this._syncPosition();
   }
 
@@ -80,13 +105,18 @@ class SignpostLineDataSource extends LineDataSource {
       const pointOffset = endMovingPoint.index - startMovingPoint.index;
       const priceScale = ensureNotNull(this.priceScale());
       const firstValue = ensure(this.ownerSource()?.firstValue());
-      const anchorPriceOffset = priceScale.priceToCoordinate(endMovingPoint.price, firstValue) - priceScale.priceToCoordinate(startMovingPoint.price, firstValue);
+      const anchorPriceOffset =
+        priceScale.priceToCoordinate(endMovingPoint.price, firstValue) -
+        priceScale.priceToCoordinate(startMovingPoint.price, firstValue);
       const newAnchorY = this._startMovingAnchorY + anchorPriceOffset;
-      const newAnchorPrice = priceScale.coordinateToPrice(newAnchorY, firstValue);
+      const newAnchorPrice = priceScale.coordinateToPrice(
+        newAnchorY,
+        firstValue
+      );
 
       this._updatePositionAndCorrectPoint({
         index: startPoint.index + pointOffset,
-        price: newAnchorPrice
+        price: newAnchorPrice,
       });
     }
 
@@ -121,25 +151,44 @@ class SignpostLineDataSource extends LineDataSource {
 
     const containerHeight = priceScale.height();
     let middlePriceCoordinate = containerHeight / 2;
-    const upwardDirection = point.price >= priceScale.coordinateToPrice(middlePriceCoordinate, firstValue) ? 1 : -1;
+    const upwardDirection =
+      point.price >=
+      priceScale.coordinateToPrice(middlePriceCoordinate, firstValue)
+        ? 1
+        : -1;
 
     const mainSeries = this._model.mainSeries();
     if (priceSource === mainSeries) {
-      const baseIndex = mainSeries.data().search(this._baseSeriesIndexForPoint(point));
+      const baseIndex = mainSeries
+        .data()
+        .search(this._baseSeriesIndexForPoint(point));
       if (baseIndex !== null) {
         const previousPrice = seriesPrice(mainSeries, baseIndex, -1);
         const nextPrice = seriesPrice(mainSeries, baseIndex, 1);
         const direction = point.price >= previousPrice ? 1 : -1;
-        middlePriceCoordinate = priceScale.priceToCoordinate(direction === 1 ? nextPrice : previousPrice, firstValue);
-        point.price = direction === 1 ? Math.max(nextPrice, point.price) : point.price;
+        middlePriceCoordinate = priceScale.priceToCoordinate(
+          direction === 1 ? nextPrice : previousPrice,
+          firstValue
+        );
+        point.price =
+          direction === 1 ? Math.max(nextPrice, point.price) : point.price;
       }
     }
 
-    const visualDirection = upwardDirection !== priceScale.isInverted() ? -1 : 1;
-    const containerOffset = upwardDirection === -1 ? middlePriceCoordinate : containerHeight - middlePriceCoordinate;
+    const visualDirection =
+      upwardDirection !== priceScale.isInverted() ? -1 : 1;
+    const containerOffset =
+      upwardDirection === -1
+        ? middlePriceCoordinate
+        : containerHeight - middlePriceCoordinate;
     const pointOffset = priceScale.priceToCoordinate(point.price, firstValue);
-    const distance = Math.min(containerHeight, Math.abs(pointOffset - middlePriceCoordinate));
-    const position = Math.max(0, Math.min(100, (100 * distance) / containerOffset)) * upwardDirection;
+    const distance = Math.min(
+      containerHeight,
+      Math.abs(pointOffset - middlePriceCoordinate)
+    );
+    const position =
+      Math.max(0, Math.min(100, (100 * distance) / containerOffset)) *
+      upwardDirection;
 
     this.properties().childs().position.setValue(position);
     return point;
@@ -154,13 +203,13 @@ class SignpostLineDataSource extends LineDataSource {
 
     if (linkKey !== null) {
       const state = {
-        position: this.properties().childs().position.value()
+        position: this.properties().childs().position.value(),
       };
 
       changeLineStyle({
         linkKey: linkKey,
         state: state,
-        model: this._model
+        model: this._model,
       });
     }
   }
@@ -200,19 +249,36 @@ class SignpostLineDataSource extends LineDataSource {
     }
 
     const position = customEvent.position();
-    const priceCoordinate = priceScale.priceToCoordinate(basePosition.price, firstValue);
+    const priceCoordinate = priceScale.priceToCoordinate(
+      basePosition.price,
+      firstValue
+    );
 
-    return positionToCoordinate(position, priceScale.height(), priceCoordinate, positionVisualDirection(position, priceScale.isInverted()));
+    return positionToCoordinate(
+      position,
+      priceScale.height(),
+      priceCoordinate,
+      positionVisualDirection(position, priceScale.isInverted())
+    );
   }
 }
 
 class LineToolSignpost extends SignpostLineDataSource {
   constructor(model, properties, options, priceScale) {
-    super(model, properties !== null && properties !== void 0 ? properties : LineToolSignpost.createProperties(), options, priceScale);
+    super(
+      model,
+      properties !== null && properties !== void 0
+        ? properties
+        : LineToolSignpost.createProperties(),
+      options,
+      priceScale
+    );
 
-    require(1583).then(require.bind(require, 26294)).then((SignpostPaneView) => {
-      this._setPaneViews([new SignpostPaneView(this, model)]);
-    });
+    require(1583)
+      .then(require.bind(require, 26294))
+      .then((SignpostPaneView) => {
+        this._setPaneViews([new SignpostPaneView(this, model)]);
+      });
   }
 
   pointsCount() {
@@ -226,7 +292,7 @@ class LineToolSignpost extends SignpostLineDataSource {
   customEvent() {
     return {
       index: () => this.points()[0]?.index ?? null,
-      position: () => this.properties().childs().position.value()
+      position: () => this.properties().childs().position.value(),
     };
   }
 
@@ -242,7 +308,7 @@ class LineToolSignpost extends SignpostLineDataSource {
     return {
       barOffset: 1,
       xCoordOffset: 0,
-      yCoordOffset: 0
+      yCoordOffset: 0,
     };
   }
 
@@ -266,14 +332,20 @@ class LineToolSignpost extends SignpostLineDataSource {
     const properties = new DefaultProperty("linetoolsignpost", index);
     this._configureProperties(properties);
     if (!properties.hasChild("text")) {
-      properties.addChild("text", new ensureNotNull()(t(null, undefined, require(37229))));
+      properties.addChild(
+        "text",
+        new ensureNotNull()(t(null, undefined, require(37229)))
+      );
     }
     if (!properties.hasChild("position")) {
       properties.addChild("position", new ensureNotNull()(50));
     }
     properties.addExclusion("text");
     properties.addExclusion("position");
-    properties.addChild("backgroundsColors", new LineToolColorsProperty([properties.childs().plateColor]));
+    properties.addChild(
+      "backgroundsColors",
+      new LineToolColorsProperty([properties.childs().plateColor])
+    );
     return properties;
   }
 
@@ -298,10 +370,12 @@ class LineToolSignpost extends SignpostLineDataSource {
       require(3753),
       require(5871),
       require(8167),
-      require(8537)
-    ]).then(require.bind(require, 18613)).then((viewModels) => {
-      return viewModels.SignpostDefinitionsViewModel;
-    });
+      require(8537),
+    ])
+      .then(require.bind(require, 18613))
+      .then((viewModels) => {
+        return viewModels.SignpostDefinitionsViewModel;
+      });
   }
 
   static _configureProperties(properties) {
