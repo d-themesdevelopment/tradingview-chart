@@ -1,24 +1,35 @@
-import { d, ensureNotNull } from '50151';
-import { Point } from '86441';
-import { DefaultProperty } from '46100';
-import { changeLineStyle } from '88348';
-import { LineDataSource } from '13087';
-import { clone } from '1722';
-import { ensure } from '58275';
-import { e } from '21905';
+import { ensureNotNull } from "./assertions";
+import { Point } from "86441"; // ! not correct
+import { DefaultProperty } from "./46100";
+import { changeLineStyle } from "./88348";
+import { LineDataSource } from "./13087";
+import { clone } from "./StrickTypeChecks";
+import { ensure } from "./assertions";
+import { e } from "./21905";
 
 class LineToolParallelChannel extends LineDataSource {
   constructor(source, points, properties, model) {
-    super(source, points || LineToolParallelChannel.createProperties(), properties, model);
-    this._alertCreationAvailable = new ensureNotNull(properties.alertCreationAvailable().value() && this._isTimePointsValid());
+    super(
+      source,
+      points || LineToolParallelChannel.createProperties(),
+      properties,
+      model
+    );
+    this._alertCreationAvailable = new ensureNotNull(
+      properties.alertCreationAvailable().value() && this._isTimePointsValid()
+    );
     this._priceAxisViews.push(this.createPriceAxisView(3));
     this._coordOffsetWhileMovingOrChanging = null;
     this._pendingPriceOffset = null;
-    e(1583).then(e.bind(e, 26013)).then(({ ParallelChannelPaneView }) => {
-      this._setPaneViews([new ParallelChannelPaneView(this, this._model)]);
-    });
+    e(1583)
+      .then(e.bind(e, 26013))
+      .then(({ ParallelChannelPaneView }) => {
+        this._setPaneViews([new ParallelChannelPaneView(this, this._model)]);
+      });
     this._normalizedPointsChanged.subscribe(this, () => {
-      this._alertCreationAvailable.setValue(properties.alertCreationAvailable().value() && this._isTimePointsValid());
+      this._alertCreationAvailable.setValue(
+        properties.alertCreationAvailable().value() && this._isTimePointsValid()
+      );
     });
   }
 
@@ -63,13 +74,23 @@ class LineToolParallelChannel extends LineDataSource {
   }
 
   restoreExternalPoints(state, priceScale, regenerateId) {
-    const screenPoints = regenerateId ? state.points : this._timePoint.map((point, index) => ({
-      price: point.price,
-      offset: state.points[index].offset,
-      time_t: state.points[index].time_t,
-    }));
-    if (super.restoreExternalPoints({ ...state, points: screenPoints }, priceScale)) {
-      if (priceScale.pricesChanged && this._points.length === screenPoints.length) {
+    const screenPoints = regenerateId
+      ? state.points
+      : this._timePoint.map((point, index) => ({
+          price: point.price,
+          offset: state.points[index].offset,
+          time_t: state.points[index].time_t,
+        }));
+    if (
+      super.restoreExternalPoints(
+        { ...state, points: screenPoints },
+        priceScale
+      )
+    ) {
+      if (
+        priceScale.pricesChanged &&
+        this._points.length === screenPoints.length
+      ) {
         for (let i = 0; i < screenPoints.length; i++) {
           this._points[i].price = screenPoints[i].price;
         }
@@ -79,7 +100,9 @@ class LineToolParallelChannel extends LineDataSource {
 
   restorePoints(state, priceScale, regenerateId) {
     super.restorePoints(state, priceScale, regenerateId);
-    this._alertCreationAvailable.setValue(super.alertCreationAvailable().value() && this._isTimePointsValid());
+    this._alertCreationAvailable.setValue(
+      super.alertCreationAvailable().value() && this._isTimePointsValid()
+    );
   }
 
   setPoint(index, point, override, fromAlertCreation) {
@@ -87,27 +110,42 @@ class LineToolParallelChannel extends LineDataSource {
       return;
     }
     this._snapPointBeforeChange(index, point, override);
-    const pointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[0]));
-    const lastPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[1]));
+    const pointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[0])
+    );
+    const lastPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[1])
+    );
     const newPointToScreen = ensureNotNull(this.pointToScreenPoint(point));
-    const coordOffsetWhileMovingOrChanging = ensureNotNull(this._coordOffsetWhileMovingOrChanging);
+    const coordOffsetWhileMovingOrChanging = ensureNotNull(
+      this._coordOffsetWhileMovingOrChanging
+    );
     const priceScale = ensure(this.priceScale());
     const firstValue = ensureNotNull(this.ownerSource()).firstValue();
     switch (index) {
       case 0:
         super.setPoint(index, point);
-        this._points[2].price = priceScale.coordinateToPrice(newPointToScreen.y + coordOffsetWhileMovingOrChanging, firstValue);
+        this._points[2].price = priceScale.coordinateToPrice(
+          newPointToScreen.y + coordOffsetWhileMovingOrChanging,
+          firstValue
+        );
         break;
       case 1:
         super.setPoint(index, point);
         break;
       case 2:
         super.setPoint(index, point);
-        this._points[0].price = priceScale.coordinateToPrice(newPointToScreen.y - coordOffsetWhileMovingOrChanging, firstValue);
+        this._points[0].price = priceScale.coordinateToPrice(
+          newPointToScreen.y - coordOffsetWhileMovingOrChanging,
+          firstValue
+        );
         this._points[0].index = point.index;
         break;
       case 3:
-        this._points[1].price = priceScale.coordinateToPrice(newPointToScreen.y - coordOffsetWhileMovingOrChanging, firstValue);
+        this._points[1].price = priceScale.coordinateToPrice(
+          newPointToScreen.y - coordOffsetWhileMovingOrChanging,
+          firstValue
+        );
         this._points[1].index = point.index;
         break;
       case 4: {
@@ -115,7 +153,10 @@ class LineToolParallelChannel extends LineDataSource {
         const t = (newPointToScreen.x - pointToScreen.x) / lineVector.x;
         const intersectPoint = pointToScreen.addScaled(lineVector, t);
         const offsetY = newPointToScreen.y - intersectPoint.y;
-        this._points[2].price = priceScale.coordinateToPrice(pointToScreen.y + offsetY, firstValue);
+        this._points[2].price = priceScale.coordinateToPrice(
+          pointToScreen.y + offsetY,
+          firstValue
+        );
         break;
       }
       case 5: {
@@ -123,8 +164,14 @@ class LineToolParallelChannel extends LineDataSource {
         const t = (newPointToScreen.x - pointToScreen.x) / lineVector.x;
         const intersectPoint = pointToScreen.addScaled(lineVector, t);
         const offsetY = newPointToScreen.y - intersectPoint.y;
-        this._points[0].price = priceScale.coordinateToPrice(pointToScreen.y + offsetY, firstValue);
-        this._points[1].price = priceScale.coordinateToPrice(lastPointToScreen.y + offsetY, firstValue);
+        this._points[0].price = priceScale.coordinateToPrice(
+          pointToScreen.y + offsetY,
+          firstValue
+        );
+        this._points[1].price = priceScale.coordinateToPrice(
+          lastPointToScreen.y + offsetY,
+          firstValue
+        );
         break;
       }
     }
@@ -169,9 +216,15 @@ class LineToolParallelChannel extends LineDataSource {
     if (index < 3) {
       return super.getPoint(index);
     }
-    const firstPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[0]));
-    const lastPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[1]));
-    const thirdPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[2]));
+    const firstPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[0])
+    );
+    const lastPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[1])
+    );
+    const thirdPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[2])
+    );
     if (!firstPointToScreen || !lastPointToScreen || !thirdPointToScreen) {
       return null;
     }
@@ -188,7 +241,9 @@ class LineToolParallelChannel extends LineDataSource {
         return this.screenPointToPoint(middlePoint);
       }
       case 5: {
-        const middlePoint = firstPointToScreen.add(lastPointToScreen).scaled(0.5);
+        const middlePoint = firstPointToScreen
+          .add(lastPointToScreen)
+          .scaled(0.5);
         return this.screenPointToPoint(middlePoint);
       }
     }
@@ -235,7 +290,10 @@ class LineToolParallelChannel extends LineDataSource {
   }
 
   static createProperties(properties) {
-    const defaultProperties = new DefaultProperty("linetoolparallelchannel", properties);
+    const defaultProperties = new DefaultProperty(
+      "linetoolparallelchannel",
+      properties
+    );
     this._configureProperties(defaultProperties);
     return defaultProperties;
   }
@@ -277,18 +335,35 @@ class LineToolParallelChannel extends LineDataSource {
     const extendLeft = this.properties().childs().extendLeft.value();
     const extendRight = this.properties().childs().extendRight.value();
     return [
-      this._linePointsToAlertPlot(upperPoints, "Upper", extendLeft, extendRight),
-      this._linePointsToAlertPlot(lowerPoints, "Lower", extendLeft, extendRight),
+      this._linePointsToAlertPlot(
+        upperPoints,
+        "Upper",
+        extendLeft,
+        extendRight
+      ),
+      this._linePointsToAlertPlot(
+        lowerPoints,
+        "Lower",
+        extendLeft,
+        extendRight
+      ),
     ].filter((plot) => plot !== null);
   }
 
   _correctLastPoint(point) {
-    if (this._points.length < 2 || this._points[1].index === this._points[0].index) {
+    if (
+      this._points.length < 2 ||
+      this._points[1].index === this._points[0].index
+    ) {
       return point;
     }
     const newPointToScreen = ensureNotNull(this.pointToScreenPoint(point));
-    const lastPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[1]));
-    const firstPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[0]));
+    const lastPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[1])
+    );
+    const firstPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[0])
+    );
     const lineVector = lastPointToScreen.subtract(firstPointToScreen);
     const t = (newPointToScreen.x - firstPointToScreen.x) / lineVector.x;
     const intersectPoint = firstPointToScreen.addScaled(lineVector, t);
@@ -303,9 +378,15 @@ class LineToolParallelChannel extends LineDataSource {
 
   _axisPoints() {
     const points = this.points();
-    const firstPointToScreen = this._points[0] ? this.pointToScreenPoint(this._points[0]) : null;
-    const lastPointToScreen = this._points[1] ? this.pointToScreenPoint(this._points[1]) : null;
-    const thirdPointToScreen = this._points[2] ? this.pointToScreenPoint(this._points[2]) : null;
+    const firstPointToScreen = this._points[0]
+      ? this.pointToScreenPoint(this._points[0])
+      : null;
+    const lastPointToScreen = this._points[1]
+      ? this.pointToScreenPoint(this._points[1])
+      : null;
+    const thirdPointToScreen = this._points[2]
+      ? this.pointToScreenPoint(this._points[2])
+      : null;
     if (firstPointToScreen && lastPointToScreen && thirdPointToScreen) {
       const offsetY = lastPointToScreen.y - firstPointToScreen.y;
       const newPointWithOffset = thirdPointToScreen.add(new Point(0, offsetY));
@@ -316,8 +397,12 @@ class LineToolParallelChannel extends LineDataSource {
 
   _convertLastPointTo3rdPoint(point) {
     const newPointToScreen = ensureNotNull(this.pointToScreenPoint(point));
-    const lastPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[1]));
-    const firstPointToScreen = ensureNotNull(this.pointToScreenPoint(this._points[0]));
+    const lastPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[1])
+    );
+    const firstPointToScreen = ensureNotNull(
+      this.pointToScreenPoint(this._points[0])
+    );
     const lineVector = lastPointToScreen.subtract(firstPointToScreen);
     const t = (newPointToScreen.x - firstPointToScreen.x) / lineVector.x;
     const intersectPoint = firstPointToScreen.addScaled(lineVector, t);
@@ -329,7 +414,9 @@ class LineToolParallelChannel extends LineDataSource {
   _findPixelsHeight() {
     const thirdPointToScreen = this.pointToScreenPoint(this._points[2]);
     const firstPointToScreen = this.pointToScreenPoint(this._points[0]);
-    return thirdPointToScreen && firstPointToScreen ? thirdPointToScreen.y - firstPointToScreen.y : null;
+    return thirdPointToScreen && firstPointToScreen
+      ? thirdPointToScreen.y - firstPointToScreen.y
+      : null;
   }
 
   _applyPendingPriceOffset() {
@@ -344,13 +431,25 @@ class LineToolParallelChannel extends LineDataSource {
     }
     const newPointPrice1 = priceOffset + this._points[0].price;
     const newPointPrice2 = priceOffset + this._points[1].price;
-    const newPointPriceMiddle = 0.5 * (newPointPrice1 + newPointPrice2) - priceOffset;
+    const newPointPriceMiddle =
+      0.5 * (newPointPrice1 + newPointPrice2) - priceOffset;
     const newPointPrice = 0.5 * (newPointPrice1 + newPointPrice2);
-    const firstPointCoordinate = priceScale.priceToCoordinate(newPointPriceMiddle, firstValue);
-    const secondPointCoordinate = priceScale.priceToCoordinate(newPointPrice, firstValue);
+    const firstPointCoordinate = priceScale.priceToCoordinate(
+      newPointPriceMiddle,
+      firstValue
+    );
+    const secondPointCoordinate = priceScale.priceToCoordinate(
+      newPointPrice,
+      firstValue
+    );
     const coordinateOffset = secondPointCoordinate - firstPointCoordinate;
-    const newPointPriceCoordinate = priceScale.priceToCoordinate(this._points[0].price, firstValue) + coordinateOffset;
-    const newPointPriceValue = priceScale.coordinateToPrice(newPointPriceCoordinate, firstValue);
+    const newPointPriceCoordinate =
+      priceScale.priceToCoordinate(this._points[0].price, firstValue) +
+      coordinateOffset;
+    const newPointPriceValue = priceScale.coordinateToPrice(
+      newPointPriceCoordinate,
+      firstValue
+    );
     this._points[2].price = newPointPriceValue;
     this._timePoint[2].price = newPointPriceValue;
     this._points[2].index = this._points[0].index;

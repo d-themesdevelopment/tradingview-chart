@@ -1,13 +1,23 @@
-import { AbstractFilledAreaPaneView } from '50151';
-import { generateColor } from '87095';
-import { clamp, ensureNotNull } from '37160';
-import { AreaBackgroundRenderer, AreaBackgroundItemsGroup, AreaBackgroundItem, CachedMap } from '82386';
-import { PriceDataSource } from '86094';
-import { LevelsProperty } from '45197';
-import { ObjectValuesCache, CachedContainer } from '77173';
+import { AbstractFilledAreaPaneView } from "./50151";
+import { generateColor } from "./87095";
+import { ensureNotNull } from "./assertions";
+
+import { clamp } from "./assertions"; // ! not correct
+
+import {
+  AreaBackgroundRenderer,
+  AreaBackgroundItemsGroup,
+  AreaBackgroundItem,
+  CachedMap,
+} from "./82386";
+import { PriceDataSource } from "./PriceDataSource";
+// import { LevelsProperty } from '45197';
+import { ObjectValuesCache, CachedContainer } from "./CachedContainer";
 
 function getColorKey(color) {
-  return color.type === 0 ? `${color.color}` : `${color.color1}:${color.color2}:${color.value1}:${color.value2}`;
+  return color.type === 0
+    ? `${color.color}`
+    : `${color.color1}:${color.color2}:${color.value1}:${color.value2}`;
 }
 
 class StudyValuesCache extends ObjectValuesCache {
@@ -89,8 +99,16 @@ class AbstractFilledAreaPaneView {
     const plottableRange = this._source.data().plottableRange();
     const firstBar = range.firstBar() + Math.min(0, plotOffset) - 1;
     const lastBar = range.lastBar() - plotOffset + 1;
-    const plottableLeft = plottableRange.search(firstBar, PriceDataSource.PlotRowSearchMode.NearestLeft, this._plotIndex1());
-    const plottableRight = plottableRange.search(lastBar, PriceDataSource.PlotRowSearchMode.NearestRight, this._plotIndex1());
+    const plottableLeft = plottableRange.search(
+      firstBar,
+      PriceDataSource.PlotRowSearchMode.NearestLeft,
+      this._plotIndex1()
+    );
+    const plottableRight = plottableRange.search(
+      lastBar,
+      PriceDataSource.PlotRowSearchMode.NearestRight,
+      this._plotIndex1()
+    );
 
     const validLeft = ensureNotNull(plottableLeft).index;
     const validRight = ensureNotNull(plottableRight).index;
@@ -98,18 +116,27 @@ class AbstractFilledAreaPaneView {
     const gapRight = range.lastBar() + 1;
 
     let startGap = Infinity;
-    if (this._colorPlotIndex !== null && (plottableLeft !== null || plottableRight !== null)) {
-      const gapBar = plottableRange.search(Math.min(gapLeft, gapRight) - 1, PriceDataSource.PlotRowSearchMode.NearestLeft);
+    if (
+      this._colorPlotIndex !== null &&
+      (plottableLeft !== null || plottableRight !== null)
+    ) {
+      const gapBar = plottableRange.search(
+        Math.min(gapLeft, gapRight) - 1,
+        PriceDataSource.PlotRowSearchMode.NearestLeft
+      );
       if (gapBar !== null) {
         startGap = gapBar.index;
       }
     }
 
-    return [Math.min(gapLeft, gapRight, startGap), Math.max(validLeft, validRight)];
+    return [
+      Math.min(gapLeft, gapRight, startGap),
+      Math.max(validLeft, validRight),
+    ];
   }
 
   _plotNames() {
-    return this._source.metaInfo().plots.map(plot => plot.id);
+    return this._source.metaInfo().plots.map((plot) => plot.id);
   }
 
   _plotIndex1() {
@@ -127,7 +154,7 @@ class AbstractFilledAreaPaneView {
   }
 
   _updateImpl() {
-    if (this._areaRenderer.setData(null), !this._visible()) {
+    if ((this._areaRenderer.setData(null), !this._visible())) {
       return;
     }
 
@@ -147,12 +174,18 @@ class AbstractFilledAreaPaneView {
     }
 
     if (this._isHlineFill) {
-      const bandA = this._source.properties().bands[ensureNotNull(this._bandAKey)];
-      const bandB = this._source.properties().bands[ensureNotNull(this._
-
-bandBKey)];
-      this._level1 = priceScale.priceToCoordinate(bandA.value.value(), firstValue);
-      this._level2 = priceScale.priceToCoordinate(bandB.value.value(), firstValue);
+      const bandA =
+        this._source.properties().bands[ensureNotNull(this._bandAKey)];
+      const bandB =
+        this._source.properties().bands[ensureNotNull(this._bandBKey)];
+      this._level1 = priceScale.priceToCoordinate(
+        bandA.value.value(),
+        firstValue
+      );
+      this._level2 = priceScale.priceToCoordinate(
+        bandB.value.value(),
+        firstValue
+      );
     }
 
     const visibleRange = timeScale.visibleBarsStrictRange();
@@ -205,7 +238,10 @@ bandBKey)];
       const sourceIndex1 = index + plotOffset;
       const sourceIndex2 = index + plotOffset;
 
-      if (sourceIndex1 === sourceIndex2 && studyValuesCache.isValidIndex(sourceIndex1)) {
+      if (
+        sourceIndex1 === sourceIndex2 &&
+        studyValuesCache.isValidIndex(sourceIndex1)
+      ) {
         const cacheObject = studyValuesCache.at(sourceIndex1);
         cacheObject.plot1Value = value1;
         cacheObject.plot2Value = value2;
@@ -227,14 +263,27 @@ bandBKey)];
             const colorObject = colorValuesCache.at(sourceIndex);
             cacheObject.colorValue = colorObject;
             colorObject.type = 0;
-            colorObject.colorIndexOrRgba = values[colorPlotIndex.colorIndexOrRgba + 1];
+            colorObject.colorIndexOrRgba =
+              values[colorPlotIndex.colorIndexOrRgba + 1];
           } else {
             const colorObject = colorValuesCache.at(sourceIndex);
             cacheObject.colorValue = colorObject;
-            colorObject.colorIndexOrRgba1 = colorPlotIndex.colorIndexOrRgba1 !== undefined ? values[colorPlotIndex.colorIndexOrRgba1 + 1] : undefined;
-            colorObject.colorIndexOrRgba2 = colorPlotIndex.colorIndexOrRgba2 !== undefined ? values[colorPlotIndex.colorIndexOrRgba2 + 1] : undefined;
-            colorObject.value1 = colorPlotIndex.valueIndex1 !== undefined ? values[colorPlotIndex.valueIndex1 + 1] : undefined;
-            colorObject.value2 = colorPlotIndex.valueIndex2 !== undefined ? values[colorPlotIndex.valueIndex2 + 1] : undefined;
+            colorObject.colorIndexOrRgba1 =
+              colorPlotIndex.colorIndexOrRgba1 !== undefined
+                ? values[colorPlotIndex.colorIndexOrRgba1 + 1]
+                : undefined;
+            colorObject.colorIndexOrRgba2 =
+              colorPlotIndex.colorIndexOrRgba2 !== undefined
+                ? values[colorPlotIndex.colorIndexOrRgba2 + 1]
+                : undefined;
+            colorObject.value1 =
+              colorPlotIndex.valueIndex1 !== undefined
+                ? values[colorPlotIndex.valueIndex1 + 1]
+                : undefined;
+            colorObject.value2 =
+              colorPlotIndex.valueIndex2 !== undefined
+                ? values[colorPlotIndex.valueIndex2 + 1]
+                : undefined;
           }
         }
       }
@@ -251,15 +300,20 @@ bandBKey)];
     if (commonColor.type === 1) {
       commonColor.value1 = getColorKey(commonColor.value1);
       commonColor.value2 = getColorKey(commonColor.value2);
-      commonColor.color1 = commonColor.color1 && generateColor(commonColor.color1);
-      commonColor.color2 = commonColor.color2 && generateColor(commonColor.color2);
+      commonColor.color1 =
+        commonColor.color1 && generateColor(commonColor.color1);
+      commonColor.color2 =
+        commonColor.color2 && generateColor(commonColor.color2);
     } else {
       commonColor.color = generateColor(commonColor.color);
     }
 
     const timePointsLength = timePoints.length();
     for (let i = 0; i < timePointsLength; i++) {
-      if (!this._fillGaps && (previousColor === null || currentColor === null)) {
+      if (
+        !this._fillGaps &&
+        (previousColor === null || currentColor === null)
+      ) {
         const previousIndex = i - 1;
         timePoints.push(previousIndex);
         points1.push(NaN);
@@ -279,7 +333,10 @@ bandBKey)];
       if (this._fillGaps ? hasLevel1 || hasLevel2 : hasLevel1 && hasLevel2) {
         const colorObject = colors ? colors.at(i) || commonColor : commonColor;
 
-        if (!(previousColor === null || previousColor === colorObject) || previousArea === null) {
+        if (
+          !(previousColor === null || previousColor === colorObject) ||
+          previousArea === null
+        ) {
           if (previousArea !== null) {
             if (hasLevel1) {
               previousArea.addPoints1Point(timePoint, level1);
@@ -295,9 +352,7 @@ bandBKey)];
           previousColor = colorObject;
           const key = getColorKey(colorObject);
           const colorAreas = this._colorAreas;
-          let areaGroup =
-
- null;
+          let areaGroup = null;
           if (colorAreas.has(key)) {
             areaGroup = colorAreas.get(key);
           } else {
@@ -324,13 +379,27 @@ bandBKey)];
 
     const data = {
       barSpacing: this._model.timeScale().barSpacing(),
-      colorAreas: this._getFilledAreas(timePoints, points1, points2, colors, priceScale.priceToCoordinate, generateColor),
+      colorAreas: this._getFilledAreas(
+        timePoints,
+        points1,
+        points2,
+        colors,
+        priceScale.priceToCoordinate,
+        generateColor
+      ),
     };
 
     this._areaRenderer.setData(data);
   }
 
-  _getFilledAreas(timePoints, points1, points2, colors, priceToCoordinate, generateColor) {
+  _getFilledAreas(
+    timePoints,
+    points1,
+    points2,
+    colors,
+    priceToCoordinate,
+    generateColor
+  ) {
     const isHlineFill = this._isHlineFill;
     if (!isHlineFill && (points1.length() === 0 || points2.length() === 0)) {
       return new CachedMap();
@@ -345,8 +414,10 @@ bandBKey)];
     if (commonColor.type === 1) {
       commonColor.value1 = priceToCoordinate(commonColor.value1);
       commonColor.value2 = priceToCoordinate(commonColor.value2);
-      commonColor.color1 = commonColor.color1 && generateColor(commonColor.color1);
-      commonColor.color2 = commonColor.color2 && generateColor(commonColor.color2);
+      commonColor.color1 =
+        commonColor.color1 && generateColor(commonColor.color1);
+      commonColor.color2 =
+        commonColor.color2 && generateColor(commonColor.color2);
     } else {
       commonColor.color = generateColor(commonColor.color);
     }
@@ -363,7 +434,10 @@ bandBKey)];
       if (this._fillGaps ? hasLevel1 || hasLevel2 : hasLevel1 && hasLevel2) {
         const colorObject = colors ? colors.at(i) || commonColor : commonColor;
 
-        if (!(previousColor === null || previousColor === colorObject) || previousArea === null) {
+        if (
+          !(previousColor === null || previousColor === colorObject) ||
+          previousArea === null
+        ) {
           if (previousArea !== null) {
             if (hasLevel1) {
               previousArea.addPoints1Point(timePoint, level1);
@@ -378,7 +452,9 @@ bandBKey)];
 
           previousColor = colorObject;
           const key = getColorKey(colorObject);
-          const areaGroup = colorAreas.has(key) ? colorAreas.get(key) : new AreaBackgroundItemsGroup(colorObject);
+          const areaGroup = colorAreas.has(key)
+            ? colorAreas.get(key)
+            : new AreaBackgroundItemsGroup(colorObject);
           previousArea = areaGroup.newItem() || new AreaBackgroundItem();
           areaGroup.push(previousArea);
         }
