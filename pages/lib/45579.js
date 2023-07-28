@@ -1,15 +1,20 @@
-import { DefaultProperty } from 'propertyUtils';
-import { LineDataSource } from 'dataSource';
-import { LineToolColorsProperty } from 'lineToolProperties';
-import { LineToolTrianglePatternPaneView } from 'lineToolViews';
+import { DefaultProperty } from "propertyUtils";
+import { LineDataSource } from "dataSource";
+import { LineToolColorsProperty } from "lineToolProperties";
+import { LineToolTrianglePatternPaneView } from "lineToolViews";
 
 class LineToolTrianglePattern extends LineDataSource {
   constructor(chartModel, properties, options, renderer) {
-    const defaultProperties = properties || LineToolTrianglePattern.createProperties();
+    const defaultProperties =
+      properties || LineToolTrianglePattern.createProperties();
     super(chartModel, defaultProperties, options, renderer);
-    import('./LineToolTrianglePatternPaneView').then(({ LineToolTrianglePatternPaneView }) => {
-      this._setPaneViews([new LineToolTrianglePatternPaneView(this, chartModel)]);
-    });
+    import("./LineToolTrianglePatternPaneView").then(
+      ({ LineToolTrianglePatternPaneView }) => {
+        this._setPaneViews([
+          new LineToolTrianglePatternPaneView(this, chartModel),
+        ]);
+      }
+    );
   }
 
   pointsCount() {
@@ -17,20 +22,32 @@ class LineToolTrianglePattern extends LineDataSource {
   }
 
   name() {
-    return 'Triangle Pattern';
+    return "Triangle Pattern";
   }
 
   static createProperties(properties) {
-    const defaultProp = new DefaultProperty('linetooltrianglepattern', properties);
+    const defaultProp = new DefaultProperty(
+      "linetooltrianglepattern",
+      properties
+    );
     this._configureProperties(defaultProp);
     return defaultProp;
   }
 
   static _configureProperties(properties) {
     super._configureProperties(properties);
-    properties.addChild('linesColors', new LineToolColorsProperty([properties.childs().color]));
-    properties.addChild('textsColors', new LineToolColorsProperty([properties.childs().textcolor]));
-    properties.addChild('backgroundsColors', new LineToolColorsProperty([properties.childs().backgroundColor]));
+    properties.addChild(
+      "linesColors",
+      new LineToolColorsProperty([properties.childs().color])
+    );
+    properties.addChild(
+      "textsColors",
+      new LineToolColorsProperty([properties.childs().textcolor])
+    );
+    properties.addChild(
+      "backgroundsColors",
+      new LineToolColorsProperty([properties.childs().backgroundColor])
+    );
   }
 }
 

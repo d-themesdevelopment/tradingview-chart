@@ -1,9 +1,9 @@
-import { ensureNotNull, ensureDefined } from 'utils/assertions';
-import { t } from 'helpers/i18n';
-import { isStudy } from 'models/Study';
-import { scaleRatio } from 'models/Panes/PriceScale';
-import { createPriceScaleSelectionStrategy } from './PriceScaleSelectionStrategyFactory';
-import { PriceScalePosition } from 'models/Panes/PriceScalePosition';
+import { ensureNotNull, ensureDefined } from "./assertions";
+import { t } from "helpers/i18n"; // ! not correct
+import { isStudy } from "models/Study"; // ! not correct
+// import { scaleRatio } from "models/Panes/PriceScale";
+import { createPriceScaleSelectionStrategy } from "./49535";
+import { PriceScalePosition } from "models/Panes/PriceScalePosition"; // ! not correct
 
 class PriceScaleSelectionStrategy {
   constructor(metaInfo) {
@@ -17,21 +17,36 @@ class PriceScaleSelectionStrategy {
 
   findSuitableScale(pane, source, targetPriceScalePosition, sourceStudy) {
     if (targetPriceScalePosition !== undefined) {
-      return this._tryToGetDesiredPriceScale(pane, source, targetPriceScalePosition, sourceStudy);
+      return this._tryToGetDesiredPriceScale(
+        pane,
+        source,
+        targetPriceScalePosition,
+        sourceStudy
+      );
     }
 
     if (isStudy(source)) {
       const sourceMetaInfo = source.metaInfo();
-      if (sourceMetaInfo.shortId === 'Volume' && pane.containsMainSeries()) {
+      if (sourceMetaInfo.shortId === "Volume" && pane.containsMainSeries()) {
         return pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
       }
 
-      const desiredPriceScalePosition = sourceMetaInfo.desiredPriceScalePosition();
+      const desiredPriceScalePosition =
+        sourceMetaInfo.desiredPriceScalePosition();
       if (desiredPriceScalePosition !== null) {
-        return this._tryToGetDesiredPriceScale(pane, source, desiredPriceScalePosition, sourceStudy);
+        return this._tryToGetDesiredPriceScale(
+          pane,
+          source,
+          desiredPriceScalePosition,
+          sourceStudy
+        );
       }
 
-      if (sourceStudy !== undefined && (isStudy(sourceStudy) || pane.isMainPane()) && sourceMetaInfo.is_price_study) {
+      if (
+        sourceStudy !== undefined &&
+        (isStudy(sourceStudy) || pane.isMainPane()) &&
+        sourceMetaInfo.is_price_study
+      ) {
         return this._getPriceScaleTheSameAsForSource(sourceStudy, pane);
       }
     }
@@ -40,9 +55,14 @@ class PriceScaleSelectionStrategy {
     if (isStudy(source)) {
       const groupingKey = source.metaInfo().groupingKey;
       if (groupingKey !== undefined) {
-        const nonOverlayStudyWithGroupingKey = pane.model().findNonOverlayStudyWithGroupingKey(groupingKey, pane);
+        const nonOverlayStudyWithGroupingKey = pane
+          .model()
+          .findNonOverlayStudyWithGroupingKey(groupingKey, pane);
         if (nonOverlayStudyWithGroupingKey !== null) {
-          return this._getPriceScaleTheSameAsForSource(nonOverlayStudyWithGroupingKey.study, nonOverlayStudyWithGroupingKey.pane);
+          return this._getPriceScaleTheSameAsForSource(
+            nonOverlayStudyWithGroupingKey.study,
+            nonOverlayStudyWithGroupingKey.pane
+          );
         }
       }
       isPriceStudy = Boolean(source.metaInfo().is_price_study);
@@ -61,25 +81,40 @@ class PriceScaleSelectionStrategy {
   }
 
   canCreateNewPriceScale(pane) {
-    return pane.leftPriceScales().length + pane.rightPriceScales().length < this._priceScalesLimit;
+    return (
+      pane.leftPriceScales().length + pane.rightPriceScales().length <
+      this._priceScalesLimit
+    );
   }
 
   _getPriceScaleTheSameAsForSource(source, targetPane) {
-    return targetPane.isOverlay(source) ? targetPane.createPriceScaleAtPosition(PriceScalePosition.Overlay) : ensureNotNull(source.priceScale());
+    return targetPane.isOverlay(source)
+      ? targetPane.createPriceScaleAtPosition(PriceScalePosition.Overlay)
+      : ensureNotNull(source.priceScale());
   }
 
   _priceScaleIsPrice(priceScale, model) {
     const mainSource = priceScale.mainSource();
-    return !!mainSource && (mainSource === model.mainSeries() || (isStudy(mainSource) && Boolean(mainSource.metaInfo().is_price_study)));
+    return (
+      !!mainSource &&
+      (mainSource === model.mainSeries() ||
+        (isStudy(mainSource) && Boolean(mainSource.metaInfo().is_price_study)))
+    );
   }
 
   _findFirstScaleForPriceStudy(pane) {
     const model = pane.model();
     for (let i = 0; i < this._priceScalesLimit; i++) {
-      if (pane.rightPriceScales().length > i && this._priceScaleIsPrice(pane.rightPriceScales()[i], model)) {
+      if (
+        pane.rightPriceScales().length > i &&
+        this._priceScaleIsPrice(pane.rightPriceScales()[i], model)
+      ) {
         return pane.rightPriceScales()[i];
       }
-      if (pane.leftPriceScales().length > i && this._priceScaleIsPrice(pane.leftPriceScales()[i], model)) {
+      if (
+        pane.leftPriceScales().length > i &&
+        this._priceScaleIsPrice(pane.leftPriceScales()[i], model)
+      ) {
         return pane.leftPriceScales()[i];
       }
     }
@@ -92,14 +127,27 @@ class PriceScaleSelectionStrategy {
     }
   }
 
-  _tryToGetDesiredPriceScale(pane, source, targetPriceScalePosition, sourceStudy) {
+  _tryToGetDesiredPriceScale(
+    pane,
+    source,
+    targetPriceScalePosition,
+    sourceStudy
+  ) {
     switch (targetPriceScalePosition) {
       case PriceScalePosition.Left:
-        return this.canCreateNewPriceScale(pane) ? pane.createPriceScaleAtPosition(PriceScalePosition.Left) : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
+        return this.canCreateNewPriceScale(pane)
+          ? pane.createPriceScaleAtPosition(PriceScalePosition.Left)
+          : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
       case PriceScalePosition.Right:
-        return this.canCreateNewPriceScale(pane) ? pane.createPriceScaleAtPosition(PriceScalePosition.Right) : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
+        return this.canCreateNewPriceScale(pane)
+          ? pane.createPriceScaleAtPosition(PriceScalePosition.Right)
+          : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
       case PriceScalePosition.AsSeries:
-        return sourceStudy !== undefined ? ensureNotNull(sourceStudy.priceScale()) : pane.isMainPane() ? ensureNotNull(ensureNotNull(pane.mainDataSource()).priceScale()) : this.createNewPriceScaleIfPossible(pane);
+        return sourceStudy !== undefined
+          ? ensureNotNull(sourceStudy.priceScale())
+          : pane.isMainPane()
+          ? ensureNotNull(ensureNotNull(pane.mainDataSource()).priceScale())
+          : this.createNewPriceScaleIfPossible(pane);
       case PriceScalePosition.Overlay:
         return pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
     }
@@ -108,8 +156,8 @@ class PriceScaleSelectionStrategy {
 
 const allPriceScaleSelectionStrategyInfo = [
   {
-    name: 'left',
-    title: t(null, undefined, 'Left'),
+    name: "left",
+    title: t(null, undefined, "Left"),
     ctor: class extends PriceScaleSelectionStrategy {
       constructor(metaInfo) {
         super(metaInfo);
@@ -117,17 +165,28 @@ const allPriceScaleSelectionStrategyInfo = [
 
       apply(pane) {
         const model = pane.model();
-        pane.rightPriceScales().slice(0).forEach(priceScale => pane.movePriceScale(priceScale, PriceScalePosition.Left, this._targetPriceScaleIndex(priceScale, model)));
+        pane
+          .rightPriceScales()
+          .slice(0)
+          .forEach((priceScale) =>
+            pane.movePriceScale(
+              priceScale,
+              PriceScalePosition.Left,
+              this._targetPriceScaleIndex(priceScale, model)
+            )
+          );
       }
 
       createNewPriceScaleIfPossible(pane) {
-        return this.canCreateNewPriceScale(pane) ? pane.createPriceScaleAtPosition(PriceScalePosition.Left) : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
+        return this.canCreateNewPriceScale(pane)
+          ? pane.createPriceScaleAtPosition(PriceScalePosition.Left)
+          : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
       }
     },
   },
   {
-    name: 'right',
-    title: t(null, undefined, 'Right'),
+    name: "right",
+    title: t(null, undefined, "Right"),
     ctor: class extends PriceScaleSelectionStrategy {
       constructor(metaInfo) {
         super(metaInfo);
@@ -135,19 +194,28 @@ const allPriceScaleSelectionStrategyInfo = [
 
       apply(pane) {
         const model = pane.model();
-        pane.leftPriceScales().slice(0).forEach(priceScale => pane.movePriceScale(priceScale, PriceScalePosition.Right, this._targetPriceScaleIndex(priceScale, model)));
+        pane
+          .leftPriceScales()
+          .slice(0)
+          .forEach((priceScale) =>
+            pane.movePriceScale(
+              priceScale,
+              PriceScalePosition.Right,
+              this._targetPriceScaleIndex(priceScale, model)
+            )
+          );
       }
 
-      createNewPriceScaleIfPossible(pane
-
-) {
-        return this.canCreateNewPriceScale(pane) ? pane.createPriceScaleAtPosition(PriceScalePosition.Right) : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
+      createNewPriceScaleIfPossible(pane) {
+        return this.canCreateNewPriceScale(pane)
+          ? pane.createPriceScaleAtPosition(PriceScalePosition.Right)
+          : pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
       }
     },
   },
   {
-    name: 'auto',
-    title: t(null, undefined, 'Auto'),
+    name: "auto",
+    title: t(null, undefined, "Auto"),
     ctor: class extends PriceScaleSelectionStrategy {
       constructor(metaInfo) {
         super(metaInfo);
@@ -155,18 +223,33 @@ const allPriceScaleSelectionStrategyInfo = [
 
       apply(pane) {
         if (pane.containsMainSeries()) {
-          const mainDataSource = ensureNotNull(ensureNotNull(pane.mainDataSource()));
+          const mainDataSource = ensureNotNull(
+            ensureNotNull(pane.mainDataSource())
+          );
           const priceScale = ensureNotNull(mainDataSource.priceScale());
           pane.movePriceScale(priceScale, PriceScalePosition.Right, 0);
         }
         const model = pane.model();
         while (pane.leftPriceScales().length > pane.rightPriceScales().length) {
-          const priceScale = pane.leftPriceScales()[pane.leftPriceScales().length - 1];
-          pane.movePriceScale(priceScale, PriceScalePosition.Right, this._targetPriceScaleIndex(priceScale, model));
+          const priceScale =
+            pane.leftPriceScales()[pane.leftPriceScales().length - 1];
+          pane.movePriceScale(
+            priceScale,
+            PriceScalePosition.Right,
+            this._targetPriceScaleIndex(priceScale, model)
+          );
         }
-        while (pane.rightPriceScales().length - pane.leftPriceScales().length > 1) {
-          const priceScale = pane.rightPriceScales()[pane.rightPriceScales().length - 1];
-          pane.movePriceScale(priceScale, PriceScalePosition.Left, this._targetPriceScaleIndex(priceScale, model));
+        while (
+          pane.rightPriceScales().length - pane.leftPriceScales().length >
+          1
+        ) {
+          const priceScale =
+            pane.rightPriceScales()[pane.rightPriceScales().length - 1];
+          pane.movePriceScale(
+            priceScale,
+            PriceScalePosition.Left,
+            this._targetPriceScaleIndex(priceScale, model)
+          );
         }
       }
 
@@ -174,11 +257,17 @@ const allPriceScaleSelectionStrategyInfo = [
         if (!this.canCreateNewPriceScale(pane)) {
           return pane.createPriceScaleAtPosition(PriceScalePosition.Overlay);
         }
-        const targetPosition = pane.leftPriceScales().length < pane.rightPriceScales().length ? PriceScalePosition.Left : PriceScalePosition.Right;
+        const targetPosition =
+          pane.leftPriceScales().length < pane.rightPriceScales().length
+            ? PriceScalePosition.Left
+            : PriceScalePosition.Right;
         return pane.createPriceScaleAtPosition(targetPosition);
       }
     },
   },
 ];
 
-export { allPriceScaleSelectionStrategyInfo, createPriceScaleSelectionStrategy };
+export {
+  allPriceScaleSelectionStrategyInfo,
+  createPriceScaleSelectionStrategy,
+};

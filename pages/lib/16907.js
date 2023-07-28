@@ -737,7 +737,7 @@ class Adapter {
   }
 }
 
-class LineToolOrder extends LineToolTrading {
+export class LineToolOrder extends LineToolTrading {
   constructor() {
     super();
     this._source = new LineDataSource();

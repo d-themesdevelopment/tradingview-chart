@@ -1,19 +1,26 @@
-import { ensureNotNull, assert } from 'utility-module';
-import { Point } from 'point-module';
-import { CachedContainer } from 'cached-container-module';
-import { CachedMap, AreaBackgroundItemsGroup, AreaBackgroundItem } from 'cached-map-module';
-import { ObjectValuesCache } from 'object-values-cache-module';
-import { CompositeRenderer } from 'composite-renderer-module';
-import { SelectionIndexes } from 'selection-indexes-module';
-import { enabled } from 'enabled-module';
-import { AreaBackgroundRenderer, PaneRendererLine, SelectionRenderer } from 'renderer-module';
+import { ensureNotNull, assert } from "./assertions";
+import { Point } from "point-module"; // ! not correct
+import { CachedContainer } from "./CachedContainer";
+import {
+  CachedMap,
+  AreaBackgroundItemsGroup,
+  AreaBackgroundItem,
+} from "./82386";
+import { ObjectValuesCache } from "./CachedContainer";
+import { CompositeRenderer } from "./CompositeRenderer";
+import SelectionIndexes from "./SelectionIndexes";
+import { enabled } from "./assertions";
+
+import { AreaBackgroundRenderer } from "./82386";
+import { SelectionRenderer } from "./80101";
+import { PaneRendererLine } from "./PaneRendererLine";
 
 class HLCObjectCache extends ObjectValuesCache {
   _newObject() {
     return {
       high: undefined,
       close: undefined,
-      low: undefined
+      low: undefined,
     };
   }
 
@@ -80,15 +87,18 @@ class SeriesHLCAreaPaneView {
 
     let prevClose, prevHigh, prevLow;
 
-    this._source.bars().range(startBar, endBar).each((index, bar) => {
-      if (this._hlcAreaCache.isValidIndex(index)) {
-        const cacheObj = this._hlcAreaCache.at(index);
-        cacheObj.close = bar[4];
-        cacheObj.high = bar[2];
-        cacheObj.low = bar[3];
-      }
-      return false;
-    });
+    this._source
+      .bars()
+      .range(startBar, endBar)
+      .each((index, bar) => {
+        if (this._hlcAreaCache.isValidIndex(index)) {
+          const cacheObj = this._hlcAreaCache.at(index);
+          cacheObj.close = bar[4];
+          cacheObj.high = bar[2];
+          cacheObj.low = bar[3];
+        }
+        return false;
+      });
 
     const cachedIndexToScreen = new Map();
 
@@ -98,7 +108,14 @@ class SeriesHLCAreaPaneView {
       const high = cacheObj.high !== undefined ? cacheObj.high : null;
       const low = cacheObj.low !== undefined ? cacheObj.low : null;
 
-      if ((close !== null || high !== null || low !== null || Number.isFinite(prevClose) || Number.isFinite(prevHigh) || Number.isFinite(prevLow))) {
+      if (
+        close !== null ||
+        high !== null ||
+        low !== null ||
+        Number.isFinite(prevClose) ||
+        Number.isFinite(prevHigh) ||
+        Number.isFinite(prevLow)
+      ) {
         prevClose = close;
         prevHigh = high;
         prevLow = low;
@@ -112,10 +129,25 @@ class SeriesHLCAreaPaneView {
       }
     }
 
-    priceScale.pricesArrayToCoordinates(this._highPoints.data(), firstValue, this._highPoints.length());
-    priceScale.pricesArrayToCoordinates(this._closePoints.data(), firstValue, this._closePoints.length());
-    priceScale.pricesArrayToCoordinates(this._lowPoints.data(), firstValue, this._lowPoints.length());
-    timeScale.indexesToCoordinates(this._timePoints.data(), this._timePoints.length());
+    priceScale.pricesArrayToCoordinates(
+      this._highPoints.data(),
+      firstValue,
+      this._highPoints.length()
+    );
+    priceScale.pricesArrayToCoordinates(
+      this._closePoints.data(),
+      firstValue,
+      this._closePoints.length()
+    );
+    priceScale.pricesArrayToCoordinates(
+      this._lowPoints.data(),
+      firstValue,
+      this._lowPoints.length()
+    );
+    timeScale.indexesToCoordinates(
+      this._timePoints.data(),
+      this._timePoints.length()
+    );
 
     const barSpacing = timeScale.barSpacing();
 
@@ -123,13 +155,19 @@ class SeriesHLCAreaPaneView {
     const highCloseFillColor = areaStyle.highCloseFillColor.value();
     const closeLowFillColor = areaStyle.closeLowFillColor.value();
 
-    const highCloseAreaGroup = this._filledAreas.get(highCloseFillColor) ?? new AreaBackgroundItemsGroup({ type: 0, color: highCloseFillColor });
-    const highCloseAreaItem = highCloseAreaGroup.newItem() ?? new AreaBackgroundItem();
+    const highCloseAreaGroup =
+      this._filledAreas.get(highCloseFillColor) ??
+      new AreaBackgroundItemsGroup({ type: 0, color: highCloseFillColor });
+    const highCloseAreaItem =
+      highCloseAreaGroup.newItem() ?? new AreaBackgroundItem();
     highCloseAreaGroup.push(highCloseAreaItem);
     this._filledAreas.set(highCloseFillColor, highCloseAreaGroup);
 
-    const closeLowAreaGroup = this._filledAreas.get(closeLowFillColor) ?? new AreaBackgroundItemsGroup({ type: 0, color: closeLowFillColor });
-    const closeLowAreaItem = closeLowAreaGroup.newItem() ?? new AreaBackgroundItem();
+    const closeLowAreaGroup =
+      this._filledAreas.get(closeLowFillColor) ??
+      new AreaBackgroundItemsGroup({ type: 0, color: closeLowFillColor });
+    const closeLowAreaItem =
+      closeLowAreaGroup.newItem() ?? new AreaBackgroundItem();
     closeLowAreaGroup.push(closeLowAreaItem);
     this._filledAreas.set(closeLowFillColor, closeLowAreaGroup);
 
@@ -161,48 +199,60 @@ class SeriesHLCAreaPaneView {
       }
     }
 
-    this._renderer.append(new AreaBackgroundRenderer({
-      barSpacing: barSpacing,
-      colorAreas: this._filledAreas
-    }));
+    this._renderer.append(
+      new AreaBackgroundRenderer({
+        barSpacing: barSpacing,
+        colorAreas: this._filledAreas,
+      })
+    );
 
-    this._renderer.append(new PaneRendererLine({
-      barSpacing: barSpacing,
-      items: lowPoints,
-      simpleMode: true,
-      withMarkers: false,
-      lineColor: areaStyle.lowLineColor.value(),
-      lineStyle: areaStyle.lowLineStyle.value(),
-      lineWidth: areaStyle.lowLineWidth.value()
-    }));
+    this._renderer.append(
+      new PaneRendererLine({
+        barSpacing: barSpacing,
+        items: lowPoints,
+        simpleMode: true,
+        withMarkers: false,
+        lineColor: areaStyle.lowLineColor.value(),
+        lineStyle: areaStyle.lowLineStyle.value(),
+        lineWidth: areaStyle.lowLineWidth.value(),
+      })
+    );
 
-    this._renderer.append(new PaneRendererLine({
-      barSpacing: barSpacing
+    this._renderer.append(
+      new PaneRendererLine({
+        barSpacing: barSpacing,
 
-,
-      items: highPoints,
-      simpleMode: true,
-      withMarkers: false,
-      lineColor: areaStyle.highLineColor.value(),
-      lineStyle: areaStyle.highLineStyle.value(),
-      lineWidth: areaStyle.highLineWidth.value()
-    }));
+        items: highPoints,
+        simpleMode: true,
+        withMarkers: false,
+        lineColor: areaStyle.highLineColor.value(),
+        lineStyle: areaStyle.highLineStyle.value(),
+        lineWidth: areaStyle.highLineWidth.value(),
+      })
+    );
 
-    this._renderer.append(new PaneRendererLine({
-      barSpacing: barSpacing,
-      items: closePoints,
-      simpleMode: true,
-      withMarkers: false,
-      lineColor: areaStyle.closeLineColor.value(),
-      lineStyle: areaStyle.closeLineStyle.value(),
-      lineWidth: areaStyle.closeLineWidth.value()
-    }));
+    this._renderer.append(
+      new PaneRendererLine({
+        barSpacing: barSpacing,
+        items: closePoints,
+        simpleMode: true,
+        withMarkers: false,
+        lineColor: areaStyle.closeLineColor.value(),
+        lineStyle: areaStyle.closeLineStyle.value(),
+        lineWidth: areaStyle.closeLineWidth.value(),
+      })
+    );
 
-    if (this._model.selection().isSelected(this._source) && this._isMarkersEnabled) {
+    if (
+      this._model.selection().isSelected(this._source) &&
+      this._isMarkersEnabled
+    ) {
       const selectionIndexes = this._selectionIndexer.indexes();
       const points = [];
       const bgColors = [];
-      const paneHeight = ensureNotNull(this._model.paneForSource(this._source)).height();
+      const paneHeight = ensureNotNull(
+        this._model.paneForSource(this._source)
+      ).height();
 
       for (let i = 0; i < selectionIndexes.length; i++) {
         const barIndex = selectionIndexes[i];
@@ -213,16 +263,20 @@ class SeriesHLCAreaPaneView {
         const timePoint = this._timePoints.at(timePointIndex);
 
         points.push(new Point(timePoint, closePrice));
-        bgColors.push(this._model.backgroundColorAtYPercentFromTop(closePrice / paneHeight));
+        bgColors.push(
+          this._model.backgroundColorAtYPercentFromTop(closePrice / paneHeight)
+        );
       }
 
-      this._renderer.append(new SelectionRenderer({
-        bgColors: bgColors,
-        points: points,
-        visible: true,
-        barSpacing: timeScale.barSpacing(),
-        hittestResult: HitTarget.Regular
-      }));
+      this._renderer.append(
+        new SelectionRenderer({
+          bgColors: bgColors,
+          points: points,
+          visible: true,
+          barSpacing: timeScale.barSpacing(),
+          hittestResult: HitTarget.Regular,
+        })
+      );
     } else {
       this._selectionIndexer.clear();
     }

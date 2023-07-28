@@ -1,8 +1,8 @@
-import { ensureDefined, ensureNotNull } from 'some-library';
-import { LineDataSource, Point, sourceChangeEvent } from 'another-library';
-import { TextPaneView } from 'yet-another-library';
-import { DefaultProperty, LineToolColorsProperty } from 'property-library';
-import { t } from 'translation-library';
+import { ensureDefined, ensureNotNull } from "some-library";
+import { LineDataSource, Point, sourceChangeEvent } from "another-library";
+import { TextPaneView } from "yet-another-library";
+import { DefaultProperty, LineToolColorsProperty } from "property-library";
+import { t } from "translation-library";
 
 class LineToolText extends LineDataSource {
   constructor(chartWidget, properties, sourceId, internalId) {
@@ -11,14 +11,29 @@ class LineToolText extends LineDataSource {
     this.barSpacing = chartWidget.timeScale().barSpacing();
     this.recalculatePointsOnCenter = false;
 
-    import(/* webpackChunkName: "chart-pane-view" */  'chart-pane-view-library').then(({ TextPaneView }) => {
-      const onCenterPositionChange = this.recalculatePointsOnCenter ? (x, y) => {
-        if (this.recalculatePointsOnCenter) {
-          this.recalculateCenterPosition(x, y);
-        }
-      } : undefined;
+    import(
+      /* webpackChunkName: "chart-pane-view" */ "chart-pane-view-library"
+    ).then(({ TextPaneView }) => {
+      const onCenterPositionChange = this.recalculatePointsOnCenter
+        ? (x, y) => {
+            if (this.recalculatePointsOnCenter) {
+              this.recalculateCenterPosition(x, y);
+            }
+          }
+        : undefined;
 
-      this.setPaneViews([new TextPaneView(this, chartWidget, undefined, undefined, undefined, undefined, undefined, onCenterPositionChange)]);
+      this.setPaneViews([
+        new TextPaneView(
+          this,
+          chartWidget,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          onCenterPositionChange
+        ),
+      ]);
     });
   }
 
@@ -30,8 +45,13 @@ class LineToolText extends LineDataSource {
     const childProperties = this.properties().childs();
     if (index === 1 && childProperties.wordWrapWidth.value()) {
       const timeScale = this.model().timeScale();
-      const anchorX = this.isFixed() ? ensureDefined(this.fixedPoint()).x : timeScale.indexToCoordinate(this.points()[0].index);
-      const width = timeScale.indexToCoordinate(point.index) - anchorX - ~~(childProperties.fontsize.value() / 6);
+      const anchorX = this.isFixed()
+        ? ensureDefined(this.fixedPoint()).x
+        : timeScale.indexToCoordinate(this.points()[0].index);
+      const width =
+        timeScale.indexToCoordinate(point.index) -
+        anchorX -
+        ~~(childProperties.fontsize.value() / 6);
       if (!isFinite(width)) return;
       childProperties.wordWrapWidth.setValue(Math.max(100, width));
     }
@@ -48,7 +68,8 @@ class LineToolText extends LineDataSource {
   setPriceScale(priceScale) {
     super.setPriceScale(priceScale);
     if (priceScale && priceScale.priceRange()) {
-      this.priceDensity = priceScale.height() / ensureNotNull(priceScale.priceRange()).length();
+      this.priceDensity =
+        priceScale.height() / ensureNotNull(priceScale.priceRange()).length();
       this.isPriceDensityLog = priceScale.isLog();
     }
   }
@@ -56,7 +77,8 @@ class LineToolText extends LineDataSource {
   restoreSize() {
     const priceScale = ensureNotNull(this.priceScale());
     this.barSpacing = this.model().timeScale().barSpacing();
-    this.priceDensity = priceScale.height() / ensureNotNull(priceScale.priceRange()).length();
+    this.priceDensity =
+      priceScale.height() / ensureNotNull(priceScale.priceRange()).length();
     this.redraw(sourceChangeEvent(this.id()));
   }
 
@@ -111,24 +133,48 @@ class LineToolText extends LineDataSource {
   }
 
   _getPropertyDefinitionsViewModelClass() {
-    return import(/* webpackChunkName: "text-definitions-view-model" */ 'text-definitions-view-model-library').then(({ TextDefinitionsViewModel }) => TextDefinitionsViewModel);
+    return import(
+      /* webpackChunkName: "text-definitions-view-model" */ "text-definitions-view-model-library"
+    ).then(({ TextDefinitionsViewModel }) => TextDefinitionsViewModel);
   }
 
   static configureProperties(properties) {
     super.configureProperties(properties);
     if (!properties.hasChild("text")) {
-      properties.addChild("text", new TextProperty(t(null, undefined, import( /* webpackChunkName: "translation-library" */ 'translation-library'))));
+      properties.addChild(
+        "text",
+        new TextProperty(
+          t(
+            null,
+            undefined,
+            import(
+              /* webpackChunkName: "translation-library" */ "translation-library"
+            )
+          )
+        )
+      );
     }
-    properties.addChild("linesColors", new LineToolColorsProperty([properties.childs().borderColor]));
-    properties.addChild("textsColors", new LineToolColorsProperty([properties.childs().color]));
+    properties.addChild(
+      "linesColors",
+      new LineToolColorsProperty([properties.childs().borderColor])
+    );
+    properties.addChild(
+      "textsColors",
+      new LineToolColorsProperty([properties.childs().color])
+    );
     properties.addExclusion("text");
     properties.addExclusion("linesColors");
     properties.addExclusion("textsColors");
   }
 
   recalculateCenterPosition(width, height) {
-    const fixedPoint = this.isFixed() ? ensureDefined(this.fixedPoint()) : ensureNotNull(this.pointToScreenPoint(this._points[0]));
-    const newPoint = new Point(fixedPoint.x - width / 2, fixedPoint.y - height / 2);
+    const fixedPoint = this.isFixed()
+      ? ensureDefined(this.fixedPoint())
+      : ensureNotNull(this.pointToScreenPoint(this._points[0]));
+    const newPoint = new Point(
+      fixedPoint.x - width / 2,
+      fixedPoint.y - height / 2
+    );
     const newCoordinates = ensureNotNull(this.screenPointToPoint(newPoint));
     this.setPoints([newCoordinates]);
     this.normalizePoints();
@@ -137,7 +183,7 @@ class LineToolText extends LineDataSource {
   }
 }
 
-class LineToolTextAbsolute extends LineToolText {
+export class LineToolTextAbsolute extends LineToolText {
   constructor(chartWidget, properties) {
     super(chartWidget, properties || LineToolTextAbsolute.createProperties());
   }
@@ -155,7 +201,10 @@ class LineToolTextAbsolute extends LineToolText {
   }
 
   static createProperties(properties) {
-    const defaultProperties = new DefaultProperty("linetooltextabsolute", properties);
+    const defaultProperties = new DefaultProperty(
+      "linetooltextabsolute",
+      properties
+    );
     this.configureProperties(defaultProperties);
     return defaultProperties;
   }
