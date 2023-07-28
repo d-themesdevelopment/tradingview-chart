@@ -93,7 +93,7 @@ function offsetValue(value, offset) {
     : value + offset;
 }
 
-function drawRoundRect(context, x, y, width, height, radius, closePath) {
+export function drawRoundRect(context, x, y, width, height, radius, closePath) {
   let topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius;
   if (Array.isArray(radius)) {
     if (radius.length === 2) {

@@ -1,7 +1,12 @@
-import { Point, box, ensureNotNull, ensureDefined } from 'some-library';
-import { isString, isNumber, deepEquals } from 'another-library';
-import { measureText, drawScaled, drawRoundRect, setLineStyle, LINESTYLE_DASHED } from 'some-other-library';
-import { HitTestResult, HitTarget, AreaName } from 'hit-test-library';
+import { Point, box } from "some-library"; // ! not correct
+import { ensureNotNull, ensureDefined } from "./assertions";
+// import { isString, isNumber, deepEquals } from 'another-library';
+import { measureText, drawScaled } from "./74359";
+
+import { drawRoundRect, setLineStyle } from "./68441";
+import { LINESTYLE_DASHED } from "./79849";
+
+import { HitTestResult, HitTarget, AreaName } from "./18807";
 
 class TextRenderer {
   constructor(data, hitTestResult) {
@@ -11,9 +16,11 @@ class TextRenderer {
     this._polygonPoints = null;
     this._linesInfo = null;
     this._fontInfo = null;
-    this._hittest = hitTestResult || new HitTestResult(HitTarget.MovePoint, {
-      areaName: AreaName.Text
-    });
+    this._hittest =
+      hitTestResult ||
+      new HitTestResult(HitTarget.MovePoint, {
+        areaName: AreaName.Text,
+      });
     if (data !== undefined) {
       this.setData(data);
     }
@@ -35,7 +42,11 @@ class TextRenderer {
   }
 
   hitTest(point) {
-    if (this._data === null || this._data.points === undefined || this._data.points.length === 0) {
+    if (
+      this._data === null ||
+      this._data.points === undefined ||
+      this._data.points.length === 0
+    ) {
       return null;
     }
     if (pointInPolygon(point, this.getPolygonPoints())) {
@@ -45,7 +56,11 @@ class TextRenderer {
   }
 
   doesIntersectWithBox(box) {
-    if (this._data !== null && this._data.points !== undefined && this._data.points.length !== 0) {
+    if (
+      this._data !== null &&
+      this._data.points !== undefined &&
+      this._data.points.length !== 0
+    ) {
       if (pointInBox(this._data.points[0], box)) {
         return true;
       }
@@ -60,7 +75,7 @@ class TextRenderer {
     const boxSize = this._getBoxSize();
     return {
       width: boxSize.boxWidth,
-      height: boxSize.boxHeight
+      height: boxSize.boxHeight,
     };
   }
 
@@ -73,18 +88,30 @@ class TextRenderer {
       x: internalData.boxLeft,
       y: internalData.boxTop,
       width: internalData.boxWidth,
-      height: internalData.boxHeight
+      height: internalData.boxHeight,
     };
   }
 
   isOutOfScreen(screenWidth, screenHeight) {
-    if (this._data === null || this._data.points === undefined || this._data.points.length === 0) {
+    if (
+      this._data === null ||
+      this._data.points === undefined ||
+      this._data.points.length === 0
+    ) {
       return true;
     }
     const internalData = this._getInternalData();
-    if (internalData.boxLeft + internalData.boxWidth < 0 || internalData.boxLeft > screenWidth) {
-      const screenBox = box(new Point(0, 0), new Point(screenWidth, screenHeight));
-      return this.getPolygonPoints().every(point => !pointInBox(point, screenBox));
+    if (
+      internalData.boxLeft + internalData.boxWidth < 0 ||
+      internalData.boxLeft > screenWidth
+    ) {
+      const screenBox = box(
+        new Point(0, 0),
+        new Point(screenWidth, screenHeight)
+      );
+      return this.getPolygonPoints().every(
+        (point) => !pointInBox(point, screenBox)
+      );
     }
     return false;
   }
@@ -102,14 +129,24 @@ class TextRenderer {
   }
 
   wordWrap(text, font, maxWidth) {
-    return wordWrap(text, maxWidth || this._data.wordWrapWidth, font || this.fontStyle());
+    return wordWrap(
+      text,
+      maxWidth || this._data.wordWrapWidth,
+      font || this.fontStyle()
+    );
   }
 
   draw(context, renderingOptions) {
-    if (this._data === null || this._data.points === undefined || this._data.points.length === 0) {
+    if (
+      this._data === null ||
+      this._data.points === undefined ||
+      this._data.points.length === 0
+    ) {
       return;
     }
-    if (this.isOutOfScreen(renderingOptions.cssWidth, renderingOptions.cssHeight)) {
+    if (
+      this.isOutOfScreen(renderingOptions.cssWidth, renderingOptions.cssHeight)
+    ) {
       return;
     }
     const pixelRatio = renderingOptions.pixelRatio;
@@ -126,7 +163,10 @@ class TextRenderer {
     context.textAlign = internalData.textAlign;
     context.font = this.fontStyle();
 
-    const { scaledLeft, scaledRight, scaledTop, scaledBottom } = getScaledBox(internalData, pixelRatio);
+    const { scaledLeft, scaledRight, scaledTop, scaledBottom } = getScaledBox(
+      internalData,
+      pixelRatio
+    );
     if (
       this._data.backgroundColor ||
       this._data.borderColor ||
@@ -138,7 +178,12 @@ class TextRenderer {
       let drawShadow = false;
       if (this._data.boxShadow) {
         context.save();
-        const { shadowColor, shadowBlur, shadowOffsetX = 0, shadowOffsetY = 0 } = this._data.boxShadow;
+        const {
+          shadowColor,
+          shadowBlur,
+          shadowOffsetX = 0,
+          shadowOffsetY = 0,
+        } = this._data.boxShadow;
         context.shadowColor = shadowColor;
         context.shadowBlur = shadowBlur;
         context.shadowOffsetX = shadowOffsetX;
@@ -147,7 +192,14 @@ class TextRenderer {
       }
       if (this._data.backgroundRoundRect) {
         if (this._data.backgroundColor) {
-          drawRoundRect(context, scaledLeft, scaledTop, scaledRight - scaledLeft, scaledBottom - scaledTop, this._data.backgroundRoundRect * pixelRatio);
+          drawRoundRect(
+            context,
+            scaledLeft,
+            scaledTop,
+            scaledRight - scaledLeft,
+            scaledBottom - scaledTop,
+            this._data.backgroundRoundRect * pixelRatio
+          );
           context.fillStyle = this._data.backgroundColor;
           context.fill();
           if (drawShadow) {
@@ -156,7 +208,14 @@ class TextRenderer {
           }
         }
         if (this._data.borderColor) {
-          drawRoundRect(context, scaledLeft - halfBorderWidth, scaledTop - halfBorderWidth, scaledRight - scaledLeft + scaledBorderWidth, scaledBottom - scaledTop + scaledBorderWidth, this._data.backgroundRoundRect * pixelRatio + scaledBorderWidth);
+          drawRoundRect(
+            context,
+            scaledLeft - halfBorderWidth,
+            scaledTop - halfBorderWidth,
+            scaledRight - scaledLeft + scaledBorderWidth,
+            scaledBottom - scaledTop + scaledBorderWidth,
+            this._data.backgroundRoundRect * pixelRatio + scaledBorderWidth
+          );
           context.strokeStyle = this._data.borderColor;
           context.lineWidth = scaledBorderWidth;
           context.stroke();
@@ -168,7 +227,12 @@ class TextRenderer {
       } else {
         if (this._data.backgroundColor) {
           context.fillStyle = this._data.backgroundColor;
-          context.fillRect(scaledLeft, scaledTop, scaledRight - scaledLeft, scaledBottom - scaledTop);
+          context.fillRect(
+            scaledLeft,
+            scaledTop,
+            scaledRight - scaledLeft,
+            scaledBottom - scaledTop
+          );
           if (drawShadow) {
             context.restore();
             drawShadow = false;
@@ -186,9 +250,18 @@ class TextRenderer {
           context.lineWidth = lineWidth;
           context.beginPath();
           context.moveTo(scaledLeft - lineWidth / 2, scaledTop - lineWidth / 2);
-          context.lineTo(scaledLeft - lineWidth / 2, scaledBottom + lineWidth / 2);
-          context.lineTo(scaledRight + lineWidth / 2, scaledBottom + lineWidth / 2);
-          context.lineTo(scaledRight + lineWidth / 2, scaledTop - lineWidth / 2);
+          context.lineTo(
+            scaledLeft - lineWidth / 2,
+            scaledBottom + lineWidth / 2
+          );
+          context.lineTo(
+            scaledRight + lineWidth / 2,
+            scaledBottom + lineWidth / 2
+          );
+          context.lineTo(
+            scaledRight + lineWidth / 2,
+            scaledTop - lineWidth / 2
+          );
           context.lineTo(scaledLeft - lineWidth / 2, scaledTop - lineWidth / 2);
           context.stroke();
           if (drawShadow) {
@@ -199,12 +272,19 @@ class TextRenderer {
     }
 
     context.fillStyle = this._data.color;
-    const textStart = (scaledLeft + Math.round(internalData.textStart * pixelRatio)) / pixelRatio;
-    const textTop = (scaledTop + Math.round((internalData.textTop + 0.05 * fontSize) * pixelRatio)) / pixelRatio;
+    const textStart =
+      (scaledLeft + Math.round(internalData.textStart * pixelRatio)) /
+      pixelRatio;
+    const textTop =
+      (scaledTop +
+        Math.round((internalData.textTop + 0.05 * fontSize) * pixelRatio)) /
+      pixelRatio;
     const padding = getPadding(this._data);
     const linesInfo = this.getLinesInfo();
     for (const line of linesInfo.lines) {
-      drawScaled(context, pixelRatio, pixelRatio, () => context.fillText(line, textStart, textTop));
+      drawScaled(context, pixelRatio, pixelRatio, () =>
+        context.fillText(line, textStart, textTop)
+      );
       textTop += fontSize + padding;
     }
 
@@ -224,8 +304,12 @@ class TextRenderer {
     this._polygonPoints = [
       rotatePoint(new Point(boxLeft, boxTop), rotationPoint, angle),
       rotatePoint(new Point(boxLeft + boxWidth, boxTop), rotationPoint, angle),
-      rotatePoint(new Point(boxLeft + boxWidth, boxTop + boxHeight), rotationPoint, angle),
-      rotatePoint(new Point(boxLeft, boxTop + boxHeight), rotationPoint, angle)
+      rotatePoint(
+        new Point(boxLeft + boxWidth, boxTop + boxHeight),
+        rotationPoint,
+        angle
+      ),
+      rotatePoint(new Point(boxLeft, boxTop + boxHeight), rotationPoint, angle),
     ];
     return this._polygonPoints;
   }
@@ -235,14 +319,17 @@ class TextRenderer {
       const data = ensureNotNull(this._data);
       let wrappedText = this.wordWrap(data.text, data.font, data.wordWrapWidth);
       if (data.maxHeight !== undefined) {
-        const maxLines = Math.floor((ensureDefined(data.maxHeight) + getPadding(data)) / (getFontSize(data) + getPadding(data)));
+        const maxLines = Math.floor(
+          (ensureDefined(data.maxHeight) + getPadding(data)) /
+            (getFontSize(data) + getPadding(data))
+        );
         if (wrappedText.length > maxLines) {
           wrappedText = wrappedText.slice(0, maxLines);
         }
       }
       this._linesInfo = {
         linesMaxWidth: this._getLinesMaxWidth(wrappedText),
-        lines: wrappedText
+        lines: wrappedText,
       };
     }
     return this._linesInfo;
@@ -250,7 +337,11 @@ class TextRenderer {
 
   _getLinesMaxWidth(lines) {
     const fontStyle = this.fontStyle();
-    if (this._data !== null && this._data.wordWrapWidth && !this._data.forceCalculateMaxLineWidth) {
+    if (
+      this._data !== null &&
+      this._data.wordWrapWidth &&
+      !this._data.forceCalculateMaxLineWidth
+    ) {
       return this._data.wordWrapWidth * getFontSize(this._data);
     }
     let maxWidth = 0;
@@ -271,13 +362,13 @@ class TextRenderer {
     const firstPoint = ensureDefined(data.points)[0];
     let topY = firstPoint.y;
     switch (data.vertAlign) {
-      case 'bottom':
+      case "bottom":
         topY -= boxHeight + data.offsetY;
         break;
-      case 'middle':
+      case "middle":
         topY -= boxHeight / 2;
         break;
-      case 'top':
+      case "top":
         topY += data.offsetY;
         break;
     }
@@ -286,13 +377,13 @@ class TextRenderer {
     const paddingVert = getPaddingVert(data);
     const padding = getPadding(data);
     switch (data.horzAlign) {
-      case 'left':
+      case "left":
         leftX += data.offsetX;
         break;
-      case 'center':
+      case "center":
         leftX -= boxWidth / 2;
         break;
-      case 'right':
+      case "right":
         leftX -= boxWidth + data.offsetX;
         break;
     }
@@ -300,27 +391,27 @@ class TextRenderer {
     let textStart;
     const baseLineOffset = (paddingVert + getFontSize(data)) / 2;
     switch (ensureDefined(data.horzTextAlign)) {
-      case 'left':
-        textAlign = 'start';
+      case "left":
+        textAlign = "start";
         textStart = leftX + paddingHorz;
         if (isRtl()) {
           if (data.forceTextAlign) {
-            textAlign = 'left';
+            textAlign = "left";
           } else {
             textStart = leftX + boxWidth - paddingHorz;
-            textAlign = 'right';
+            textAlign = "right";
           }
         }
         break;
-      case 'center':
-        textAlign = 'center';
+      case "center":
+        textAlign = "center";
         textStart = leftX + boxWidth / 2;
         break;
-      case 'right':
-        textAlign = 'end';
+      case "right":
+        textAlign = "end";
         textStart = leftX + boxWidth - paddingHorz;
         if (isRtl() && data.forceTextAlign) {
-          textAlign = 'right';
+          textAlign = "right";
         }
         break;
     }
@@ -332,7 +423,7 @@ class TextRenderer {
       textStart: textStart - leftX,
       textTop: baseLineOffset + topY,
       textAlign: textAlign,
-      textBaseLine: 'middle'
+      textBaseLine: "middle",
     };
     return this._internalData;
   }
@@ -341,10 +432,15 @@ class TextRenderer {
     if (this._fontInfo === null) {
       const data = ensureNotNull(this._data);
       const fontSize = getFontSize(data);
-      const fontStyle = (data.bold ? 'bold ' : '') + (data.italic ? 'italic ' : '') + fontSize + 'px ' + data.font;
+      const fontStyle =
+        (data.bold ? "bold " : "") +
+        (data.italic ? "italic " : "") +
+        fontSize +
+        "px " +
+        data.font;
       this._fontInfo = {
         fontStyle: fontStyle,
-        fontSize: fontSize
+        fontSize: fontSize,
       };
     }
     return this._fontInfo;
@@ -356,7 +452,7 @@ class TextRenderer {
       const data = ensureNotNull(this._data);
       this._boxSize = {
         boxWidth: calculateBoxWidth(data, linesInfo.linesMaxWidth),
-        boxHeight: calculateBoxHeight(data, linesInfo.lines.length)
+        boxHeight: calculateBoxHeight(data, linesInfo.lines.length),
       };
     }
     return this._boxSize;
@@ -367,24 +463,24 @@ class TextRenderer {
     const { horzAlign, vertAlign } = ensureNotNull(this._data);
     let rotationPointX, rotationPointY;
     switch (horzAlign) {
-      case 'center':
+      case "center":
         rotationPointX = boxLeft + boxWidth / 2;
         break;
-      case 'left':
+      case "left":
         rotationPointX = boxLeft;
         break;
-      case 'right':
+      case "right":
         rotationPointX = boxLeft + boxWidth;
         break;
     }
     switch (vertAlign) {
-      case 'middle':
+      case "middle":
         rotationPointY = boxTop + boxHeight / 2;
         break;
-      case 'top':
+      case "top":
         rotationPointY = boxTop;
         break;
-      case 'bottom':
+      case "bottom":
         rotationPointY = boxTop + boxHeight;
         break;
     }

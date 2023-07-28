@@ -1,8 +1,20 @@
-import { t } from 'translation-library';
-import { ResolutionKind, SpecialResolutionKind, Interval, parse as parseInterval } from 'some-library';
-import { linking, setValue as setLinkingValue, getValue as getLinkingValue } from 'some-library';
-import { uniq } from 'some-library';
-import { enabled } from 'some-library';
+import { t } from "translation-library"; // ! not correct
+import {
+  ResolutionKind, // ! not correct
+  SpecialResolutionKind, // ! not correct
+  Interval, // ! not correct
+  parse as parseInterval,
+} from "some-library"; // ! not correct
+
+import { linking } from "./82992";
+
+import {
+  setValue as setLinkingValue,
+  getValue as getLinkingValue,
+} from "some-library"; // ! not correct
+
+import { uniq } from "./uniq";
+import { enabled } from "./helpers";
 
 const resolutionToMinutesMap = {
   [ResolutionKind.Ticks]: 1,
@@ -30,14 +42,46 @@ const resolutionKindOrderMap = {
 
 const resolutionTranslationMap = {
   [ResolutionKind.Invalid]: "",
-  [ResolutionKind.Ticks]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [ResolutionKind.Seconds]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [ResolutionKind.Minutes]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [SpecialResolutionKind.Hours]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [ResolutionKind.Days]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [ResolutionKind.Weeks]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [ResolutionKind.Months]: t(null, { context: "interval_short" }, 'some-translation-key'),
-  [ResolutionKind.Range]: t(null, { context: "interval_short" }, 'some-translation-key'),
+  [ResolutionKind.Ticks]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [ResolutionKind.Seconds]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [ResolutionKind.Minutes]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [SpecialResolutionKind.Hours]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [ResolutionKind.Days]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [ResolutionKind.Weeks]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [ResolutionKind.Months]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
+  [ResolutionKind.Range]: t(
+    null,
+    { context: "interval_short" },
+    "some-translation-key"
+  ),
 };
 
 function normalizeIntervalString(intervalString) {
@@ -58,14 +102,21 @@ function isAvailable(intervalString) {
   const value = interval.value();
   const dataFrequencyResolution = linking.dataFrequencyResolution.value();
 
-  if (dataFrequencyResolution !== undefined && compareResolutions(value, dataFrequencyResolution) < 0) {
+  if (
+    dataFrequencyResolution !== undefined &&
+    compareResolutions(value, dataFrequencyResolution) < 0
+  ) {
     return false;
   }
 
   const supportedResolutions = linking.supportedResolutions.value();
 
   if (supportedResolutions !== undefined) {
-    return supportedResolutions.find((resolution) => parseInterval(resolution) === interval.value()) !== undefined;
+    return (
+      supportedResolutions.find(
+        (resolution) => parseInterval(resolution) === interval.value()
+      ) !== undefined
+    );
   }
 
   if (interval.isSeconds()) {
@@ -88,17 +139,22 @@ function setLastUsedResolution(intervalString) {
 
   if (interval.isValid()) {
     if (interval.isRange()) {
-      setLinkingValue('chart.lastUsedRangeResolution', intervalString);
+      setLinkingValue("chart.lastUsedRangeResolution", intervalString);
     } else {
-      setLinkingValue('chart.lastUsedTimeBasedResolution', intervalString);
+      setLinkingValue("chart.lastUsedTimeBasedResolution", intervalString);
     }
   }
 }
 
 function getRangeResolution(resolutions) {
-  const lastUsedRangeResolution = getLinkingValue('chart.lastUsedRangeResolution');
+  const lastUsedRangeResolution = getLinkingValue(
+    "chart.lastUsedRangeResolution"
+  );
 
-  if (lastUsedRangeResolution !== undefined && Interval.isRange(lastUsedRangeResolution)) {
+  if (
+    lastUsedRangeResolution !== undefined &&
+    Interval.isRange(lastUsedRangeResolution)
+  ) {
     return lastUsedRangeResolution;
   }
 
@@ -122,9 +178,14 @@ function getRangeResolution(resolutions) {
 }
 
 function getTimeBasedResolution(resolutions) {
-  const lastUsedTimeBasedResolution = getLinkingValue('chart.lastUsedTimeBasedResolution');
+  const lastUsedTimeBasedResolution = getLinkingValue(
+    "chart.lastUsedTimeBasedResolution"
+  );
 
-  if (lastUsedTimeBasedResolution !== undefined && Interval.isTimeBased(lastUsedTimeBasedResolution)) {
+  if (
+    lastUsedTimeBasedResolution !== undefined &&
+    Interval.isTimeBased(lastUsedTimeBasedResolution)
+  ) {
     return lastUsedTimeBasedResolution;
   }
 
@@ -220,9 +281,13 @@ function getTranslatedResolutionModel(resolution, throwError = true) {
   return {
     multiplier: multiplier.toString(),
     shortKind,
-    hint: `${multiplier} ${getResolutionShortKind(parsedResolution.kind(), multiplier)}`,
+    hint: `${multiplier} ${getResolutionShortKind(
+      parsedResolution.kind(),
+      multiplier
+    )}`,
     mayOmitMultiplier: parsedResolution.isDWM() && multiplier === 1,
-    mayOmitShortKind: parsedResolution.isMinutes() && !parsedResolution.isMinuteHours(),
+    mayOmitShortKind:
+      parsedResolution.isMinutes() && !parsedResolution.isMinuteHours(),
   };
 }
 
@@ -233,21 +298,21 @@ function getResolutionShortKind(kind, count) {
 
   switch (kind) {
     case ResolutionKind.Ticks:
-      return t(null, { plural: "ticks", count }, 'some-translation-key');
+      return t(null, { plural: "ticks", count }, "some-translation-key");
     case ResolutionKind.Days:
-      return t(null, { plural: "days", count }, 'some-translation-key');
+      return t(null, { plural: "days", count }, "some-translation-key");
     case ResolutionKind.Weeks:
-      return t(null, { plural: "weeks", count }, 'some-translation-key');
+      return t(null, { plural: "weeks", count }, "some-translation-key");
     case ResolutionKind.Months:
-      return t(null, { plural: "months", count }, 'some-translation-key');
+      return t(null, { plural: "months", count }, "some-translation-key");
     case ResolutionKind.Seconds:
-      return t(null, { plural: "seconds", count }, 'some-translation-key');
+      return t(null, { plural: "seconds", count }, "some-translation-key");
     case ResolutionKind.Minutes:
-      return t(null, { plural: "minutes", count }, 'some-translation-key');
+      return t(null, { plural: "minutes", count }, "some-translation-key");
     case SpecialResolutionKind.Hours:
-      return t(null, { plural: "hours", count }, 'some-translation-key');
+      return t(null, { plural: "hours", count }, "some-translation-key");
     case ResolutionKind.Range:
-      return t(null, { plural: "ranges", count }, 'some-translation-key');
+      return t(null, { plural: "ranges", count }, "some-translation-key");
     default:
       return kind;
   }
@@ -274,7 +339,8 @@ function isIntervalEnabled(interval) {
 }
 
 function isResolutionMultiplierValid(interval) {
-  const { interval: parsedInterval, guiResolutionKind } = parseInterval(interval);
+  const { interval: parsedInterval, guiResolutionKind } =
+    parseInterval(interval);
 
   if (!parsedInterval.isValid()) {
     return false;
@@ -282,7 +348,11 @@ function isResolutionMultiplierValid(interval) {
 
   const multiplier = parsedInterval.multiplier();
 
-  return (guiResolutionKind === SpecialResolutionKind.Hours ? multiplier / 60 : multiplier) <= getMaxResolutionValue(guiResolutionKind);
+  return (
+    (guiResolutionKind === SpecialResolutionKind.Hours
+      ? multiplier / 60
+      : multiplier) <= getMaxResolutionValue(guiResolutionKind)
+  );
 }
 
 function getMaxResolutionValue(interval) {
@@ -300,23 +370,31 @@ function getCustomResolutions() {
 
 function getResolutionsFromSettings(settingName) {
   const resolutions = I(o.getJSON(settingName, []));
-  return uniq(resolutions.filter(isResolutionMultiplierValid).map(normalizeIntervalString));
+  return uniq(
+    resolutions.filter(isResolutionMultiplierValid).map(normalizeIntervalString)
+  );
 }
 
 function parseIntervalValue(value) {
-  const intervalRegex = enabled("tick_resolution") ?
-    /^[,\s]*(^[1-9][0-9]*)?\s*([hdwmst]?)\s*$/i :
-    /^[,\s]*(^[1-9][0-9]*)?\s*([hdwms]?)\s*$/i;
+  const intervalRegex = enabled("tick_resolution")
+    ? /^[,\s]*(^[1-9][0-9]*)?\s*([hdwmst]?)\s*$/i
+    : /^[,\s]*(^[1-9][0-9]*)?\s*([hdwms]?)\s*$/i;
 
   const matches = intervalRegex.exec(value) || [];
   const count = ~~matches[1];
-  const unit = matches[2] && matches[2].toUpperCase() || null;
+  const unit = (matches[2] && matches[2].toUpperCase()) || null;
   const interval = {
     qty: !count && unit ? 1 : count,
     unit,
   };
   interval.error = !count && !unit;
-  interval.intraday = !(interval.error || (interval.unit && interval.unit !== "H" && interval.unit !== "S" && interval.unit !== "T"));
+  interval.intraday = !(
+    interval.error ||
+    (interval.unit &&
+      interval.unit !== "H" &&
+      interval.unit !== "S" &&
+      interval.unit !== "T")
+  );
   interval.range = interval.unit === "R";
 
   return interval;
@@ -335,16 +413,25 @@ function intervalIsSupported(interval) {
 
     if (!enabled("custom_resolutions")) {
       const normalizedInterval = normalizeIntervalString(interval);
-      const defaultResolutions = window.ChartApiInstance.defaultResolutions().filter(isIntervalEnabled);
+      const defaultResolutions =
+        window.ChartApiInstance.defaultResolutions().filter(isIntervalEnabled);
 
-      if (normalizedInterval && !defaultResolutions.includes(normalizedInterval)) {
+      if (
+        normalizedInterval &&
+        !defaultResolutions.includes(normalizedInterval)
+      ) {
         return false;
       }
     }
 
     const dataFrequencyResolution = linking.dataFrequencyResolution.value();
 
-    if (dataFrequencyResolution !== undefined && parsedInterval.unit !== null && getCustomResolution(dataFrequencyResolution, parsedInterval.unit) !== parsedInterval.unit) {
+    if (
+      dataFrequencyResolution !== undefined &&
+      parsedInterval.unit !== null &&
+      getCustomResolution(dataFrequencyResolution, parsedInterval.unit) !==
+        parsedInterval.unit
+    ) {
       return false;
     }
 
@@ -354,7 +441,11 @@ function intervalIsSupported(interval) {
 
     const supportedResolutions = linking.supportedResolutions.value();
 
-    return !supportedResolutions || (parsedInterval.unit !== null && supportedResolutions.includes(parsedInterval.unit));
+    return (
+      !supportedResolutions ||
+      (parsedInterval.unit !== null &&
+        supportedResolutions.includes(parsedInterval.unit))
+    );
   }
 }
 

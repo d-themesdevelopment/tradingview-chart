@@ -118,7 +118,7 @@ export class HitTestResult {
   }
 }
 
-const AreaName = {
+export const AreaName = {
   Style: "Style",
   Text: "Text",
   SourceItemMove: "SourceItemMove",

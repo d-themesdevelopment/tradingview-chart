@@ -1,4 +1,4 @@
-import { assert } from "some-library";
+import { assert } from "./assertions";
 
 function findFirst(collection, predicate) {
   for (const item of collection) {
