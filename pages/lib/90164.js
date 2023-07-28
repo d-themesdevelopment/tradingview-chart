@@ -1,14 +1,14 @@
-class HHistDirection {
+export class HHistDirection {
   static LeftToRight = "left_to_right";
   static RightToLeft = "right_to_left";
 }
 
-class HHistLocation {
+export class HHistLocation {
   static Relative = "relative";
   static Absolute = "absolute";
 }
 
-class HHistVolumeMode {
+export class HHistVolumeMode {
   static UpDown = "Up/Down";
   static Total = "Total";
   static Delta = "Delta";
@@ -47,7 +47,7 @@ export function materializeHHist(hhist, timePoints) {
   };
 }
 
-function dematerializeHHist(materializedHHist, id) {
+export function dematerializeHHist(materializedHHist, id) {
   const firstBarTime = ensureTimePointIndex(
     materializedHHist.indexOf(materializedHHist.firstBarTime)
   );
@@ -63,7 +63,7 @@ function dematerializeHHist(materializedHHist, id) {
   };
 }
 
-function isHHistInBarsRange(hhist, barsRange) {
+export function isHHistInBarsRange(hhist, barsRange) {
   const firstBarTime = Math.min(hhist.firstBarTime, hhist.lastBarTime);
   const lastBarTime = Math.max(hhist.firstBarTime, hhist.lastBarTime);
 

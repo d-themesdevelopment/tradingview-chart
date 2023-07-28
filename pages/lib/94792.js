@@ -1,30 +1,71 @@
 "use strict";
 
-const TranslatedString = require('36298').TranslatedString;
-const doAnimate = require('88275').doAnimate;
-const ChartUndoModelBase = require('45446').ChartUndoModelBase;
-const saveDefaultProperties = require('46100').saveDefaultProperties;
-const UndoCommand = require('./62591').UndoCommand;
-const ApplyLineToolTemplateUndoCommand = require('37846').ApplyLineToolTemplateUndoCommand;
-const SetPriceScaleSelectionStrategyCommand = require('53051').SetPriceScaleSelectionStrategyCommand;
-const SetScaleRatioPropertiesCommand = require('610').SetScaleRatioPropertiesCommand;
-const trackEvent = require('51768').trackEvent;
-const RestoreDefaultsPreferencesUndoCommand = require('4505').RestoreDefaultsPreferencesUndoCommand;
-const SetPriceScaleModeCommand = require('95367').SetPriceScaleModeCommand;
-const PriceScaleChangeUndoCommand = require('67521').PriceScaleChangeUndoCommand;
+const TranslatedString = require("36298").TranslatedString;
+const doAnimate = require("88275").doAnimate;
+const ChartUndoModelBase = require("45446").ChartUndoModelBase;
+const saveDefaultProperties = require("46100").saveDefaultProperties;
+const UndoCommand = require("./62591").UndoCommand;
+const ApplyLineToolTemplateUndoCommand =
+  require("37846").ApplyLineToolTemplateUndoCommand;
+const SetPriceScaleSelectionStrategyCommand =
+  require("53051").SetPriceScaleSelectionStrategyCommand;
+const SetScaleRatioPropertiesCommand =
+  require("610").SetScaleRatioPropertiesCommand;
+const trackEvent = require("51768").trackEvent;
+const RestoreDefaultsPreferencesUndoCommand =
+  require("4505").RestoreDefaultsPreferencesUndoCommand;
+const SetPriceScaleModeCommand = require("95367").SetPriceScaleModeCommand;
+const PriceScaleChangeUndoCommand =
+  require("67521").PriceScaleChangeUndoCommand;
 
-const moveLeftString = new TranslatedString("move left", require('44352').t(null, void 0, require('15086')));
-const moveRightString = new TranslatedString("move right", require('44352').t(null, void 0, require('61711')));
-const toggleAutoScaleString = new TranslatedString("toggle auto scale", require('44352').t(null, void 0, require('63060')));
-const toggleLockScaleString = new TranslatedString("toggle lock scale", require('44352').t(null, void 0, require('21203')));
-const toggleRegularScaleString = new TranslatedString("toggle regular scale", require('44352').t(null, void 0, require('33714')));
-const toggleIndexedTo100ScaleString = new TranslatedString("toggle indexed to 100 scale", require('44352').t(null, void 0, require('98860')));
-const togglePercentageScaleString = new TranslatedString("toggle percentage scale", require('44352').t(null, void 0, require('68642')));
-const toggleLogScaleString = new TranslatedString("toggle log scale", require('44352').t(null, void 0, require('60166')));
-const invertScaleString = new TranslatedString("invert scale", require('44352').t(null, void 0, require('94245')));
-const removePaneString = new TranslatedString("remove pane", require('44352').t(null, void 0, require('47637')));
-const applyAllChartPropertiesString = new TranslatedString("apply all chart properties", require('44352').t(null, void 0, require('64034')));
-const setPriceScaleSelectionStrategyString = new TranslatedString("set price scale selection strategy to {title}", require('44352').t(null, void 0, require('69485')));
+const moveLeftString = new TranslatedString(
+  "move left",
+  require("44352").t(null, void 0, require("15086"))
+);
+const moveRightString = new TranslatedString(
+  "move right",
+  require("44352").t(null, void 0, require("61711"))
+);
+const toggleAutoScaleString = new TranslatedString(
+  "toggle auto scale",
+  require("44352").t(null, void 0, require("63060"))
+);
+const toggleLockScaleString = new TranslatedString(
+  "toggle lock scale",
+  require("44352").t(null, void 0, require("21203"))
+);
+const toggleRegularScaleString = new TranslatedString(
+  "toggle regular scale",
+  require("44352").t(null, void 0, require("33714"))
+);
+const toggleIndexedTo100ScaleString = new TranslatedString(
+  "toggle indexed to 100 scale",
+  require("44352").t(null, void 0, require("98860"))
+);
+const togglePercentageScaleString = new TranslatedString(
+  "toggle percentage scale",
+  require("44352").t(null, void 0, require("68642"))
+);
+const toggleLogScaleString = new TranslatedString(
+  "toggle log scale",
+  require("44352").t(null, void 0, require("60166"))
+);
+const invertScaleString = new TranslatedString(
+  "invert scale",
+  require("44352").t(null, void 0, require("94245"))
+);
+const removePaneString = new TranslatedString(
+  "remove pane",
+  require("44352").t(null, void 0, require("47637"))
+);
+const applyAllChartPropertiesString = new TranslatedString(
+  "apply all chart properties",
+  require("44352").t(null, void 0, require("64034"))
+);
+const setPriceScaleSelectionStrategyString = new TranslatedString(
+  "set price scale selection strategy to {title}",
+  require("44352").t(null, void 0, require("69485"))
+);
 
 class ChartUndoModel extends ChartUndoModelBase {
   constructor(e, t, i, s, r, n, o, a, l, c, h, d) {
@@ -87,8 +128,18 @@ class ChartUndoModel extends ChartUndoModelBase {
 
   scrollPriceTo(e, t, i) {
     if (!t.isAutoScale()) {
-      if (this._initialPriceScrollPos && Math.abs(this._initialPriceScrollPos - i) > 20) {
-        this.pushUndoCommand(new PriceScaleChangeUndoCommand(this.m_model, e, t, this._initialPriceScrollState));
+      if (
+        this._initialPriceScrollPos &&
+        Math.abs(this._initialPriceScrollPos - i) > 20
+      ) {
+        this.pushUndoCommand(
+          new PriceScaleChangeUndoCommand(
+            this.m_model,
+            e,
+            t,
+            this._initialPriceScrollState
+          )
+        );
         delete this._initialPriceScrollState;
         delete this._initialPriceScrollPos;
       }
@@ -105,7 +156,9 @@ class ChartUndoModel extends ChartUndoModelBase {
   }
 
   setPriceAutoScale(e, t, i) {
-    this.pushUndoCommand(new PriceScaleChangeUndoCommand(this.m_model, e, t, t.state()));
+    this.pushUndoCommand(
+      new PriceScaleChangeUndoCommand(this.m_model, e, t, t.state())
+    );
     this.chartModel().setPriceAutoScale(e, t, i);
   }
 
@@ -215,12 +268,22 @@ class ChartUndoModel extends ChartUndoModelBase {
   }
 
   setPriceScaleSelectionStrategy(e) {
-    if (this.m_model.properties().priceScaleSelectionStrategyName.value() !== e) {
+    if (
+      this.m_model.properties().priceScaleSelectionStrategyName.value() !== e
+    ) {
       trackEvent("Chart", "Change PriceScale Selection Strategy");
       const title = setPriceScaleSelectionStrategyString.format({ title: e });
       this.beginUndoMacro(title);
-      this.setProperty(this.m_model.properties().priceScaleSelectionStrategyName, e, title);
-      const command = new SetPriceScaleSelectionStrategyCommand(this.m_model, e, title);
+      this.setProperty(
+        this.m_model.properties().priceScaleSelectionStrategyName,
+        e,
+        title
+      );
+      const command = new SetPriceScaleSelectionStrategyCommand(
+        this.m_model,
+        e,
+        title
+      );
       this.pushUndoCommand(command);
       this.endUndoMacro();
     }
@@ -300,7 +363,7 @@ class ChartUndoModel extends ChartUndoModelBase {
       },
       onComplete() {
         self.endUndoMacro();
-      }
+      },
     });
   }
 
@@ -323,7 +386,7 @@ class ChartUndoModel extends ChartUndoModelBase {
       },
       onComplete() {
         self.endUndoMacro();
-      }
+      },
     });
   }
 
@@ -364,43 +427,47 @@ class ChartUndoModel extends ChartUndoModelBase {
 
   togglePriceScaleAutoScaleMode(e) {
     const t = {
-      autoScale: !e.isAutoScale()
+      autoScale: !e.isAutoScale(),
     };
     this.setPriceScaleMode(t, e, toggleAutoScaleString);
   }
 
   togglePriceScaleLockScaleMode(e) {
     const t = {
-      lockScale: !e.isLockScale()
+      lockScale: !e.isLockScale(),
     };
     this.setPriceScaleMode(t, e, toggleLockScaleString);
   }
 
   setPriceScaleRegularScaleMode(e) {
-    this.setPriceScaleMode({
-      log: false,
-      percentage: false,
-      indexedTo100: false
-    }, e, toggleRegularScaleString);
+    this.setPriceScaleMode(
+      {
+        log: false,
+        percentage: false,
+        indexedTo100: false,
+      },
+      e,
+      toggleRegularScaleString
+    );
   }
 
   togglePriceScaleIndexedTo100ScaleMode(e) {
     const t = {
-      indexedTo100: !e.isIndexedTo100()
+      indexedTo100: !e.isIndexedTo100(),
     };
     this.setPriceScaleMode(t, e, toggleIndexedTo100ScaleString);
   }
 
   togglePriceScalePercentageScaleMode(e) {
     const t = {
-      percentage: !e.isPercentage()
+      percentage: !e.isPercentage(),
     };
     this.setPriceScaleMode(t, e, togglePercentageScaleString);
   }
 
   togglePriceScaleLogScaleMode(e) {
     const t = {
-      log: !e.isLog()
+      log: !e.isLog(),
     };
     this.setPriceScaleMode(t, e, toggleLogScaleString);
   }

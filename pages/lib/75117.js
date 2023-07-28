@@ -1,14 +1,13 @@
-import { createDeferredPromise } from 'promise-module';
-import { ContextMenuManager, showWarning, showConfirm } from 'ui-module';
-import { ChartChangesWatcher, TradingViewApiBase } from 'tradingview-module';
-import { getStudyInputsInfo, getStudyStylesInfo } from 'study-utils-module';
+import { createDeferredPromise } from "./createDeferredPromise";
+import { showWarning, showConfirm } from "./3615";
+import { ContextMenuManager } from "./ContextMenuManager";
+import { ChartChangesWatcher } from "./ChartChangesWatcher";
+import { TradingViewApiBase } from "./96005";
+import { getStudyInputsInfo } from "./getStudyInputsInfo";
+import { getStudyStylesInfo } from "./getStudyStylesInfo";
 
-const linking = require('linking-module');
-const {
-  logHistory,
-  loggingOn,
-  loggingOff
-} = require('logging-module');
+const linking = require("linking-module");
+const { logHistory, loggingOn, loggingOff } = require("logging-module");
 
 class CustomTradingViewApi extends TradingViewApiBase {
   constructor(options) {
@@ -22,7 +21,7 @@ class CustomTradingViewApi extends TradingViewApiBase {
       favoriteServices,
       chartApiInstance = null,
       studyMarket = null,
-      webview
+      webview,
     } = options;
     super({
       chartApiInstance,
@@ -31,7 +30,7 @@ class CustomTradingViewApi extends TradingViewApiBase {
       saveChartService,
       loadChartService,
       sharingChartService,
-      webview
+      webview,
     });
     this._chartApiInstance = chartApiInstance;
     this._loadChartService = loadChartService;
@@ -48,7 +47,9 @@ class CustomTradingViewApi extends TradingViewApiBase {
     this._getDataSourceHub = () => {
       return chartWidgetCollection.activeChartWidget.value().model().model();
     };
-    this._alertService = this._alertsDispatcher ? new AlertService(this._alertsDispatcher, this._getDataSourceHub) : null;
+    this._alertService = this._alertsDispatcher
+      ? new AlertService(this._alertsDispatcher, this._getDataSourceHub)
+      : null;
     this._activeChangedChangedDelegate = new EventEmitter();
     this._chartWidgetCollection.activeChartWidget.subscribe(() => {
       this._activeChangedChangedDelegate.fire();
@@ -65,13 +66,13 @@ class CustomTradingViewApi extends TradingViewApiBase {
   }
 
   onContextMenu(callback) {
-    createDeferredPromise.subscribe('onContextMenu', (params) => {
+    createDeferredPromise.subscribe("onContextMenu", (params) => {
       params.callback(callback(params.unixtime, params.price));
     });
   }
 
   onGrayedObjectClicked(handler) {
-    createDeferredPromise.subscribe('onGrayedObjectClicked', handler);
+    createDeferredPromise.subscribe("onGrayedObjectClicked", handler);
   }
 
   onActiveChartChanged() {
@@ -82,22 +83,24 @@ class CustomTradingViewApi extends TradingViewApiBase {
     linking.interval.setValue(Interval.normalize(interval));
     linking.symbol.setValue(symbol);
     if (onDataLoadedCallback) {
-      this.activeChart().onDataLoaded().subscribe(null, onDataLoadedCallback, true);
+      this.activeChart()
+        .onDataLoaded()
+        .subscribe(null, onDataLoadedCallback, true);
     }
   }
 
   viewMode() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   viewModeWatchedValue() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   getSymbolInterval(callback) {
     const result = {
       symbol: linking.symbol.value(),
-      interval: linking.interval.value()
+      interval: linking.interval.value(),
     };
     if (callback) {
       callback(result);
@@ -121,15 +124,18 @@ class CustomTradingViewApi extends TradingViewApiBase {
     if (data.extendedData) {
       this._chartWidgetCollection.metaInfo.id.setValue(data.extendedData.uid);
       this._chartWidgetCollection.metaInfo.uid.setValue(data.extendedData.uid);
-      this._chartWidgetCollection.metaInfo.name.setValue(data.extendedData.name);
+      this._chartWidgetCollection.metaInfo.name.setValue(
+        data.extendedData.name
+      );
     }
     this._chartApiInstance.connect();
     linking.symbol.setValue(this.activeChart().symbol());
-    createDeferredPromise.emit('chart_loaded');
+    createDeferredPromise.emit("chart_loaded");
   }
 
   getStudiesList() {
-    return this._chartApiInstance.allStudiesMetadata()
+    return this._chartApiInstance
+      .allStudiesMetadata()
       .filter((study) => !study.is_hidden_study)
       .map((study) => study.description);
   }
@@ -195,7 +201,7 @@ class CustomTradingViewApi extends TradingViewApiBase {
         return supportedLineTools[i];
       }
     }
-    return '';
+    return "";
   }
 
   lockAllDrawingTools() {
@@ -213,7 +219,9 @@ class CustomTradingViewApi extends TradingViewApiBase {
 
   hideAllDrawingTools() {
     if (!this._hideDrawingsWatchedValue) {
-      this._hideDrawingsWatchedValue = new WatchedValue(hideAllDrawings.value());
+      this._hideDrawingsWatchedValue = new WatchedValue(
+        hideAllDrawings.value()
+      );
       this._hideDrawingsWatchedValue.subscribe((value) => {
         hideAllDrawings.value = value;
       });
@@ -225,10 +233,10 @@ class CustomTradingViewApi extends TradingViewApiBase {
   }
 
   hideAllIndicators() {
-    if (!this._hideIndicatorsWatch
-
-edValue) {
-      this._hideIndicatorsWatchedValue = new WatchedValue(hideAllIndicators.value());
+    if (!this._hideIndicatorsWatchedValue) {
+      this._hideIndicatorsWatchedValue = new WatchedValue(
+        hideAllIndicators.value()
+      );
       this._hideIndicatorsWatchedValue.subscribe((value) => {
         hideAllIndicators.value = value;
       });
@@ -240,20 +248,25 @@ edValue) {
   }
 
   mainSeriesPriceFormatter() {
-    return this._chartWidgetCollection.activeChartWidget.value().model().mainSeries().priceScale().formatter();
+    return this._chartWidgetCollection.activeChartWidget
+      .value()
+      .model()
+      .mainSeries()
+      .priceScale()
+      .formatter();
   }
 
   showNoticeDialog(options) {
     showWarning({
       title: options.title,
-      text: options.body || '',
-      onClose: options.callback
+      text: options.body || "",
+      onClose: options.callback,
     });
   }
 
   showConfirmDialog(options) {
     if (!options.callback) {
-      throw new Error('Callback must be provided');
+      throw new Error("Callback must be provided");
     }
     let callback = options.callback;
 
@@ -265,14 +278,14 @@ edValue) {
     }
     showConfirm({
       title: options.title,
-      text: options.body || '',
-      onClose: function() {
+      text: options.body || "",
+      onClose: function () {
         confirmHandler(false);
       },
-      onConfirm: function(e) {
+      onConfirm: function (e) {
         confirmHandler(true);
         e.dialogClose();
-      }
+      },
     });
   }
 
@@ -280,7 +293,7 @@ edValue) {
     return {
       getLogHistory: logHistory,
       enable: loggingOn,
-      disable: loggingOff
+      disable: loggingOff,
     };
   }
 
@@ -294,92 +307,95 @@ edValue) {
   showSaveAsChartDialog() {
     const saveChartService = this._saveChartService;
     if (saveChartService) {
-      window.runOrSignIn(() => {
-        saveChartService.saveChartAs();
-      }, {
-        source: 'Save as chart dialogue'
-      });
+      window.runOrSignIn(
+        () => {
+          saveChartService.saveChartAs();
+        },
+        {
+          source: "Save as chart dialogue",
+        }
+      );
     }
   }
 
   drawOnAllCharts(value) {
-    return drawOnAllCharts.value = value;
+    return (drawOnAllCharts.value = value);
   }
 
   trading() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   waitTrading() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   symbolSearch() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   saveChartOrShowTitleDialog(value, callback, options) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   showRenameChartDialog() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   setUserInfo(data) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   connect() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   disconnect() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   loginRequired() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   onConnectionStatusChanged(handler) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   isConnected() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   showCreateAlertDialog() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   alertService() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   publishChart(data) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   setPublishChartOptions(options) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   showSupportDialog() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   openMobileChartPicker() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   closeMobileChartPicker() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   replayApi() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   takeScreenshot() {
@@ -407,15 +423,15 @@ edValue) {
   }
 
   getFavoriteIntervalsService() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   getFavoriteChartStylesService() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   getLinetoolsFavoritesStore() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   supportTicketData() {
@@ -429,20 +445,23 @@ edValue) {
         window.saver,
         createDeferredPromise
       );
-      this._hasChartChangesWatchedValue = new WatchedValue(this._chartChangesWatcher.hasChanges());
+      this._hasChartChangesWatchedValue = new WatchedValue(
+        this._chartChangesWatcher.hasChanges()
+      );
       this._chartChangesWatcher.getOnChange().subscribe(this, () => {
-        this._hasChartChangesWatchedValue.value = this._chartChangesWatcher.hasChanges();
+        this._hasChartChangesWatchedValue.value =
+          this._chartChangesWatcher.hasChanges();
       });
     }
     return this._hasChartChangesWatchedValue;
   }
 
   createGoProDialog(options) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   onGoProDialog(event, handler) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 }
 

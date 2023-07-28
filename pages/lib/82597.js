@@ -1,23 +1,15 @@
 import { VolumeByPriceExpr, VbPCheckHaveVolumeExpr } from "./89529";
 import { VbPCheckHaveVolumeExpr } from "./VbPCheckHaveVolumeExpr";
-import {
-  VolumeProfileBase,
-  numOfSubHists,
-  maxHHistItems,
-  assert,
-  ensureDefined,
-} from "another-library";
+import { VolumeProfileBase, numOfSubHists, maxHHistItems } from "./16907";
+import { assert, ensureDefined } from "./assertions";
+import { HHistDirection } from "./90164";
+import { GraphicsListColl } from "./GraphicsListColl";
+import { GraphicsList } from "./GraphicsList";
+import { VolumeProfileOutputSeries } from "./VolumeProfileOutputSeries";
+import { Container } from "./748";
 
-import {
-  HHistDirection,
-  Container,
-  GraphicsListColl,
-  GraphicsList,
-  VolumeProfileOutputSeries,
-} from "yet-another-library";
-
-import { LineStyle, LineStudyPlotStyle } from "some-other-library";
-import { EraseObj } from "some-more-library";
+import { LineStyle, LineStudyPlotStyle } from "some-other-library"; // ! not correct
+import { EraseObj } from "./43945";
 
 class VolumeProfileFixedRangeVbPStudyItem extends VolumeByPriceExpr {
   constructor(e, t, i, s, r, n, o, a, l, c, h, d, u) {

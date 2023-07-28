@@ -1,7 +1,6 @@
-
 "use strict";
 
-class EraseObj {
+export class EraseObj {
   constructor(id, type) {
     this.id = id;
     this.type = type;
@@ -11,7 +10,7 @@ class EraseObj {
     return {
       action: "one",
       id: this.id,
-      type: this.type
+      type: this.type,
     };
   }
 }
@@ -19,7 +18,7 @@ class EraseObj {
 export class EraseAll {
   primitiveData() {
     return {
-      action: "all"
+      action: "all",
     };
   }
 }
@@ -39,7 +38,7 @@ export class GraphicsCmds {
       t.create = i;
     }
     if (this.erase !== null && this.erase.length > 0) {
-      t.erase = this.erase.map(e => e.primitiveData());
+      t.erase = this.erase.map((e) => e.primitiveData());
     }
     if (t.create === undefined && t.erase === undefined) {
       return null;
@@ -49,11 +48,13 @@ export class GraphicsCmds {
 
   setCreate(e) {
     this.create = e;
-    this.create.forEachList(e => e.setOwner(this));
+    this.create.forEachList((e) => e.setOwner(this));
   }
 
   isNaN() {
-    return (this.erase === null || this.erase.length === 0) && this.create === null;
+    return (
+      (this.erase === null || this.erase.length === 0) && this.create === null
+    );
   }
 
   isModified() {
