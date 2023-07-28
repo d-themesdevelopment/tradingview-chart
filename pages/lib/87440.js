@@ -7,7 +7,7 @@ import { clone } from "./StrickTypeChecks";
 import { ensure } from "./assertions";
 import { e } from "./21905";
 
-class LineToolParallelChannel extends LineDataSource {
+export class LineToolParallelChannel extends LineDataSource {
   constructor(source, points, properties, model) {
     super(
       source,

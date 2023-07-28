@@ -1,23 +1,26 @@
 "use strict";
 
-const LineToolElliott = {
-  LineToolElliott: () => u,
-  LineToolElliottCorrection: () => w,
-  LineToolElliottDoubleCombo: () => C,
-  LineToolElliottImpulse: () => m,
-  LineToolElliottTriangle: () => f,
-  LineToolElliottTripleCombo: () => S
-};
+// const LineToolElliott = {
+//   LineToolElliott: () => u,
+//   LineToolElliottCorrection: () => w,
+//   LineToolElliottDoubleCombo: () => C,
+//   LineToolElliottImpulse: () => m,
+//   LineToolElliottTriangle: () => f,
+//   LineToolElliottTripleCombo: () => S,
+// };
 
-const r = require(36298);
-const n = require(13087);
-const o = require(39347);
-const a = require(46100);
-const l = require(68806);
+import { TranslatedString } from "./TranslatedString";
+import { LineDataSource } from "./13087";
+import { Action } from "./39347";
+import { DefaultProperty } from "./46100";
+import { LineToolColorsProperty } from "./68806";
 
 const degreeOptions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-const changeDegreeTranslation = new r.TranslatedString("change Elliott degree", t(null, void 0, "./76020"));
+const changeDegreeTranslation = new TranslatedString(
+  "change Elliott degree",
+  t(null, void 0, "./76020")
+);
 
 const degreeLabels = [
   { value: 0, title: t(null, void 0, "./33820") },
@@ -34,10 +37,10 @@ const degreeLabels = [
   { value: 11, title: t(null, void 0, "./71722") },
   { value: 12, title: t(null, void 0, "./10931") },
   { value: 13, title: t(null, void 0, "./29662") },
-  { value: 14, title: t(null, void 0, "./9632") }
+  { value: 14, title: t(null, void 0, "./9632") },
 ];
 
-class ElliottLineTool extends n.LineDataSource {
+class ElliottLineTool extends LineDataSource {
   constructor(e, t, s, r) {
     super(e, t || ElliottLineTool.createProperties(), s, r);
     this.version = 4;
@@ -80,33 +83,38 @@ class ElliottLineTool extends n.LineDataSource {
 
   additionalActions(e) {
     return [
-      new o.Action({
+      new Action({
         actionId: "Chart.LineTool.Elliot.ChangeDegreeProperty",
         label: t(null, void 0, "./69479"),
         subItems: degreeOptions.map((t) => {
           const degree = degreeLabels.filter((e) => e.value === t)[0];
-          return new o.Action({
+          return new Action({
             actionId: "Chart.LineTool.Elliot.ChangeDegreeProperty",
             label: degree.title,
             checkable: true,
             checked: this.properties().childs().degree.value() === t,
             onExecute: () => {
-              e.setProperty(this.properties().childs().degree, t, changeDegreeTranslation);
-            }
+              e.setProperty(
+                this.properties().childs().degree,
+                t,
+                changeDegreeTranslation
+              );
+            },
           });
-        })
-      })
+        }),
+      }),
     ];
   }
 
   label(e) {
-    const degreeIndex = degreeOptions.length - this.properties().childs().degree.value() - 1;
+    const degreeIndex =
+      degreeOptions.length - this.properties().childs().degree.value() - 1;
     const groupIndex = Math.floor(degreeIndex / 3);
     return {
       group: groupIndex,
       bold: !!(groupIndex % 2),
       decoration: ["", "brackets", "circle"][degreeIndex % 3],
-      label: this.labelsGroup()[groupIndex][e]
+      label: this.labelsGroup()[groupIndex][e],
     };
   }
 
@@ -115,13 +123,16 @@ class ElliottLineTool extends n.LineDataSource {
   }
 
   static createProperties(e) {
-    const properties = new a.DefaultProperty("linetoolelliott", e);
+    const properties = new DefaultProperty("linetoolelliott", e);
     return this._configureProperties(properties), properties;
   }
 
   static _configureProperties(properties) {
     super._configureProperties(properties);
-    properties.addChild("linesColors", new l.LineToolColorsProperty([properties.childs().color]));
+    properties.addChild(
+      "linesColors",
+      new LineToolColorsProperty([properties.childs().color])
+    );
     properties.addExclusion("linesColors");
   }
 }
@@ -141,12 +152,12 @@ class ElliottImpulseLineTool extends ElliottLineTool {
       ["0", "i", "ii", "iii", "iv", "v"],
       ["0", "1", "2", "3", "4", "5"],
       ["0", "I", "II", "III", "IV", "V"],
-      ["0", "1", "2", "3", "4", "5"]
+      ["0", "1", "2", "3", "4", "5"],
     ];
   }
 
   static createProperties(e) {
-    const properties = new a.DefaultProperty("linetoolelliottimpulse", e);
+    const properties = new DefaultProperty("linetoolelliottimpulse", e);
     return this._configureProperties(properties), properties;
   }
 }
@@ -166,12 +177,12 @@ class ElliottTriangleLineTool extends ElliottLineTool {
       ["0", "a", "b", "c", "d", "e"],
       ["0", "A", "B", "C", "D", "E"],
       ["0", "a", "b", "c", "d", "e"],
-      ["0", "A", "B", "C", "D", "E"]
+      ["0", "A", "B", "C", "D", "E"],
     ];
   }
 
   static createProperties(e) {
-    const properties = new a.DefaultProperty("linetoolelliotttriangle", e);
+    const properties = new DefaultProperty("linetoolelliotttriangle", e);
     return this._configureProperties(properties), properties;
   }
 }
@@ -191,12 +202,12 @@ class ElliottTripleComboLineTool extends ElliottLineTool {
       ["0", "w", "x", "y", "x", "z"],
       ["0", "W", "X", "Y", "X", "Z"],
       ["0", "w", "x", "y", "x", "z"],
-      ["0", "W", "X", "Y", "X", "Z"]
+      ["0", "W", "X", "Y", "X", "Z"],
     ];
   }
 
   static createProperties(e) {
-    const properties = new a.DefaultProperty("linetoolelliotttriplecombo", e);
+    const properties = new DefaultProperty("linetoolelliotttriplecombo", e);
     return this._configureProperties(properties), properties;
   }
 }
@@ -216,12 +227,12 @@ class ElliottCorrectionLineTool extends ElliottLineTool {
       ["0", "a", "b", "c"],
       ["0", "A", "B", "C"],
       ["0", "a", "b", "c"],
-      ["0", "A", "B", "C"]
+      ["0", "A", "B", "C"],
     ];
   }
 
   static createProperties(e) {
-    const properties = new a.DefaultProperty("linetoolelliottcorrection", e);
+    const properties = new DefaultProperty("linetoolelliottcorrection", e);
     return this._configureProperties(properties), properties;
   }
 }
@@ -241,12 +252,12 @@ class ElliottDoubleComboLineTool extends ElliottLineTool {
       ["0", "w", "x", "y"],
       ["0", "W", "X", "Y"],
       ["0", "w", "x", "y"],
-      ["0", "W", "X", "Y"]
+      ["0", "W", "X", "Y"],
     ];
   }
 
   static createProperties(e) {
-    const properties = new a.DefaultProperty("linetoolelliottdoublecombo", e);
+    const properties = new DefaultProperty("linetoolelliottdoublecombo", e);
     return this._configureProperties(properties), properties;
   }
 }
@@ -258,5 +269,5 @@ module.exports = {
   ElliottTriangleLineTool,
   ElliottTripleComboLineTool,
   ElliottCorrectionLineTool,
-  ElliottDoubleComboLineTool
+  ElliottDoubleComboLineTool,
 };

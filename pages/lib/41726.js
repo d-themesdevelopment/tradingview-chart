@@ -1,7 +1,16 @@
-import { clearStyle, createEmptyStyle } from 'path/to/clearStyle';
-import { ensureDefined } from 'path/to/ensureDefined';
-import { isColorerPlot, isOhlcColorerPlot, isTextColorerPlot, isBgColorerPlot, isCandleBorderColorerPlot, isCandleWickColorerPlot, isUpColorerPlot, isDownColorerPlot } from 'path/to/plotUtils';
-import { rgbaFromInteger } from 'path/to/rgbaFromInteger';
+import { clearStyle, createEmptyStyle } from "path/to/clearStyle";
+import { ensureDefined } from "path/to/ensureDefined";
+import {
+  // isColorerPlot,
+  isOhlcColorerPlot,
+  // isTextColorerPlot,
+  isBgColorerPlot,
+  // isCandleBorderColorerPlot,
+  // isCandleWickColorerPlot,
+  // isUpColorerPlot,
+  // isDownColorerPlot,
+} from "path/to/plotUtils";
+import { rgbaFromInteger } from "path/to/rgbaFromInteger";
 
 const plotStyleMap = new Map([
   [0, "color"],
@@ -9,7 +18,7 @@ const plotStyleMap = new Map([
   [3, "borderColor"],
   [4, "wickColor"],
   [5, "colorup"],
-  [6, "colordown"]
+  [6, "colordown"],
 ]);
 
 class PlotColorProvider {
@@ -26,8 +35,12 @@ class PlotColorProvider {
       }
     });
 
-    pointStyle.lineWidth = this._plotStyle.linewidth ? this._plotStyle.linewidth.value() : undefined;
-    pointStyle.lineStyle = this._plotStyle.linestyle ? this._plotStyle.linestyle.value() : undefined;
+    pointStyle.lineWidth = this._plotStyle.linewidth
+      ? this._plotStyle.linewidth.value()
+      : undefined;
+    pointStyle.lineStyle = this._plotStyle.linestyle
+      ? this._plotStyle.linestyle.value()
+      : undefined;
 
     return pointStyle;
   }
@@ -105,7 +118,9 @@ class PalettePlotColorProvider {
           pointStyle.colors[plotIndex] = "transparent";
         }
       } else {
-        pointStyle.colors[plotIndex] = this._defaultPlotColors.get(plotIndex)?.value();
+        pointStyle.colors[plotIndex] = this._defaultPlotColors
+          .get(plotIndex)
+          ?.value();
       }
     });
 
@@ -116,9 +131,17 @@ class PalettePlotColorProvider {
     const defaultColor = this._palettesColors.get(0)?.[0];
     if (defaultColor !== undefined) {
       return {
-        colors: [defaultColor.color.value(), undefined, undefined, undefined, undefined, undefined, undefined],
+        colors: [
+          defaultColor.color.value(),
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+        ],
         lineStyle: undefined,
-        lineWidth: defaultColor.width.value()
+        lineWidth: defaultColor.width.value(),
       };
     }
 
@@ -169,42 +192,68 @@ class IntegerPlotColorProvider {
 }
 
 const colorerFunctions = new Map([
-  [0, (target, plot) => {
-    const isColorerPlot = isColorerPlot(plot) || isOhlcColorerPlot(plot);
-    return "target" in plot && plot.target === target && isColorerPlot;
-  }],
-  [2, (target, plot) => {
-    const isTextColorerPlot = isTextColorerPlot(plot);
-    return "target" in plot && plot.target === target && isTextColorerPlot;
-  }],
-  [1, (target, plot) => {
-    return isBgColorerPlot(plot) && plot.id === target;
-  }],
-  [3, (target, plot) => {
-    const isCandleBorderColorerPlot = isCandleBorderColorerPlot(plot);
-    return "target" in plot && plot.target === target && isCandleBorderColorerPlot;
-  }],
-  [4, (target, plot) => {
-    const isCandleWickColorerPlot = isCandleWickColorerPlot(plot);
-    return "target" in plot && plot.target === target && isCandleWickColorerPlot;
-  }],
-  [5, (target, plot) => {
-    const isUpColorerPlot = isUpColorerPlot(plot);
-    return "target" in plot && plot.target === target && isUpColorerPlot;
-  }],
-  [6, (target, plot) => {
-    const isDownColorerPlot = isDownColorerPlot(plot);
-    return "target" in plot && plot.target === target && isDownColorerPlot;
-  }]
+  [
+    0,
+    (target, plot) => {
+      const isColorerPlot = isColorerPlot(plot) || isOhlcColorerPlot(plot);
+      return "target" in plot && plot.target === target && isColorerPlot;
+    },
+  ],
+  [
+    2,
+    (target, plot) => {
+      const isTextColorerPlot = isTextColorerPlot(plot);
+      return "target" in plot && plot.target === target && isTextColorerPlot;
+    },
+  ],
+  [
+    1,
+    (target, plot) => {
+      return isBgColorerPlot(plot) && plot.id === target;
+    },
+  ],
+  [
+    3,
+    (target, plot) => {
+      const isCandleBorderColorerPlot = isCandleBorderColorerPlot(plot);
+      return (
+        "target" in plot && plot.target === target && isCandleBorderColorerPlot
+      );
+    },
+  ],
+  [
+    4,
+    (target, plot) => {
+      const isCandleWickColorerPlot = isCandleWickColorerPlot(plot);
+      return (
+        "target" in plot && plot.target === target && isCandleWickColorerPlot
+      );
+    },
+  ],
+  [
+    5,
+    (target, plot) => {
+      const isUpColorerPlot = isUpColorerPlot(plot);
+      return "target" in plot && plot.target === target && isUpColorerPlot;
+    },
+  ],
+  [
+    6,
+    (target, plot) => {
+      const isDownColorerPlot = isDownColorerPlot(plot);
+      return "target" in plot && plot.target === target && isDownColorerPlot;
+    },
+  ],
 ]);
 
 function createStudyPlotColorProvider(chartStyle, palettes, plotIndex) {
-  const { plotIndex: index, colorers } = function findPlotIndex(chartStyle, plotId) {
+  const { plotIndex: index, colorers } = (function findPlotIndex(
+    chartStyle,
+    plotId
+  ) {
     const plots = chartStyle.plots;
     const plotIndex = plots.findIndex((plot) => plot.id === plotId);
-    const
-
- colorers = new Map();
+    const colorers = new Map();
     plots.forEach((plot, index) => {
       colorerFunctions.forEach((func, colorerIndex) => {
         if (func(plotId, plot)) {
@@ -214,12 +263,14 @@ function createStudyPlotColorProvider(chartStyle, palettes, plotIndex) {
     });
     return {
       plotIndex: index === -1 ? null : index,
-      colorers: colorers
+      colorers: colorers,
     };
-  }(chartStyle, plotIndex);
+  })(chartStyle, plotIndex);
 
   if (colorers.size) {
-    return chartStyle.isRGB ? new IntegerPlotColorProvider(colorers) : new PalettePlotColorProvider(chartStyle, palettes, plotIndex, colorers);
+    return chartStyle.isRGB
+      ? new IntegerPlotColorProvider(colorers)
+      : new PalettePlotColorProvider(chartStyle, palettes, plotIndex, colorers);
   } else {
     const ohlcPlots = chartStyle.ohlcPlots;
     if (ohlcPlots && ohlcPlots[plotIndex]) {
@@ -230,6 +281,4 @@ function createStudyPlotColorProvider(chartStyle, palettes, plotIndex) {
   }
 }
 
-export {
-  createStudyPlotColorProvider
-};
+export { createStudyPlotColorProvider };

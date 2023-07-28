@@ -1,9 +1,11 @@
 "use strict";
 
-class LineToolSineLine extends LineDataSource {
+export class LineToolSineLine extends LineDataSource {
   constructor(e, t, s, r) {
     super(e, t || LineToolSineLine.createProperties(), s, r);
-    import(/* webpackChunkName: "sine-line-pane-view" */ './sine-line-pane-view').then((module) => {
+    import(
+      /* webpackChunkName: "sine-line-pane-view" */ "./sine-line-pane-view"
+    ).then((module) => {
       const SineLinePaneView = module.default;
       this._setPaneViews([new SineLinePaneView(this, this._model)]);
     });
@@ -25,13 +27,17 @@ class LineToolSineLine extends LineDataSource {
 
   async _getPropertyDefinitionsViewModelClass() {
     const modulePromises = [
-      import(/* webpackChunkName: "cyclic-and-sine-lines-pattern-definitions-view-model" */ './cyclic-and-sine-lines-pattern-definitions-view-model'),
-      import(/* webpackChunkName: "module2" */ 'module2'),
-      import(/* webpackChunkName: "module3" */ 'module3'),
-      import(/* webpackChunkName: "module4" */ 'module4'),
-      import(/* webpackChunkName: "module5" */ 'module5')
+      import(
+        /* webpackChunkName: "cyclic-and-sine-lines-pattern-definitions-view-model" */ "./cyclic-and-sine-lines-pattern-definitions-view-model"
+      ),
+      import(/* webpackChunkName: "module2" */ "module2"),
+      import(/* webpackChunkName: "module3" */ "module3"),
+      import(/* webpackChunkName: "module4" */ "module4"),
+      import(/* webpackChunkName: "module5" */ "module5"),
     ];
-    const [CyclicAndSineLinesPatternDefinitionsViewModel] = await Promise.all(modulePromises);
+    const [CyclicAndSineLinesPatternDefinitionsViewModel] = await Promise.all(
+      modulePromises
+    );
     return CyclicAndSineLinesPatternDefinitionsViewModel;
   }
 }

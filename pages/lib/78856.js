@@ -1,5 +1,8 @@
-import { Point, ensureNotNull } from 'some-library';
-import { customFormatters, numberToStringWithLeadingZero } from 'some-other-library';
+import { Point, ensureNotNull } from "some-library";
+import {
+  customFormatters,
+  numberToStringWithLeadingZero,
+} from "some-other-library";
 
 class TrendAngleProperty extends Property {
   constructor(lineSource) {
@@ -8,17 +11,24 @@ class TrendAngleProperty extends Property {
   }
 
   value() {
-    return Math.round(180 * this.lineSource.angle() / Math.PI);
+    return Math.round((180 * this.lineSource.angle()) / Math.PI);
   }
 
   setValue(value) {
     const angleRadians = (value * Math.PI) / 180;
-    const startPoint = ensureNotNull(this.lineSource.pointToScreenPoint(this.lineSource.points()[0]));
+    const startPoint = ensureNotNull(
+      this.lineSource.pointToScreenPoint(this.lineSource.points()[0])
+    );
     const cos = Math.cos(angleRadians);
     const sin = -Math.sin(angleRadians);
     const direction = new Point(cos, sin);
-    const endPoint = startPoint.addScaled(direction, this.lineSource.distance());
-    const endPointInData = ensureNotNull(this.lineSource.screenPointToPoint(endPoint));
+    const endPoint = startPoint.addScaled(
+      direction,
+      this.lineSource.distance()
+    );
+    const endPointInData = ensureNotNull(
+      this.lineSource.screenPointToPoint(endPoint)
+    );
 
     this.lineSource.setPoint(1, endPointInData);
     const model = this.lineSource.model();
@@ -32,7 +42,7 @@ class TrendAngleProperty extends Property {
   }
 }
 
-class LineToolTrendAngle extends LineDataSource {
+export class LineToolTrendAngle extends LineDataSource {
   constructor(model, options, priceScale, id) {
     const properties = options || LineToolTrendAngle.createProperties();
     super(model, properties, priceScale, id);
@@ -40,9 +50,11 @@ class LineToolTrendAngle extends LineDataSource {
     this._angle = 0;
     this._distance = 0;
 
-    properties.addChild('angle', new TrendAngleProperty(this));
+    properties.addChild("angle", new TrendAngleProperty(this));
 
-    import(/* webpackChunkName: "line-tools-trend-angle" */ './trend-angle-pane-view').then(({ TrendAnglePaneView }) => {
+    import(
+      /* webpackChunkName: "line-tools-trend-angle" */ "./trend-angle-pane-view"
+    ).then(({ TrendAnglePaneView }) => {
       const paneViews = [new TrendAnglePaneView(this, model)];
       this._setPaneViews(paneViews);
     });
@@ -57,7 +69,7 @@ class LineToolTrendAngle extends LineDataSource {
   }
 
   name() {
-    return 'Trend Angle';
+    return "Trend Angle";
   }
 
   angle() {
@@ -137,12 +149,17 @@ class LineToolTrendAngle extends LineDataSource {
   }
 
   static createProperties(options) {
-    if (options && options.showPriceRange !== undefined && options.showPercentPriceRange === undefined && options.showPipsPriceRange === undefined) {
+    if (
+      options &&
+      options.showPriceRange !== undefined &&
+      options.showPercentPriceRange === undefined &&
+      options.showPipsPriceRange === undefined
+    ) {
       options.showPercentPriceRange = options.showPriceRange;
       options.showPipsPriceRange = options.showPriceRange;
     }
 
-    const properties = new DefaultProperty('line-tool-trend-angle', options);
+    const properties = new DefaultProperty("line-tool-trend-angle", options);
     this._configureProperties(properties);
     return properties;
   }
@@ -152,13 +169,20 @@ class LineToolTrendAngle extends LineDataSource {
   }
 
   _getAlertPlots() {
-    const plot = this._linePointsToAlertPlot(this._points, null, this._properties.childs().extendLeft.value(), this._properties.childs().extendRight.value());
+    const plot = this._linePointsToAlertPlot(
+      this._points,
+      null,
+      this._properties.childs().extendLeft.value(),
+      this._properties.childs().extendRight.value()
+    );
     return plot ? [plot] : [];
   }
 
   _calculateAngle() {
     const startPoint = ensureNotNull(this.pointToScreenPoint(this.points()[0]));
-    let endPointDiff = ensureNotNull(this.pointToScreenPoint(this.points()[1])).subtract(startPoint);
+    let endPointDiff = ensureNotNull(
+      this.pointToScreenPoint(this.points()[1])
+    ).subtract(startPoint);
     const distance = endPointDiff.length();
 
     if (distance > 0) {
@@ -176,6 +200,10 @@ class LineToolTrendAngle extends LineDataSource {
   }
 
   _getPropertyDefinitionsViewModelClass() {
-    return import(/* webpackChunkName: "line-tools-trend-angle" */ './trend-angle-definitions-view-model').then(({ TrendAngleDefinitionsViewModel }) => TrendAngleDefinitionsViewModel);
+    return import(
+      /* webpackChunkName: "line-tools-trend-angle" */ "./trend-angle-definitions-view-model"
+    ).then(
+      ({ TrendAngleDefinitionsViewModel }) => TrendAngleDefinitionsViewModel
+    );
   }
 }

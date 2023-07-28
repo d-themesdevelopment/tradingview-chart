@@ -1,9 +1,13 @@
-
 import { LineToolTrendLine } from "./47246.js";
 
-class LineToolRay extends LineToolTrendLine {
+export class LineToolRay extends LineToolTrendLine {
   constructor(chartModel, properties, options, inputObject) {
-    super(chartModel, properties || LineToolRay.createProperties(), options, inputObject);
+    super(
+      chartModel,
+      properties || LineToolRay.createProperties(),
+      options,
+      inputObject
+    );
   }
 
   name() {
@@ -20,4 +24,3 @@ class LineToolRay extends LineToolTrendLine {
 module.exports = {
   LineToolRay,
 };
-

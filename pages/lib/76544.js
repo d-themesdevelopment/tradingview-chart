@@ -1,8 +1,9 @@
-import { deepExtend } from 'some-library';
-import { getLogger } from 'another-library';
-import { TIMEFRAMETYPE, isSingleValueBasedStyle } from 'yet-another-library';
-import { SeriesBase } from 'some-other-library';
-import { isInteger } from 'some-utility-library';
+import { deepExtend } from "./30888";
+import { getLogger } from "another-library"; // ! not correct
+import { TIMEFRAMETYPE } from "yet-another-library"; // ! not correct
+import { isSingleValueBasedStyle } from "./42960";
+import { SeriesBase } from "some-other-library"; // ! not correct
+import { isInteger } from "./1722";
 
 class CustomSeries extends SeriesBase {
   constructor(chartApi, properties, seriesSource, model) {
@@ -10,28 +11,48 @@ class CustomSeries extends SeriesBase {
     super(chartApi, properties, seriesSource, model);
     this._chartApi = chartApi;
     this.createPaneView();
-    this._properties.addExclusion && (this._properties.addExclusion("visible"), this._properties.addExclusion("currencyId"));
+    this._properties.addExclusion &&
+      (this._properties.addExclusion("visible"),
+      this._properties.addExclusion("currencyId"));
     this._futureBarsPaneView = null;
 
-    this.properties().minTick.listeners().subscribe(this, CustomSeries.prototype._recreateFormatter);
-    this.properties().minTick.listeners().subscribe(null, () => {
-      this._model.fullUpdate();
-    });
+    this.properties()
+      .minTick.listeners()
+      .subscribe(this, CustomSeries.prototype._recreateFormatter);
+    this.properties()
+      .minTick.listeners()
+      .subscribe(null, () => {
+        this._model.fullUpdate();
+      });
 
     this._priceLineView = null;
     this._baseHorizontalLineView = new HorizontalLinePaneView(this);
     this.bindStyleChange();
     this.bindJapChartsInputs();
     this._createIsDWMProperty();
-    this.properties().showCountdown.listeners().subscribe(this, CustomSeries.prototype._onChangeShowCountdown);
+    this.properties()
+      .showCountdown.listeners()
+      .subscribe(this, CustomSeries.prototype._onChangeShowCountdown);
     this._onChangeShowCountdown(this.properties().showCountdown);
     this._recreatePriceFormattingDependencies();
-    this.properties().lineStyle.priceSource.listeners().subscribe(this, this._updateBarFunction);
-    this.properties().lineWithMarkersStyle.priceSource.listeners().subscribe(this, this._updateBarFunction);
-    this.properties().steplineStyle.priceSource.listeners().subscribe(this, this._updateBarFunction);
-    this.properties().areaStyle.priceSource.listeners().subscribe(this, this._updateBarFunction);
-    this.properties().baselineStyle.priceSource.listeners().subscribe(this, this._updateBarFunction);
-    this.properties().columnStyle.priceSource.listeners().subscribe(this, this._updateBarFunction);
+    this.properties()
+      .lineStyle.priceSource.listeners()
+      .subscribe(this, this._updateBarFunction);
+    this.properties()
+      .lineWithMarkersStyle.priceSource.listeners()
+      .subscribe(this, this._updateBarFunction);
+    this.properties()
+      .steplineStyle.priceSource.listeners()
+      .subscribe(this, this._updateBarFunction);
+    this.properties()
+      .areaStyle.priceSource.listeners()
+      .subscribe(this, this._updateBarFunction);
+    this.properties()
+      .baselineStyle.priceSource.listeners()
+      .subscribe(this, this._updateBarFunction);
+    this.properties()
+      .columnStyle.priceSource.listeners()
+      .subscribe(this, this._updateBarFunction);
     this._updateBarFunction();
   }
 
@@ -124,30 +145,66 @@ class CustomSeries extends SeriesBase {
   }
 
   bindStyleChange() {
-    Object.keys(CustomSeries.STYLE_SHORT_NAMES).map((key) => {
-      return CustomSeries.STYLE_SHORT_NAMES[key] + "Style";
-    }).forEach((style) => {
-      this._properties[style].listeners().subscribe(this, CustomSeries.prototype.invalidateBarStylesCache);
-    });
+    Object.keys(CustomSeries.STYLE_SHORT_NAMES)
+      .map((key) => {
+        return CustomSeries.STYLE_SHORT_NAMES[key] + "Style";
+      })
+      .forEach((style) => {
+        this._properties[style]
+          .listeners()
+          .subscribe(this, CustomSeries.prototype.invalidateBarStylesCache);
+      });
   }
 
   bindJapChartsInputs() {
-    this._properties.renkoStyle.inputs.boxSize.listeners().subscribe(this, this.onInputChanged);
-    this._properties.renkoStyle.inputs.style.listeners().subscribe(this, this.onInputChanged);
-    this._properties.renkoStyle.inputs.atrLength.listeners().subscribe(this, this.onInputChanged);
-    this._properties.renkoStyle.inputs.wicks.listeners().subscribe(this, this.onInputChanged);
-    this._properties.renkoStyle.inputs.sources.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pbStyle.inputs.lb.listeners().subscribe(this, this.onInputChanged);
-    this._properties.kagiStyle.inputs.reversalAmount.listeners().subscribe(this, this.onInputChanged);
-    this._properties.kagiStyle.inputs.style.listeners().subscribe(this, this.onInputChanged);
-    this._properties.kagiStyle.inputs.atrLength.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pnfStyle.inputs.boxSize.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pnfStyle.inputs.reversalAmount.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pnfStyle.inputs.sources.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pnfStyle.inputs.style.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pnfStyle.inputs.atrLength.listeners().subscribe(this, this.onInputChanged);
-    this._properties.pnfStyle.inputs.oneStepBackBuilding.listeners().subscribe(this, this.onInputChanged);
-    this._properties.rangeStyle.inputs.phantomBars.listeners().subscribe(this, this.onInputChanged);
+    this._properties.renkoStyle.inputs.boxSize
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.renkoStyle.inputs.style
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.renkoStyle.inputs.atrLength
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.renkoStyle.inputs.wicks
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.renkoStyle.inputs.sources
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pbStyle.inputs.lb
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.kagiStyle.inputs.reversalAmount
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.kagiStyle.inputs.style
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.kagiStyle.inputs.atrLength
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pnfStyle.inputs.boxSize
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pnfStyle.inputs.reversalAmount
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pnfStyle.inputs.sources
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pnfStyle.inputs.style
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pnfStyle.inputs.atrLength
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.pnfStyle.inputs.oneStepBackBuilding
+      .listeners()
+      .subscribe(this, this.onInputChanged);
+    this._properties.rangeStyle.inputs.phantomBars
+      .listeners()
+      .subscribe(this, this.onInputChanged);
   }
 
   createDividendsAdjustmentProperty() {
@@ -164,7 +221,7 @@ class CustomSeries extends SeriesBase {
       autoScale: options.priceAxisProperties.autoScale,
       percentage: options.priceAxisProperties.percentage,
       log: options.priceAxisProperties.log,
-      lockScale: options.priceAxisProperties.lockScale
+      lockScale: options.priceAxisProperties.lockScale,
     });
 
     this.setChartStyleWithIntervalIfNeeded(options.style);
@@ -225,7 +282,7 @@ class CustomSeries extends SeriesBase {
   getSourceIcon() {
     return {
       type: "loadSvg",
-      svgId: "series." + this.properties().style.value()
+      svgId: "series." + this.properties().style.value(),
     };
   }
 
@@ -262,6 +319,6 @@ class CustomSeries extends SeriesBase {
 Object.assign(CustomSeries, o);
 TradingView.Series = CustomSeries;
 t.Series = CustomSeries;
-t.isSeries = function(obj) {
+t.isSeries = function (obj) {
   return obj instanceof CustomSeries;
 };

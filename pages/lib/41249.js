@@ -1,4 +1,4 @@
-import { tzData as tzDataRaw } from 'path/to/tzData';
+import { tzData as tzDataRaw } from "./41249"; // ! not correct
 
 let tzDataInstance;
 
@@ -101,7 +101,9 @@ const compareDates = (date1, date2) => {
 };
 
 const floorSeconds = (value) => {
-  return value < 0 ? floor(value / 1000) - (value % 1000 !== 0 ? 1 : 0) : floor(value / 1000);
+  return value < 0
+    ? floor(value / 1000) - (value % 1000 !== 0 ? 1 : 0)
+    : floor(value / 1000);
 };
 
 const daysInMonth = {
@@ -116,7 +118,7 @@ const daysInMonth = {
   8: 30,
   9: 31,
   10: 30,
-  11: 31
+  11: 31,
 };
 
 const MONTHS = {
@@ -137,7 +139,7 @@ const MONTHS = {
     if (time.indexOf(":") !== -1) {
       time = time.split(":").join("");
     }
-    return time % 100 + 60 * floor(time / 100);
+    return (time % 100) + 60 * floor(time / 100);
   },
   getYear: (date) => {
     return date.getUTCFullYear();
@@ -169,7 +171,9 @@ const MONTHS = {
     return dayOfYear + date.getUTCDate();
   },
   getWeekOfYear: (date) => {
-    const firstDay = new Date(Date.UTC(date.getUTCFullYear(), 0, 1)).getUTCDay();
+    const firstDay = new Date(
+      Date.UTC(date.getUTCFullYear(), 0, 1)
+    ).getUTCDay();
     const firstWeek = firstDay === 0 ? 1 : 8 - firstDay;
     const dayOfYear = MONTHS.getDayOfYear(date);
     return Math.ceil((dayOfYear - firstWeek) / 7) + 1;
@@ -177,7 +181,14 @@ const MONTHS = {
   getMinutesFromMidnight: (date) => {
     return 60 * MONTHS.getHours(date) + MONTHS.getMinutes(date);
   },
-  setHoursMinutesSeconds: (date, hours, minutes, seconds, milliseconds, timezone) => {
+  setHoursMinutesSeconds: (
+    date,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    timezone
+  ) => {
     date.setUTCHours(hours);
     date.setUTCMinutes(minutes);
     date.setUTCSeconds(seconds);
@@ -203,9 +214,7 @@ const MONTHS = {
     date.setTime(date.getTime() + days * MONTHS.millisecondsPerDay);
   },
   addMinutes: (date, minutes) => {
-    date.setTime(date
-
-.getTime() + minutesToMilliseconds(minutes));
+    date.setTime(date.getTime() + minutesToMilliseconds(minutes));
   },
   clone: (date) => {
     return new Date(date.getTime());
@@ -269,7 +278,7 @@ const MONTHS = {
     return 1000 * seconds;
   },
   timeMinutesDiff: (date1, date2) => {
-    return floor((compareDates(date1, date2)) / 60);
+    return floor(compareDates(date1, date2) / 60);
   },
   timeSecondsDiff: compareDates,
   utcToCal: (timezone, timestamp) => {
@@ -279,7 +288,9 @@ const MONTHS = {
     return timestamp + timezone.offsetUtc(timestamp);
   },
   getCal: (timezone, year, month, day, hours, minutes, seconds) => {
-    const date = new Date(Date.UTC(year, month, day, hours || 0, minutes || 0, seconds || 0));
+    const date = new Date(
+      Date.UTC(year, month, day, hours || 0, minutes || 0, seconds || 0)
+    );
     const utcOffset = timezone.offsetUtc(+date);
     return new Date(date.valueOf() - utcOffset);
   },
@@ -308,7 +319,7 @@ const MONTHS = {
   },
   setCustomTimezones: (timezones) => {
     tzDataInstance = timezones;
-  }
+  },
 };
 
 function isLeapYear(year) {

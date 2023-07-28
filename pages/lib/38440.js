@@ -2,7 +2,7 @@
 const { LineDataSource } = require("./13087");
 const { DefaultProperty, LineToolColorsProperty } = require("./46100");
 
-class LineToolBalloon extends LineDataSource {
+export class LineToolBalloon extends LineDataSource {
   constructor(e, t, i, s) {
     super(e, t || LineToolBalloon.createProperties(), i, s);
     this._createPaneView();

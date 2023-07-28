@@ -1,15 +1,22 @@
-import { LineDataSource } from 'some-module';
-import { ensureNotNull, Point } from 'another-module';
-import { distanceToLine } from 'yet-another-module';
-import { DefaultProperty, LineToolColorsProperty } from 'some-other-module';
+import { LineDataSource } from "./13087";
+import { ensureNotNull } from "./assertions";
+import { Point } from "./assertions"; // ! not correct
+import { distanceToLine } from "yet-another-module"; // ! not correct
+import { DefaultProperty } from "./46100";
+import { LineToolColorsProperty } from "./68806";
 
 class LineToolEllipse extends LineDataSource {
   constructor(source, model, properties, options) {
-    super(source, properties || LineToolEllipse.createProperties(), model, options);
+    super(
+      source,
+      properties || LineToolEllipse.createProperties(),
+      model,
+      options
+    );
     this.version = 2;
     this._dist = null;
     this._fakePointAdded = false;
-    import(/* webpackChunkName: "ellipse-pane-view" */ 1583).then(module => {
+    import(/* webpackChunkName: "ellipse-pane-view" */ 1583).then((module) => {
       const { EllipsePaneView } = module;
       this._setPaneViews([new EllipsePaneView(this, this._model)]);
     });
@@ -44,9 +51,17 @@ class LineToolEllipse extends LineDataSource {
         if (timePoint && timePoint.shift()) {
           this._snapPoint45Degree(newPoint, this._points[1]);
           this._points[0] = newPoint;
-          this._points[2] = this._preparePointInternal(this._points[2], timePoint, true);
+          this._points[2] = this._preparePointInternal(
+            this._points[2],
+            timePoint,
+            true
+          );
           if (this._points[0].index === this._points[1].index) {
-            this._fixVerticalDiameterPoints(this._points[0], this._points[1], this._points[2]);
+            this._fixVerticalDiameterPoints(
+              this._points[0],
+              this._points[1],
+              this._points[2]
+            );
           }
           break;
         }
@@ -63,9 +78,17 @@ class LineToolEllipse extends LineDataSource {
         if (timePoint && timePoint.shift()) {
           this._snapPoint45Degree(newPoint, this._points[0]);
           this._points[1] = newPoint;
-          this._points[2] = this._preparePointInternal(this._points[2], timePoint, true);
+          this._points[2] = this._preparePointInternal(
+            this._points[2],
+            timePoint,
+            true
+          );
           if (this._points[0].index === this._points[1].index) {
-            this._fixVerticalDiameterPoints(this._points[1], this._points[0], this._points[2]);
+            this._fixVerticalDiameterPoints(
+              this._points[1],
+              this._points[0],
+              this._points[2]
+            );
           }
           break;
         }
@@ -121,27 +144,28 @@ class LineToolEllipse extends LineDataSource {
       const avgPrice = 0.5 * (this._points[0].price + this._points[1].price);
       this._points[0] = {
         price: avgPrice,
-        index: this._points[0].index
+        index: this._points[0].index,
       };
       this._points[1] = {
         price: avgPrice,
-        index: this._points[1].index
+        index: this._points[1].index,
       };
       this._points.push({
         price: point1Price,
-        index: this._points[0].index
+        index: this._points[0].index,
       });
     }
 
     if (from === 1 && this._timePoint.length === 2) {
       const point1Price = this._timePoint[0].price;
-      const avgPrice = 0.5 * (this._timePoint[0].price + this._timePoint[1].price);
+      const avgPrice =
+        0.5 * (this._timePoint[0].price + this._timePoint[1].price);
       this._timePoint[0].price = avgPrice;
       this._timePoint[1].price = avgPrice;
       const newPoint = {
         price: point1Price,
         offset: this._timePoint[0].offset,
-        time_t: this._timePoint[0].time_t
+        time_t: this._timePoint[0].time_t,
       };
       this._timePoint.push(newPoint);
     }
@@ -154,7 +178,7 @@ class LineToolEllipse extends LineDataSource {
   }
 
   static createProperties(prop) {
-    const properties = new DefaultProperty('linetoolellipse', prop);
+    const properties = new DefaultProperty("linetoolellipse", prop);
     this._configureProperties(properties);
     return properties;
   }
@@ -162,12 +186,11 @@ class LineToolEllipse extends LineDataSource {
   async _getPropertyDefinitionsViewModelClass() {
     const module = await Promise.all([
       import(/* webpackChunkName: "module1" */ 7201),
-     
 
- import(/* webpackChunkName: "module2" */ 3753),
+      import(/* webpackChunkName: "module2" */ 3753),
       import(/* webpackChunkName: "module3" */ 5871),
       import(/* webpackChunkName: "module4" */ 8167),
-      import(/* webpackChunkName: "module5" */ 8537)
+      import(/* webpackChunkName: "module5" */ 8537),
     ]);
     const viewModelModule = module[0];
     return viewModelModule.EllipseCircleDefinitionsViewModel;
@@ -175,8 +198,16 @@ class LineToolEllipse extends LineDataSource {
 
   _preparePoint(point, timePoint) {
     const preparedPoint = this._preparePointInternal(point, timePoint, false);
-    if (timePoint && timePoint.shift() && this._points[0].index === this._points[1].index) {
-      this._fixVerticalDiameterPoints(this._points[1], this._points[0], preparedPoint);
+    if (
+      timePoint &&
+      timePoint.shift() &&
+      this._points[0].index === this._points[1].index
+    ) {
+      this._fixVerticalDiameterPoints(
+        this._points[1],
+        this._points[0],
+        preparedPoint
+      );
     }
     return preparedPoint;
   }
@@ -188,12 +219,21 @@ class LineToolEllipse extends LineDataSource {
 
   static _configureProperties(properties) {
     super._configureProperties(properties);
-    if (!properties.hasChild('text')) {
-      properties.addChild('text', new LineToolTextProperty(''));
+    if (!properties.hasChild("text")) {
+      properties.addChild("text", new LineToolTextProperty(""));
     }
-    properties.addChild('linesColors', new LineToolColorsProperty([properties.childs().color]));
-    properties.addChild('textsColors', new LineToolColorsProperty([properties.childs().textColor], properties.childs().showLabel));
-    properties.addExclusion('text');
+    properties.addChild(
+      "linesColors",
+      new LineToolColorsProperty([properties.childs().color])
+    );
+    properties.addChild(
+      "textsColors",
+      new LineToolColorsProperty(
+        [properties.childs().textColor],
+        properties.childs().showLabel
+      )
+    );
+    properties.addExclusion("text");
   }
 
   _preparePointInternal(point, timePoint, isShift) {
@@ -240,7 +280,9 @@ class LineToolEllipse extends LineDataSource {
     const y2 = timeScale.indexToCoordinate(point3.index);
     let h = 2 * Math.abs(y1 - y2);
     h *= point2.price > point1.price ? 1 : -1;
-    point1.price = ensureNotNull(this.screenPointToPoint(new Point(p1.x, p2.y + h))).price;
+    point1.price = ensureNotNull(
+      this.screenPointToPoint(new Point(p1.x, p2.y + h))
+    ).price;
   }
 }
 

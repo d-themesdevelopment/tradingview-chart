@@ -8,7 +8,7 @@ import {
   // ensureNotNullArray
 } from "./assertions";
 
-class LineToolRectangle extends LineDataSource {
+export class LineToolRectangle extends LineDataSource {
   constructor(model, properties, options, inputs) {
     const defaultProperties =
       properties || LineToolRectangle.createProperties();

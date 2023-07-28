@@ -1,8 +1,5 @@
-
-
-
-import { EventDispatcher } from '<path_to_EventDispatcher_module>';
-import { ensureDefined } from '<path_to_ensureDefined_module>';
+// import { EventDispatcher } from "<path_to_EventDispatcher_module>";
+import { ensureDefined } from "./assertions";
 
 export class InvalidationLevel {
   constructor(level = defaultInvalidationLevel) {
@@ -30,7 +27,10 @@ export class InvalidationLevel {
   }
 
   invalidatePriceScale(side, priceScale, level) {
-    const scalesMap = side === "left" ? this._leftPriceScalesInvalidationMap : this._rightPriceScalesInvalidationMap;
+    const scalesMap =
+      side === "left"
+        ? this._leftPriceScalesInvalidationMap
+        : this._rightPriceScalesInvalidationMap;
     const previousLevel = scalesMap.get(priceScale) || defaultInvalidationLevel;
     scalesMap.set(priceScale, Math.max(previousLevel, level));
   }
@@ -40,16 +40,29 @@ export class InvalidationLevel {
   }
 
   legendWidgetLayoutInvalidated() {
-    return this._legendWidgetInvalidated || this._invalidationLevel === InvalidationLevel.Full;
+    return (
+      this._legendWidgetInvalidated ||
+      this._invalidationLevel === InvalidationLevel.Full
+    );
   }
 
   getterForPriceScaleInvalidationLevelBySide(side) {
-    const scalesMap = side === "left" ? this._leftPriceScalesInvalidationMap : this._rightPriceScalesInvalidationMap;
-    return (priceScale) => Math.max(scalesMap.get(priceScale) || defaultInvalidationLevel, this._invalidationLevel);
+    const scalesMap =
+      side === "left"
+        ? this._leftPriceScalesInvalidationMap
+        : this._rightPriceScalesInvalidationMap;
+    return (priceScale) =>
+      Math.max(
+        scalesMap.get(priceScale) || defaultInvalidationLevel,
+        this._invalidationLevel
+      );
   }
 
   priceScaleSideMaxLevel(side) {
-    const scalesMap = side === "left" ? this._leftPriceScalesInvalidationMap : this._rightPriceScalesInvalidationMap;
+    const scalesMap =
+      side === "left"
+        ? this._leftPriceScalesInvalidationMap
+        : this._rightPriceScalesInvalidationMap;
     let maxLevel = this._invalidationLevel;
     if (scalesMap.size > 0) {
       scalesMap.forEach((level) => {
@@ -62,21 +75,43 @@ export class InvalidationLevel {
   }
 
   merge(invalidationLevel) {
-    this._invalidationLevel = Math.max(this._invalidationLevel, invalidationLevel._invalidationLevel);
-    this._paneInvalidationLevel = Math.max(this._paneInvalidationLevel, invalidationLevel._paneInvalidationLevel);
-    invalidationLevel._leftPriceScalesInvalidationMap.forEach((level, priceScale) => {
-      const previousLevel = this._leftPriceScalesInvalidationMap.get(priceScale) || defaultInvalidationLevel;
-      this._leftPriceScalesInvalidationMap.set(priceScale, Math.max(previousLevel, level));
-    });
-    invalidationLevel._rightPriceScalesInvalidationMap.forEach((level, priceScale) => {
-      const previousLevel = this._rightPriceScalesInvalidationMap.get(priceScale) || defaultInvalidationLevel;
-      this._rightPriceScalesInvalidationMap.set(priceScale, Math.max(previousLevel, level));
-    });
-    this._legendWidgetInvalidated = this._legendWidgetInvalidated || invalidationLevel._legendWidgetInvalidated;
+    this._invalidationLevel = Math.max(
+      this._invalidationLevel,
+      invalidationLevel._invalidationLevel
+    );
+    this._paneInvalidationLevel = Math.max(
+      this._paneInvalidationLevel,
+      invalidationLevel._paneInvalidationLevel
+    );
+    invalidationLevel._leftPriceScalesInvalidationMap.forEach(
+      (level, priceScale) => {
+        const previousLevel =
+          this._leftPriceScalesInvalidationMap.get(priceScale) ||
+          defaultInvalidationLevel;
+        this._leftPriceScalesInvalidationMap.set(
+          priceScale,
+          Math.max(previousLevel, level)
+        );
+      }
+    );
+    invalidationLevel._rightPriceScalesInvalidationMap.forEach(
+      (level, priceScale) => {
+        const previousLevel =
+          this._rightPriceScalesInvalidationMap.get(priceScale) ||
+          defaultInvalidationLevel;
+        this._rightPriceScalesInvalidationMap.set(
+          priceScale,
+          Math.max(previousLevel, level)
+        );
+      }
+    );
+    this._legendWidgetInvalidated =
+      this._legendWidgetInvalidated ||
+      invalidationLevel._legendWidgetInvalidated;
   }
 }
 
-export const defaultInvalidationLevel = InvalidationLevel.None;
+// export const defaultInvalidationLevel = InvalidationLevel.None;
 
 class InvalidationMask {
   constructor(level = defaultInvalidationLevel) {
@@ -100,20 +135,32 @@ class InvalidationMask {
 
   invalidateAllPane(pane, level) {
     if (!this._invalidatedPanes.has(pane)) {
-      this._invalidatedPanes.set(pane, new InvalidationLevel(this._invalidationLevel));
+      this._invalidatedPanes.set(
+        pane,
+        new InvalidationLevel(this._invalidationLevel)
+      );
     }
     ensureDefined(this._invalidatedPanes.get(pane)).invalidateAll(level);
   }
 
   invalidatePriceScale(pane, priceScale, level) {
     if (!this._invalidatedPanes.has(pane)) {
-      this._invalidatedPanes.set(pane, new InvalidationLevel(this._invalidationLevel));
+      this._invalidatedPanes.set(
+        pane,
+        new InvalidationLevel(this._invalidationLevel)
+      );
     }
-    ensureDefined(this._invalidatedPanes.get(pane)).invalidatePriceScale(priceScale, level);
+    ensureDefined(this._invalidatedPanes.get(pane)).invalidatePriceScale(
+      priceScale,
+      level
+    );
   }
 
   invalidateTimeScale(level) {
-    this._timeAxisInvalidationLevel = Math.max(this._timeAxisInvalidationLevel, level);
+    this._timeAxisInvalidationLevel = Math.max(
+      this._timeAxisInvalidationLevel,
+      level
+    );
   }
 
   invalidatePanesOrder() {
@@ -137,7 +184,10 @@ class InvalidationMask {
   }
 
   invalidateForPane(pane) {
-    return this._invalidatedPanes.get(pane) || new InvalidationLevel(this._invalidationLevel);
+    return (
+      this._invalidatedPanes.get(pane) ||
+      new InvalidationLevel(this._invalidationLevel)
+    );
   }
 
   invalidateForTimeScale() {
@@ -153,19 +203,31 @@ class InvalidationMask {
   }
 
   merge(invalidationMask) {
-    this._invalidationLevel = Math.max(this._invalidationLevel, invalidationMask._invalidationLevel);
-    this._panesOrderChanged = this._panesOrderChanged || invalidationMask._panesOrderChanged;
-    this._keepVisibleTimeRangeOnResize = this._keepVisibleTimeRangeOnResize || invalidationMask._keepVisibleTimeRangeOnResize;
+    this._invalidationLevel = Math.max(
+      this._invalidationLevel,
+      invalidationMask._invalidationLevel
+    );
+    this._panesOrderChanged =
+      this._panesOrderChanged || invalidationMask._panesOrderChanged;
+    this._keepVisibleTimeRangeOnResize =
+      this._keepVisibleTimeRangeOnResize ||
+      invalidationMask._keepVisibleTimeRangeOnResize;
     this._invalidatedPanes.forEach((pane) => {
       pane.invalidateAll(this._invalidationLevel);
     });
     invalidationMask._invalidatedPanes.forEach((invalidationLevel, pane) => {
       if (!this._invalidatedPanes.has(pane)) {
-        this._invalidatedPanes.set(pane, new InvalidationLevel(this._invalidationLevel));
+        this._invalidatedPanes.set(
+          pane,
+          new InvalidationLevel(this._invalidationLevel)
+        );
       }
       ensureDefined(this._invalidatedPanes.get(pane)).merge(invalidationLevel);
     });
-    this._timeAxisInvalidationLevel = Math.max(this._timeAxisInvalidationLevel, invalidationMask._timeAxisInvalidationLevel);
+    this._timeAxisInvalidationLevel = Math.max(
+      this._timeAxisInvalidationLevel,
+      invalidationMask._timeAxisInvalidationLevel
+    );
     for (let i = 0; i < invalidationMask._additionalActions.length; i++) {
       this._additionalActions.push(invalidationMask._additionalActions[i]);
     }
@@ -186,14 +248,14 @@ class InvalidationMask {
     this._removeTimeScaleAnimation();
     this._timeScaleInvalidations.push({
       type: 0,
-      value: animation
+      value: animation,
     });
   }
 
   stopTimeScaleAnimation() {
     this._removeTimeScaleAnimation();
     this._timeScaleInvalidations.push({
-      type: 1
+      type: 1,
     });
   }
 
@@ -245,7 +307,9 @@ class InvalidationMask {
   }
 
   _removeTimeScaleAnimation() {
-    const index = this._timeScaleInvalidations.findIndex((invalidation) => invalidation.type === 0);
+    const index = this._timeScaleInvalidations.findIndex(
+      (invalidation) => invalidation.type === 0
+    );
     if (index !== -1) {
       const [removed] = this._timeScaleInvalidations.splice(index, 1);
       removed.value.terminate();

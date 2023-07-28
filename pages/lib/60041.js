@@ -1,16 +1,17 @@
-import { DefaultProperty, ensureNotNull } from 'some-module';
-import { LineDataSource } from 'some-module';
-import { e as lazyImport, bind } from 'some-module';
+import { DefaultProperty, ensureNotNull } from "some-module";
+import { LineDataSource } from "some-module";
+import { e as lazyImport, bind } from "some-module";
 
 class LineToolBezierQuadro extends LineDataSource {
   constructor(series, properties, model, options) {
-    const defaultProperties = properties || LineToolBezierQuadro.createProperties();
+    const defaultProperties =
+      properties || LineToolBezierQuadro.createProperties();
     super(series, defaultProperties, model, options);
     this._controlPoint = null;
 
     lazyImport(/* webpackChunkName: "BezierQuadroPaneView" */ 1583)
       .then(bind(null, lazyImport, 33730))
-      .then(BezierQuadroPaneView => {
+      .then((BezierQuadroPaneView) => {
         this._setPaneViews([new BezierQuadroPaneView(this, series)]);
       });
   }
@@ -65,9 +66,12 @@ class LineToolBezierQuadro extends LineDataSource {
       lazyImport(3753),
       lazyImport(5871),
       lazyImport(8167),
-      lazyImport(8537)
-    ]).then(bind(null, lazyImport, 84070))
-      .then(GeneralBezierDefinitionsViewModel => GeneralBezierDefinitionsViewModel);
+      lazyImport(8537),
+    ])
+      .then(bind(null, lazyImport, 84070))
+      .then(
+        (GeneralBezierDefinitionsViewModel) => GeneralBezierDefinitionsViewModel
+      );
   }
 
   _calculateControlPoint() {
@@ -79,6 +83,4 @@ class LineToolBezierQuadro extends LineDataSource {
   }
 }
 
-export {
-  LineToolBezierQuadro
-};
+export { LineToolBezierQuadro };

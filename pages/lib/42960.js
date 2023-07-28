@@ -68,7 +68,7 @@ function isValidStyle(style) {
   return isRangeBasedStyle(style) || isTimeBasedStyle(style);
 }
 
-function isSingleValueBasedStyle(style) {
+export function isSingleValueBasedStyle(style) {
   return singleValueBasedStyles.includes(style);
 }
 
