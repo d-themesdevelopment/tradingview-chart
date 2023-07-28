@@ -4,14 +4,13 @@ import {
   ensure,
   interactionTolerance,
 } from "./assertions";
-import { Point } from "./point_utils";
-import {
-  DefaultProperty,
-  LineToolWidthsProperty,
-  LineToolColorsProperty,
-} from "./46100";
+
+import { Point } from "./point_utils"; // ! not correct
+import { DefaultProperty } from "./46100";
+import { LineToolWidthsProperty, LineToolColorsProperty } from "./68806";
+
 // import { PathPaneView } from "./path_pane_view_utils";
-import { e as import_1583, bind as import_62801 } from "./module_1583";
+import { e as import_1583, bind as import_62801 } from "./module_1583"; // ! not correct
 import {
   e as import_7201,
   e as import_3753,

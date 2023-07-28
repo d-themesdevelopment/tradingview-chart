@@ -2,7 +2,7 @@
 
 const { supportTouch } = require("path/to/support-touch-module"); // ! not correct
 
-let lastMouseOrTouchEventInfo = supportTouch()
+export let lastMouseOrTouchEventInfo = supportTouch()
   ? {
       isTouch: true,
       stylus: false,

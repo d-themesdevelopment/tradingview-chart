@@ -1,6 +1,6 @@
 "use strict";
 
-function deepExtend(target, ...sources) {
+export function deepExtend(target, ...sources) {
   if (target && typeof target === "object") {
     if (sources.length === 0) {
       return target;
@@ -17,9 +17,11 @@ function deepExtend(target, ...sources) {
           if (newValue && (isPlainObject(newValue) || isArray)) {
             let mergedValue;
             if (isArray) {
-              mergedValue = currentValue && Array.isArray(currentValue) ? currentValue : [];
+              mergedValue =
+                currentValue && Array.isArray(currentValue) ? currentValue : [];
             } else {
-              mergedValue = currentValue && isPlainObject(currentValue) ? currentValue : {};
+              mergedValue =
+                currentValue && isPlainObject(currentValue) ? currentValue : {};
             }
             target[key] = deepExtend(mergedValue, newValue);
           } else if (newValue !== undefined) {
@@ -41,6 +43,12 @@ function isPlainObject(value) {
     return true;
   }
   const hasOwnProperty = Object.prototype.hasOwnProperty;
-  const hasConstructor = prototype.hasOwnProperty("constructor") && prototype.constructor;
-  return typeof hasConstructor === "function" && Object.prototype.toString.call(hasConstructor) === Object.prototype.toString.call(Object) && hasOwnProperty.call(prototype, "isPrototypeOf");
+  const hasConstructor =
+    prototype.hasOwnProperty("constructor") && prototype.constructor;
+  return (
+    typeof hasConstructor === "function" &&
+    Object.prototype.toString.call(hasConstructor) ===
+      Object.prototype.toString.call(Object) &&
+    hasOwnProperty.call(prototype, "isPrototypeOf")
+  );
 }

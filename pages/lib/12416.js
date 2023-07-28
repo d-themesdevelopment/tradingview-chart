@@ -1,5 +1,5 @@
 import { getLogger } from "path/to/logger"; // ! not correct
-import { deepExtend } from "path/to/utils";
+import { deepExtend } from "./30888";
 import {
   candleStylePreferencesDefault,
   hollowCandlePreferencesStyleDefault,
@@ -17,9 +17,10 @@ import {
   rangeStylePreferencesDefault,
   columnStylePreferencesDefault,
 } from "path/to/styles";
-import { PriceAxisLastValueMode } from "path/to/enums";
-import { sessionsPreferencesDefault } from "path/to/sessions";
-import { tradingPreferencesDefault } from "path/to/trading";
+
+import { PriceAxisLastValueMode } from "./PriceAxisLastValueMode";
+import { sessionsPreferencesDefault } from "./sessionsPreferencesDefault";
+import { tradingPreferencesDefault } from "./67980";
 
 const logger = getLogger("Chart.ApplyPreferencesToAllCharts");
 

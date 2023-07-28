@@ -1,6 +1,6 @@
 import { isNumber } from "./1722.js"; // Replace 'your-module-path' with the actual module path
 
-class LimitedPrecisionNumericFormatter {
+export class LimitedPrecisionNumericFormatter {
   constructor(precision = 1) {
     this._precision = precision;
   }

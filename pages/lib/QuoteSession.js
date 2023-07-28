@@ -1,9 +1,6 @@
+import { randomHash } from "some-library"; // Replace 'some-library' with the actual library you're using
 
-
-
-import { randomHash } from 'some-library'; // Replace 'some-library' with the actual library you're using
-
-class QuoteSession {
+export class QuoteSession {
   constructor(chartApi, sessionId = randomHash()) {
     this._sessionStarted = false;
     this._globalHandler = null;
@@ -50,13 +47,13 @@ class QuoteSession {
 
   onMessage(message) {
     switch (message.method) {
-      case 'connected':
+      case "connected":
         if (!this._sessionStarted) {
           this._chartApi.quoteCreateSession(this._sessionId);
           this._sessionStarted = true;
         }
         break;
-      case 'disconnected':
+      case "disconnected":
         this._sessionStarted = false;
         break;
     }

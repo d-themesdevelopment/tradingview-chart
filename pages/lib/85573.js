@@ -1,5 +1,5 @@
-import { ensureNotNull } from 'path/to/ensureNotNull';
-import { PlotRowSearchMode } from 'path/to/PlotRowSearchMode';
+import { ensureNotNull } from "path/to/ensureNotNull";
+import { PlotRowSearchMode } from "path/to/PlotRowSearchMode";
 
 function getSeriesPrice(series, dataPoint, position) {
   const barFunction = series.barFunction();
@@ -16,7 +16,7 @@ function getSeriesPrice(series, dataPoint, position) {
 }
 
 function getVisualDirection(position, isInverted) {
-  return -1 === getPositionSign(position) !== isInverted ? -1 : 1;
+  return (-1 === getPositionSign(position)) !== isInverted ? -1 : 1;
 }
 
 function getPositionSign(position) {
@@ -24,8 +24,14 @@ function getPositionSign(position) {
 }
 
 function positionToCoordinate(series, priceScale, height, position) {
-  const clampedPosition = Math.min(height, Math.max(0, 1 === position ? height : height - position));
-  return position - getPositionSign(position) * Math.abs(clampedPosition * series / 100);
+  const clampedPosition = Math.min(
+    height,
+    Math.max(0, 1 === position ? height : height - position)
+  );
+  return (
+    position -
+    getPositionSign(position) * Math.abs((clampedPosition * series) / 100)
+  );
 }
 
 function getNoDataPosition(series, priceScale, position) {
@@ -36,7 +42,7 @@ function getNoDataPosition(series, priceScale, position) {
   const price = priceScale.coordinateToPrice(priceScale.height() / 2, position);
   return {
     index: dataPoint,
-    price: price
+    price: price,
   };
 }
 
@@ -66,19 +72,33 @@ function getSeriesPosition(series, priceScale, timeOrIndex, isInverted = true) {
   if (dataPoint === null) {
     return null;
   }
-  const price = getSeriesPrice(series, dataPoint, getVisualDirection(position, priceScale.isInverted()));
+  const price = getSeriesPrice(
+    series,
+    dataPoint,
+    getVisualDirection(position, priceScale.isInverted())
+  );
   return {
     index: dataPoint.index,
-    price: price
+    price: price,
   };
 }
 
 export {
   getNoDataPosition,
   getSeriesPosition,
-  noDataBasePosition: getNoDataPosition,
+  noDataBasePosition,
   positionToCoordinate,
-  positionVisualDirection: getVisualDirection,
-  seriesBasePosition: getSeriesPosition,
-  seriesPrice: getSeriesPrice
+  positionVisualDirection,
+  seriesBasePosition,
+  seriesPrice,
 };
+
+// export {
+//   getNoDataPosition,
+//   getSeriesPosition,
+//   noDataBasePosition: getNoDataPosition,
+//   positionToCoordinate,
+//   positionVisualDirection: getVisualDirection,
+//   seriesBasePosition: getSeriesPosition,
+//   seriesPrice: getSeriesPrice
+// };

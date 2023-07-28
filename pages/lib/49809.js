@@ -1,19 +1,26 @@
-import { ensureDefined, ensureNotNull } from 'utils/assertions';
-import { emit } from 'utils/events';
-import { getLogger } from 'utils/logging';
-import { LimitedPrecisionNumericFormatter } from 'formatters/numericFormatters';
-import { createPropertiesObject } from 'utils/properties';
-import { LineToolColorsProperty, LineToolWidthsProperty } from 'properties/lineToolProperties';
-import { scaleRatio } from 'utils/scaleUtils';
-import { Point } from 'models/point';
-import { LineDataSource } from 'dataSources/lineDataSource';
-import { GannComplexPaneView } from 'views/gannComplexPaneView';
-import { CHART_FONT_FAMILY } from 'constants/fonts';
-import { createProperties, subscribeToEvents } from 'utils/lineToolUtils';
+import { ensureDefined, ensureNotNull } from "./assertions";
+// import { emit } from "utils/events";
+// import { getLogger } from "utils/logging";
+import { LimitedPrecisionNumericFormatter } from "./LimitedPrecisionNumericFormatter";
+import { createPropertiesObject } from "./CustomLevelsProperty";
+
+import { LineToolColorsProperty, LineToolWidthsProperty } from "./68806";
+import { scaleRatio } from "./29541";
+import { Point } from "models/point"; // ! not correct
+import { LineDataSource } from "./13087";
+import { GannComplexPaneView } from "views/gannComplexPaneView"; // ! not correct
+import { CHART_FONT_FAMILY } from "./46501";
+
+// import { createProperties, subscribeToEvents } from "utils/lineToolUtils";
 
 class LineToolGannComplex extends LineDataSource {
   constructor(model, options, priceScale, timeScale) {
-    super(model, options || LineToolGannComplex.createProperties(), priceScale, timeScale);
+    super(
+      model,
+      options || LineToolGannComplex.createProperties(),
+      priceScale,
+      timeScale
+    );
     this.version = 2;
     this._scaleRatioFormatter = new LimitedPrecisionNumericFormatter(7);
     this._setPaneViews([new GannComplexPaneView(this, this.model())]);
@@ -22,9 +29,11 @@ class LineToolGannComplex extends LineDataSource {
     this._adjustScaleRatio(properties);
     properties.subscribe(this, this._adjustScaleRatio);
     properties.childs().scaleRatio.subscribe(this, this._correctFirstPoint);
-    this._syncStateExclusions = ['scaleRatio'];
+    this._syncStateExclusions = ["scaleRatio"];
 
-    properties.onRestoreFactoryDefaults().subscribe(this, this._handleRestoringFactoryDefaults);
+    properties
+      .onRestoreFactoryDefaults()
+      .subscribe(this, this._handleRestoringFactoryDefaults);
     this._onTemplateApplying.subscribe(this, this._handleTemplateApplying);
     this._onTemplateApplied.subscribe(this, this._correctFirstPoint);
   }
@@ -34,7 +43,8 @@ class LineToolGannComplex extends LineDataSource {
       if (this._points.length >= this.pointsCount()) {
         setTimeout(() => this._migratePoint());
       } else {
-        this._timePoint.length >= this.pointsCount() && this._pointAdded.subscribe(this, this._migratePoint);
+        this._timePoint.length >= this.pointsCount() &&
+          this._pointAdded.subscribe(this, this._migratePoint);
       }
     }
   }
@@ -43,7 +53,9 @@ class LineToolGannComplex extends LineDataSource {
     const properties = this.properties();
     properties.unsubscribe(this, this._adjustScaleRatio);
     properties.childs().scaleRatio.unsubscribe(this, this._correctFirstPoint);
-    properties.onRestoreFactoryDefaults().unsubscribe(this, this._handleRestoringFactoryDefaults);
+    properties
+      .onRestoreFactoryDefaults()
+      .unsubscribe(this, this._handleRestoringFactoryDefaults);
     this._onTemplateApplying.unsubscribe(this, this._handleTemplateApplying);
     this._onTemplateApplied.unsubscribe(this, this._correctFirstPoint);
     super.destroy();
@@ -54,7 +66,7 @@ class LineToolGannComplex extends LineDataSource {
   }
 
   name() {
-    return 'Gann Square';
+    return "Gann Square";
   }
 
   addPoint(time, price, index) {
@@ -157,11 +169,17 @@ class LineToolGannComplex extends LineDataSource {
   }
 
   arcsBackgroundTransparency() {
-    return this.properties().childs().arcsBackground.childs().transparency.value();
+    return this.properties()
+      .childs()
+      .arcsBackground.childs()
+      .transparency.value();
   }
 
   isArcsBackgroundFilled() {
-    return this.properties().childs().arcsBackground.childs().fillBackground.value();
+    return this.properties()
+      .childs()
+      .arcsBackground.childs()
+      .fillBackground.value();
   }
 
   isLabelsVisible() {
@@ -173,7 +191,10 @@ class LineToolGannComplex extends LineDataSource {
     const { fontSize, bold, italic } = properties.labelsStyle.childs();
     const levelsCount = properties.levels.childCount();
     return {
-      textColor: properties.levels.childs()[levelsCount - 1].childs().color.value(),
+      textColor: properties.levels
+        .childs()
+        [levelsCount - 1].childs()
+        .color.value(),
       font: CHART_FONT_FAMILY,
       fontSize: fontSize.value(),
       bold: bold.value(),
@@ -216,17 +237,17 @@ class LineToolGannComplex extends LineDataSource {
     return null;
   }
 
-  static create
+  static create;
 
-Properties(options) {
-    const properties = createPropertiesObject('linetoolganncomplex', options);
+  Properties(options) {
+    const properties = createPropertiesObject("linetoolganncomplex", options);
     this._configureProperties(properties);
     return properties;
   }
 
   static _configureProperties(properties) {
     super._configureProperties(properties);
-    properties.addExclusion('scaleRatio');
+    properties.addExclusion("scaleRatio");
 
     const widths = [];
     const colors = [];
@@ -259,8 +280,8 @@ Properties(options) {
       }
     }
 
-    properties.addChild('linesColors', new LineToolColorsProperty(colors));
-    properties.addChild('linesWidths', new LineToolWidthsProperty(widths));
+    properties.addChild("linesColors", new LineToolColorsProperty(colors));
+    properties.addChild("linesWidths", new LineToolWidthsProperty(widths));
   }
 
   _correctScaleRatio() {
@@ -277,7 +298,7 @@ Properties(options) {
 
   _adjustScaleRatio(properties) {
     const scaleRatio = properties.scaleRatio.value();
-    if (scaleRatio === '' || scaleRatio === null) {
+    if (scaleRatio === "" || scaleRatio === null) {
       properties.scaleRatio.setValue(this._getAdjustedScaleRatio());
     }
   }
@@ -297,7 +318,11 @@ Properties(options) {
       const referencePoint = index === 0 ? this._points[1] : this._points[0];
       const isPriceIncreasing = point.price - referencePoint.price > 0;
       const isIndexIncreasing = point.index - referencePoint.index > 0;
-      let sign = isPriceIncreasing && !isIndexIncreasing || !isPriceIncreasing && isIndexIncreasing ? -1 : 1;
+      let sign =
+        (isPriceIncreasing && !isIndexIncreasing) ||
+        (!isPriceIncreasing && isIndexIncreasing)
+          ? -1
+          : 1;
       if (index === 0) {
         sign = -sign;
       }
@@ -313,11 +338,13 @@ Properties(options) {
   }
 
   _handleRestoringFactoryDefaults() {
-    this.properties().childs().scaleRatio.setValue(this._getAdjustedScaleRatio());
+    this.properties()
+      .childs()
+      .scaleRatio.setValue(this._getAdjustedScaleRatio());
   }
 
   _handleTemplateApplying(template) {
-    if (template.scaleRatio === '') {
+    if (template.scaleRatio === "") {
       template.scaleRatio = this._getAdjustedScaleRatio();
     }
   }
@@ -348,9 +375,12 @@ Properties(options) {
     const endPointScreen = ensureNotNull(this.pointToScreenPoint(endPoint));
     const length = Math.sqrt(
       Math.pow(endPointScreen.x - startPointScreen.x, 2) +
-      Math.pow(endPointScreen.y - startPointScreen.y, 2)
+        Math.pow(endPointScreen.y - startPointScreen.y, 2)
     );
-    const normalizedDirection = new Point(Math.cos(angle), -Math.sin(angle)).normalized();
+    const normalizedDirection = new Point(
+      Math.cos(angle),
+      -Math.sin(angle)
+    ).normalized();
     const isDirectionXNegative = normalizedDirection.x < 0;
     const isDirectionYNegative = normalizedDirection.y < 0;
     const x = isDirectionXNegative ? -1 : 1;
@@ -359,14 +389,14 @@ Properties(options) {
       startPointScreen.addScaled(normalizedDirection, length),
       startPointScreen.add(new Point(5 * length * x, 5 * length * y)),
     ];
-
-
   }
 
   _calcAngle() {
     const [startPoint, endPoint] = this.points();
     const startPointScreen = ensureNotNull(this.pointToScreenPoint(startPoint));
-    let direction = ensureNotNull(this.pointToScreenPoint(endPoint)).subtract(startPointScreen);
+    let direction = ensureNotNull(this.pointToScreenPoint(endPoint)).subtract(
+      startPointScreen
+    );
     if (direction.length() > 0) {
       direction = direction.normalized();
       let angle = Math.acos(direction.x);

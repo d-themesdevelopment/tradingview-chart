@@ -1,24 +1,28 @@
-import { nmd, deepExtend } from 'lodash';
-import { default as quoteApi, QuoteSession } from 'quoteApi';
-import { default as formatNumber } from 'priceFormatter';
-import { uniq } from 'utils/array';
-import { normalizeUpdateMode } from 'utils/updateMode';
-import { QUOTE_FIELDS_CACHE, QUOTE_FIELDS } from 'constants';
-import { default as guid } from 'utils/guid';
+import { deepExtend } from "./30888";
+import { QuoteSession } from "./QuoteSession";
+import { default as formatNumber } from "priceFormatter"; // ! not correct
+import { uniq } from "./uniq";
 
+import { QUOTE_FIELDS_CACHE, QUOTE_FIELDS } from "./67545";
 class QuoteMultiplexer {
   constructor(type, options) {
-    this.options = Object.assign({
-      throttleTimeout: 125
-    }, options);
+    this.options = Object.assign(
+      {
+        throttleTimeout: 125,
+      },
+      options
+    );
     this.connected = false;
     this.symbolData = {};
     this.subscriptions = {};
     this.onConnect = new Event();
     this.onDisconnect = new Event();
     this.quoteApi = new QuoteSession(window.ChartApiInstance);
-    this.type = type || 'full';
-    this.delayUpdateFastSymbols = debounce(this.updateFastSymbols.bind(this), 250);
+    this.type = type || "full";
+    this.delayUpdateFastSymbols = debounce(
+      this.updateFastSymbols.bind(this),
+      250
+    );
     this.throttledSymbolData = {};
     this.formatterValuesCache = {};
     this.waitingForFormatters = {};
@@ -41,29 +45,29 @@ class QuoteMultiplexer {
   quoteHandler(event) {
     const { method, params } = event;
     switch (method) {
-      case 'connected':
+      case "connected":
         if (!this.connected) {
           this.connected = true;
           this.onConnected();
         }
         break;
-      case 'quote_list_fields':
+      case "quote_list_fields":
         break;
-      case 'quote_symbol_data':
+      case "quote_symbol_data":
         if (this.connected) {
           this.onSymbolData(params[0]);
         }
         break;
-      case 'quote_completed':
+      case "quote_completed":
         if (this.connected) {
           this.onSymbolData({
             symbolname: params[0],
             complete: performance.now(),
-            values: {}
+            values: {},
           });
         }
         break;
-      case 'disconnected':
+      case "disconnected":
         if (this.connected) {
           this.connected = false;
           this.onDisconnect.fire();
@@ -100,7 +104,10 @@ class QuoteMultiplexer {
     let throttledData = this.throttledSymbolData[symbolName];
     if (!throttledData) {
       throttledData = this.throttledSymbolData[symbolName] = {
-        dispatch: debounce(this.dispatchSymbolData.bind(this), this.options.throttleTimeout)
+        dispatch: debounce(
+          this.dispatchSymbolData.bind(this),
+          this.options.throttleTimeout
+        ),
       };
     }
 
@@ -125,7 +132,7 @@ class QuoteMultiplexer {
       for (const subscription in this.subscriptions) {
         const subscribers = this.subscriptions[subscription];
         if (subscribers.has(symbolName)) {
-          [...subscribers.get(symbolName)].forEach(subscriber => {
+          [...subscribers.get(symbolName)].forEach((subscriber) => {
             subscriber(symbol, data);
           });
         }
@@ -138,14 +145,14 @@ class QuoteMultiplexer {
     const subscribers = this.subscriptions[eventName];
     symbols = [].concat(symbols);
     const newSymbols = [];
-    symbols.forEach(symbol => {
+    symbols.forEach((symbol) => {
       if (this.symbolData[symbol]) {
         if (!subscribers.has(symbol)) {
           this.symbolData[symbol].subscribers_count++;
         }
       } else {
         this.symbolData[symbol] = {
-          subscribers_count: 1
+          subscribers_count: 1,
         };
         newSymbols.push(symbol);
       }
@@ -232,9 +239,7 @@ class QuoteMultiplexer {
     for (const eventName in this.subscriptions) {
       const subscribers = this.subscriptions[eventName];
       const subscribedSymbols = Array.from(subscribers.keys());
-      for (let i = 
-
-0; i < subscribedSymbols.length; ++i) {
+      for (let i = 0; i < subscribedSymbols.length; ++i) {
         const symbol = subscribedSymbols[i];
         if (subscribers.get(symbol).fast) {
           fastSymbols.push(symbol);
@@ -251,17 +256,33 @@ class QuoteMultiplexer {
 
     return new Promise((resolve, reject) => {
       if (this.formatterValuesCache[symbol]) {
-        resolve(formatNumber(this.formatterValuesCache[symbol], options && !this.formatterValuesCache[symbol].fractional ? 1 : this.formatterValuesCache[symbol].minmov));
+        resolve(
+          formatNumber(
+            this.formatterValuesCache[symbol],
+            options && !this.formatterValuesCache[symbol].fractional
+              ? 1
+              : this.formatterValuesCache[symbol].minmov
+          )
+        );
       } else {
         const guid = guid();
         this.subscribe(guid, [symbol], (data) => {
-          if (data.status === 'error') {
+          if (data.status === "error") {
             this.waitingForFormatters[symbol] = null;
-            reject('Quotes snapshot is not received');
-          } else if (data.values && data.values.pricescale && data.values.minmov) {
+            reject("Quotes snapshot is not received");
+          } else if (
+            data.values &&
+            data.values.pricescale &&
+            data.values.minmov
+          ) {
             this.waitingForFormatters[symbol] = null;
             this.formatterValuesCache[symbol] = data.values;
-            resolve(formatNumber(data.values, options && !data.values.fractional ? 1 : data.values.minmov));
+            resolve(
+              formatNumber(
+                data.values,
+                options && !data.values.fractional ? 1 : data.values.minmov
+              )
+            );
             this.unsubscribe(guid, symbol);
           }
         });
@@ -280,10 +301,14 @@ class QuoteMultiplexer {
       } else {
         const guid = guid();
         this.subscribe(guid, [symbol], (data) => {
-          if (data.status === 'error') {
+          if (data.status === "error") {
             this.waitingForSnapshot[symbol] = null;
-            reject('Quotes snapshot is not received');
-          } else if (data.values && data.values.minmov && data.values.pricescale) {
+            reject("Quotes snapshot is not received");
+          } else if (
+            data.values &&
+            data.values.minmov &&
+            data.values.pricescale
+          ) {
             this.waitingForSnapshot[symbol] = null;
             this.snapshotValuesCache[symbol] = data.values;
             resolve(data.values);
@@ -297,127 +322,129 @@ class QuoteMultiplexer {
 
 QuoteMultiplexer.prototype.typeFields = {};
 QuoteMultiplexer.prototype.typeFields.simple = [
-  'base-currency-logoid',
-  'ch',
-  'chp',
-  'currency-logoid',
-  'currency_code',
-  'currency_id',
-  'base_currency_id',
-  'current_session',
-  'description',
-  'exchange',
-  'format',
-  'fractional',
-  'is_tradable',
-  'language',
-  'local_description',
-  'listed_exchange',
-  'logoid',
-  'lp',
-  'lp_time',
-  'minmov',
-  'minmove2',
-  'original_name',
-  'pricescale',
-  'pro_name',
-  'short_name',
-  'type',
-  'typespecs',
-  'update_mode',
-  'volume',
-  'value_unit_id'
+  "base-currency-logoid",
+  "ch",
+  "chp",
+  "currency-logoid",
+  "currency_code",
+  "currency_id",
+  "base_currency_id",
+  "current_session",
+  "description",
+  "exchange",
+  "format",
+  "fractional",
+  "is_tradable",
+  "language",
+  "local_description",
+  "listed_exchange",
+  "logoid",
+  "lp",
+  "lp_time",
+  "minmov",
+  "minmove2",
+  "original_name",
+  "pricescale",
+  "pro_name",
+  "short_name",
+  "type",
+  "typespecs",
+  "update_mode",
+  "volume",
+  "value_unit_id",
 ];
 
-QuoteMultiplexer.prototype.typeFields.simpleDetailed = QuoteMultiplexer.prototype.typeFields.simple.concat([
-  'ask',
-  'bid',
-  'fundamentals',
-  'high_price',
-  'is_tradable',
-  'low_price',
-  'open_price',
-  'prev_close_price',
-  'rch',
-  'rchp',
-  'rtc',
-  'rtc_time',
-  'status',
-  'basic_eps_net_income',
-  'beta_1_year',
-  'earnings_per_share_basic_ttm',
-  'industry',
-  'market_cap_basic',
-  'price_earnings_ttm',
-  'sector',
-  'volume',
-  'dividends_yield',
-  'timezone'
-]);
+QuoteMultiplexer.prototype.typeFields.simpleDetailed =
+  QuoteMultiplexer.prototype.typeFields.simple.concat([
+    "ask",
+    "bid",
+    "fundamentals",
+    "high_price",
+    "is_tradable",
+    "low_price",
+    "open_price",
+    "prev_close_price",
+    "rch",
+    "rchp",
+    "rtc",
+    "rtc_time",
+    "status",
+    "basic_eps_net_income",
+    "beta_1_year",
+    "earnings_per_share_basic_ttm",
+    "industry",
+    "market_cap_basic",
+    "price_earnings_ttm",
+    "sector",
+    "volume",
+    "dividends_yield",
+    "timezone",
+  ]);
 
 QuoteMultiplexer.prototype.typeFields.full = [];
-QuoteMultiplexer.prototype.typeFields.watchlist = QuoteMultiplexer.prototype.typeFields.simple.concat([
-  'rchp',
-  'rtc',
-  'country_code',
-  'provider_id'
-]);
+QuoteMultiplexer.prototype.typeFields.watchlist =
+  QuoteMultiplexer.prototype.typeFields.simple.concat([
+    "rchp",
+    "rtc",
+    "country_code",
+    "provider_id",
+  ]);
 
 QuoteMultiplexer.prototype.typeFields.portfolio = [
-  'pro_name',
-  'short_name',
-  'exchange',
-  'listed_exchange',
-  'description',
-  'sector',
-  'type',
-  'typespecs',
-  'industry',
-  'currency_code',
-  'currency_id',
-  'ch',
-  'chp',
-  'logoid',
-  'currency-logoid',
-  'base-currency-logoid',
-  'earnings_per_share_forecast_next_fq',
-  'earnings_release_next_date',
-  'earnings_release_date',
-  'earnings_per_share_fq',
-  'lp',
-  'fractional',
-  'minmov',
-  'minmove2',
-  'pricescale',
-  'volume',
-  'average_volume',
-  'market_cap_basic',
-  'total_revenue',
-  'earnings_per_share_basic_ttm',
-  'price_earnings_ttm',
-  'beta_1_year',
-  'dps_common_stock_prim_issue_fy',
-  'dividends_yield',
-  'fundamental_currency_code',
-  'rates_mc',
-  'rates_fy',
-  'rates_ttm',
-  'format'
+  "pro_name",
+  "short_name",
+  "exchange",
+  "listed_exchange",
+  "description",
+  "sector",
+  "type",
+  "typespecs",
+  "industry",
+  "currency_code",
+  "currency_id",
+  "ch",
+  "chp",
+  "logoid",
+  "currency-logoid",
+  "base-currency-logoid",
+  "earnings_per_share_forecast_next_fq",
+  "earnings_release_next_date",
+  "earnings_release_date",
+  "earnings_per_share_fq",
+  "lp",
+  "fractional",
+  "minmov",
+  "minmove2",
+  "pricescale",
+  "volume",
+  "average_volume",
+  "market_cap_basic",
+  "total_revenue",
+  "earnings_per_share_basic_ttm",
+  "price_earnings_ttm",
+  "beta_1_year",
+  "dps_common_stock_prim_issue_fy",
+  "dividends_yield",
+  "fundamental_currency_code",
+  "rates_mc",
+  "rates_fy",
+  "rates_ttm",
+  "format",
 ];
 
 QuoteMultiplexer.prototype.typeFields.notes = [
-  'short_name',
-  'pro_name',
-  'logoid',
-  'currency-logoid',
-  'base-currency-logoid',
-  'symbol-primaryname',
-  'type',
-  'typespecs'
+  "short_name",
+  "pro_name",
+  "logoid",
+  "currency-logoid",
+  "base-currency-logoid",
+  "symbol-primaryname",
+  "type",
+  "typespecs",
 ];
 
 TradingView.QuoteMultiplexer = QuoteMultiplexer;
 
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = QuoteMultiplexer;
 }

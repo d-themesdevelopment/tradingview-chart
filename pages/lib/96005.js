@@ -1,6 +1,6 @@
 "use strict";
 
-class TradingViewApiBase {
+export class TradingViewApiBase {
   constructor({
     chartApiInstance,
     chartWidgetCollection,
@@ -8,7 +8,7 @@ class TradingViewApiBase {
     saveChartService,
     loadChartService,
     sharingChartService = null,
-    webview = null
+    webview = null,
   }) {
     this._chartWidgetCollection = chartWidgetCollection;
     this._studyMarket = studyMarket;
@@ -34,7 +34,7 @@ class TradingViewApiBase {
   themes() {
     if (!this._themesApi) {
       this._themesApi = new TradingViewThemesAPI({
-        chartWidgetCollection: this._chartWidgetCollection
+        chartWidgetCollection: this._chartWidgetCollection,
       });
     }
     return this._themesApi;
@@ -45,16 +45,23 @@ class TradingViewApiBase {
       Indicators: this._studyMarket,
       Compare: this._chartWidgetCollection.getCompareDialogRenderer(),
       ObjectsTree: null,
-      ChartProperties: this._chartWidgetCollection.getChartPropertiesDialogRenderer(),
-      ChartLayoutSaveAs: this._saveChartService ? this._saveChartService.getSaveAsController() : null,
-      ChartLayoutRename: this._saveChartService ? this._saveChartService.getRenameController() : null,
-      ChartLayoutCreate: this._saveChartService ? this._saveChartService.getCreateController() : null,
+      ChartProperties:
+        this._chartWidgetCollection.getChartPropertiesDialogRenderer(),
+      ChartLayoutSaveAs: this._saveChartService
+        ? this._saveChartService.getSaveAsController()
+        : null,
+      ChartLayoutRename: this._saveChartService
+        ? this._saveChartService.getRenameController()
+        : null,
+      ChartLayoutCreate: this._saveChartService
+        ? this._saveChartService.getCreateController()
+        : null,
       ChartLayoutLoad: this._loadChartLayoutDialog,
       Alerts: this._alertsWidgetDialog,
       Details: this._detailsDialogController,
       FinancialsCharts: null,
       Technicals: null,
-      Forecast: null
+      Forecast: null,
     };
   }
 
@@ -140,14 +147,18 @@ class TradingViewApiBase {
   }
 
   activeChart() {
-    return this._getChartWidgetApi(this._chartWidgetCollection.activeChartWidget.value());
+    return this._getChartWidgetApi(
+      this._chartWidgetCollection.activeChartWidget.value()
+    );
   }
 
   setActiveChart(index) {
     const chartWidgets = this._chartWidgetCollection.getAll();
     if (index >= 0 && index < chartWidgets.length) {
       const chartWidget = chartWidgets[index];
-      if (this._chartWidgetCollection.activeChartWidget.value().inFullscreen()) {
+      if (
+        this._chartWidgetCollection.activeChartWidget.value().inFullscreen()
+      ) {
         chartWidget.requestFullscreen();
       } else {
         this._chartWidgetCollection.activeChartWidget.setValue(chartWidget);
@@ -156,12 +167,15 @@ class TradingViewApiBase {
   }
 
   activeChartIndex() {
-    const activeChartWidget = this._chartWidgetCollection.activeChartWidget.value();
+    const activeChartWidget =
+      this._chartWidgetCollection.activeChartWidget.value();
     return this._chartWidgetCollection.getAll().indexOf(activeChartWidget);
   }
 
   chartsCount() {
-    return this._chartWidgetCollection.layouts[this._chartWidgetCollection.layout.value()].count;
+    return this._chartWidgetCollection.layouts[
+      this._chartWidgetCollection.layout.value()
+    ].count;
   }
 
   layout() {
@@ -234,7 +248,9 @@ class TradingViewApiBase {
   }
 
   async favoriteDrawingsToolbar() {
-    const { FavoriteDrawingsApi } = await import(/* webpackChunkName: "favorite-drawings" */ './favorite-drawings-api');
+    const { FavoriteDrawingsApi } = await import(
+      /* webpackChunkName: "favorite-drawings" */ "./favorite-drawings-api"
+    );
     if (!this._favoriteDrawingsToolbar) {
       this._favoriteDrawingsToolbar = new FavoriteDrawingsApi();
     }
@@ -289,30 +305,42 @@ class TradingViewApiBase {
 
   magnetEnabled() {
     if (!this._magnetEnabledWatchedValue) {
-      this._magnetEnabledWatchedValue = new(goldenLayout.util.WatchedValue)(properties().childs().magnet.value());
-      this._magnetEnabledWatchedValue.subscribe(value => {
+      this._magnetEnabledWatchedValue = new goldenLayout.util.WatchedValue(
+        properties().childs().magnet.value()
+      );
+      this._magnetEnabledWatchedValue.subscribe((value) => {
         saveDefaultProperties(true);
         properties().childs().magnet.setValue(value);
         saveDefaultProperties(false);
       });
-      properties().childs().magnet.subscribe(this, () => {
-        this._magnetEnabledWatchedValue.setValue(properties().childs().magnet.value());
-      });
+      properties()
+        .childs()
+        .magnet.subscribe(this, () => {
+          this._magnetEnabledWatchedValue.setValue(
+            properties().childs().magnet.value()
+          );
+        });
     }
     return this._magnetEnabledWatchedValue;
   }
 
   magnetMode() {
     if (!this._magnetModeWatchedValue) {
-      this._magnetModeWatchedValue = new(goldenLayout.util.WatchedValue)(properties().childs().magnetMode.value());
-      this._magnetModeWatchedValue.subscribe(value => {
+      this._magnetModeWatchedValue = new goldenLayout.util.WatchedValue(
+        properties().childs().magnetMode.value()
+      );
+      this._magnetModeWatchedValue.subscribe((value) => {
         saveDefaultProperties(true);
         properties().childs().magnetMode.setValue(value);
         saveDefaultProperties(false);
       });
-      properties().childs().magnetMode.subscribe(this, () => {
-        this._magnetModeWatchedValue.setValue(properties().childs().magnetMode.value());
-      });
+      properties()
+        .childs()
+        .magnetMode.subscribe(this, () => {
+          this._magnetModeWatchedValue.setValue(
+            properties().childs().magnetMode.value()
+          );
+        });
     }
     return this._magnetModeWatchedValue;
   }
@@ -331,8 +359,8 @@ class TradingViewApiBase {
 
   initAllLineTools() {
     const promises = Object.keys(supportedLineTools)
-      .filter(tool => !supportedLineTools[tool])
-      .map(tool => initLineTool(tool));
+      .filter((tool) => !supportedLineTools[tool])
+      .map((tool) => initLineTool(tool));
     return Promise.all(promises);
   }
 
@@ -372,6 +400,6 @@ class TradingViewApiBase {
   }
 
   _activateChart() {
-    return this._chartWidgetCollection.activeChartWidget.value()
+    return this._chartWidgetCollection.activeChartWidget.value();
   }
 }

@@ -1,8 +1,15 @@
-import { VolumeByPriceExpr, VbPCheckHaveVolumeExpr } from 'some-library';
-import { VolumeProfileBase, numOfSubHists, maxHHistItems, assert, ensureDefined } from 'another-library';
-import { HHistDirection, Container, GraphicsListColl, GraphicsList, VolumeProfileOutputSeries } from 'yet-another-library';
-import { LineStyle, LineStudyPlotStyle } from 'some-other-library';
-import { EraseObj } from 'some-more-library';
+import { VolumeByPriceExpr, VbPCheckHaveVolumeExpr } from "./89529";
+import { VbPCheckHaveVolumeExpr } from "./VbPCheckHaveVolumeExpr";
+import { VolumeProfileBase, numOfSubHists, maxHHistItems } from "./16907";
+import { assert, ensureDefined } from "./assertions";
+import { HHistDirection } from "./90164";
+import { GraphicsListColl } from "./GraphicsListColl";
+import { GraphicsList } from "./GraphicsList";
+import { VolumeProfileOutputSeries } from "./VolumeProfileOutputSeries";
+import { Container } from "./748";
+
+import { LineStyle, LineStudyPlotStyle } from "some-other-library"; // ! not correct
+import { EraseObj } from "./43945";
 
 class VolumeProfileFixedRangeVbPStudyItem extends VolumeByPriceExpr {
   constructor(e, t, i, s, r, n, o, a, l, c, h, d, u) {
@@ -60,9 +67,15 @@ class VolumeProfileFixedRangeBSStudyItem extends VolumeProfileBase {
 
     const i = new StudyGraphicsData();
     i.getObjsContainer("hhists").push(new Container("histBars2", this._hists));
-    i.getObjsContainer("hhists").push(new Container("histBarsVA", this._valueAreaHists));
-    i.getObjsContainer("horizlines").push(new Container("pocLines", this._pocLines));
-    i.getObjsContainer("polygons").push(new Container("histBoxBg", this._boxPolygons));
+    i.getObjsContainer("hhists").push(
+      new Container("histBarsVA", this._valueAreaHists)
+    );
+    i.getObjsContainer("horizlines").push(
+      new Container("pocLines", this._pocLines)
+    );
+    i.getObjsContainer("polygons").push(
+      new Container("histBoxBg", this._boxPolygons)
+    );
 
     this._studyDataUpdate.init(i);
     this._rowsLayout = t(0);
@@ -74,8 +87,12 @@ class VolumeProfileFixedRangeBSStudyItem extends VolumeProfileBase {
 
     this.verifyRowSizeInput(this._rowSize, this._rowsLayout);
 
-    this._originalResolution = Interval.parse(e.symbol.interval + e.symbol.resolution);
-    const n = this._lastBarTime + this._originalResolution.inMilliseconds(this._lastBarTime);
+    this._originalResolution = Interval.parse(
+      e.symbol.interval + e.symbol.resolution
+    );
+    const n =
+      this._lastBarTime +
+      this._originalResolution.inMilliseconds(this._lastBarTime);
 
     if (this._firstBarTime === 0 && this._lastBarTime === 0) {
       this._basicResolution = this._originalResolution;
@@ -88,7 +105,9 @@ class VolumeProfileFixedRangeBSStudyItem extends VolumeProfileBase {
       );
     }
 
-    this._hasSecondarySymbol = !this._originalResolution.isEqualTo(this._basicResolution);
+    this._hasSecondarySymbol = !this._originalResolution.isEqualTo(
+      this._basicResolution
+    );
 
     if (this._hasSecondarySymbol) {
       e.new_sym(e.symbol.tickerid, this._basicResolution.value());
@@ -131,8 +150,8 @@ class VolumeProfileFixedRangeBSStudyItem extends VolumeProfileBase {
     this._volumeSeries = e.new_unlimited_var();
 
     const r = {
-      type: 'composite',
-      data: []
+      type: "composite",
+      data: [],
     };
 
     if (i && i.period === this._basicResolution.value()) {
@@ -159,10 +178,18 @@ class VolumeProfileFixedRangeBSStudyItem extends VolumeProfileBase {
         this._studyDataUpdate.update();
         const e = this._studyDataUpdate.getUpdate();
         if (e.json) {
-          r.data.push({ nonseries: true, type: 'study_graphics', data: e.json });
+          r.data.push({
+            nonseries: true,
+            type: "study_graphics",
+            data: e.json,
+          });
         }
         if (e.jsonUpdate) {
-          r.data.push({ nonseries: true, type: 'study_graphics', data: e.jsonUpdate });
+          r.data.push({
+            nonseries: true,
+            type: "study_graphics",
+            data: e.jsonUpdate,
+          });
         }
       }
     }
@@ -234,7 +261,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
       _metainfoVersion: 51,
       shortDescription: "VPFR",
       format: {
-        type: "volume"
+        type: "volume",
       },
       is_price_study: true,
       defaults: {
@@ -247,7 +274,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
               showValues: false,
               transparencies: [76, 76],
               valuesColor: "#424242",
-              visible: true
+              visible: true,
             },
             histBarsVA: {
               colors: ["#1592e6", "#fbc123"],
@@ -256,23 +283,23 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
               showValues: false,
               transparencies: [30, 30],
               valuesColor: "#424242",
-              visible: true
-            }
+              visible: true,
+            },
           },
           horizlines: {
             pocLines: {
               color: "#ff0000",
               style: LineStyle.Solid,
               visible: true,
-              width: 2
-            }
+              width: 2,
+            },
           },
           polygons: {
             histBoxBg: {
               color: "#37a6ef",
-              transparency: 94
-            }
-          }
+              transparency: 94,
+            },
+          },
         },
         inputs: {
           first_bar_time: 0,
@@ -281,7 +308,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
           rowsLayout: "Number Of Rows",
           subscribeRealtime: true,
           vaVolume: 70,
-          volume: "Up/Down"
+          volume: "Up/Down",
         },
         styles: {
           developingPoc: {
@@ -291,7 +318,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
             plottype: LineStudyPlotStyle.StepLine,
             trackPrice: false,
             transparency: 0,
-            display: 0
+            display: 0,
           },
           developingVAHigh: {
             color: "#0000ff",
@@ -300,7 +327,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
             plottype: LineStudyPlotStyle.StepLine,
             trackPrice: false,
             transparency: 0,
-            display: 0
+            display: 0,
           },
           developingVALow: {
             color: "#0000ff",
@@ -309,36 +336,36 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
             plottype: LineStudyPlotStyle.StepLine,
             trackPrice: false,
             transparency: 0,
-            display: 0
-          }
-        }
+            display: 0,
+          },
+        },
       },
       graphics: {
         hhists: {
           histBars2: {
             location: HHistLocation.Absolute,
             title: "Volume Profile",
-            titles: ["Up Volume", "Down Volume"]
+            titles: ["Up Volume", "Down Volume"],
           },
           histBarsVA: {
             location: HHistLocation.Absolute,
             title: "Value Area",
-            titles: ["Value Area Up", "Value Area Down"]
-          }
+            titles: ["Value Area Up", "Value Area Down"],
+          },
         },
         horizlines: {
           pocLines: {
             name: "POC",
-            showPrice: true
-          }
+            showPrice: true,
+          },
         },
         polygons: {
           histBoxBg: {
             mouseTouchable: false,
             name: "Histogram Box",
-            showBorder: false
-          }
-        }
+            showBorder: false,
+          },
+        },
       },
       inputs: [
         {
@@ -346,7 +373,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
           id: "rowsLayout",
           name: "Rows Layout",
           options: ["Number Of Rows", "Ticks Per Row"],
-          type: "text"
+          type: "text",
         },
         {
           defval: 24,
@@ -354,14 +381,14 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
           max: 1000000,
           min: 1,
           name: "Row Size",
-          type: "integer"
+          type: "integer",
         },
         {
           defval: "Up/Down",
           id: "volume",
           name: "Volume",
           options: ["Up/Down", "Total", "Delta"],
-          type: "text"
+          type: "text",
         },
         {
           defval: 0,
@@ -370,7 +397,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
           max: 253370764800,
           min: -253370764800,
           name: "First Bar Time",
-          type: "time"
+          type: "time",
         },
         {
           defval: 0,
@@ -379,7 +406,7 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
           max: 253370764800,
           min: -253370764800,
           name: "Last Bar Time",
-          type: "time"
+          type: "time",
         },
         {
           defval: 70,
@@ -387,48 +414,46 @@ function createVolumeProfileFixedRangeVbPStudyItem(description) {
           max: 100,
           min: 0,
           name: "Value Area Volume",
-          type: "integer"
+          type: "integer",
         },
         {
           defval: true,
           id: "subscribeRealtime",
           isHidden: true,
           name: "SubscribeRealtime",
-          type: "bool"
-        }
+          type: "bool",
+        },
       ],
       plots: [
         { id: "developingPoc", type: "line" },
         { id: "developingVAHigh", type: "line" },
-        { id: "developingVALow", type: "line" }
+        { id: "developingVALow", type: "line" },
       ],
       styles: {
         developingPoc: {
           histogramBase: 0,
-          title: "Developing Poc"
+          title: "Developing Poc",
         },
         developingVAHigh: {
           histogramBase: 0,
-          title: "Developing VA High"
+          title: "Developing VA High",
         },
         developingVALow: {
           histogramBase: 0,
-          title: "Developing VA Low"
-        }
-      }
-    }
+          title: "Developing VA Low",
+        },
+      },
+    },
   };
 }
 
-const volumeProfileFixedRangeVbPStudyItem = createVolumeProfileFixedRangeVbPStudyItem(
-  'Volume Profile Fixed Range'
-);
+const volumeProfileFixedRangeVbPStudyItem =
+  createVolumeProfileFixedRangeVbPStudyItem("Volume Profile Fixed Range");
 
-const volumeProfileFixedRangeBSStudyItem = createVolumeProfileFixedRangeVbPStudyItem(
-  'Fixed Range'
-);
+const volumeProfileFixedRangeBSStudyItem =
+  createVolumeProfileFixedRangeVbPStudyItem("Fixed Range");
 
 export {
   volumeProfileFixedRangeBSStudyItem,
-  volumeProfileFixedRangeVbPStudyItem
+  volumeProfileFixedRangeVbPStudyItem,
 };

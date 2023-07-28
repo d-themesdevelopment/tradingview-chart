@@ -1,11 +1,17 @@
-import { GraphicsObj, GraphicsList } from 'some-library';
+import { GraphicsObj, GraphicsList } from "some-library";
 
-class VolumeByPriceExpr extends GraphicsObj {
+export class VolumeByPriceExpr extends GraphicsObj {
   constructor(model, chartApi, series, startIndex, endIndex, level) {
     super(model);
-    this._startIndex = this._mixinJSONObject.createTimeField(startIndex, 'startIndex');
-    this._endIndex = this._mixinJSONObject.createTimeField(endIndex, 'endIndex');
-    this._level = this._mixinJSONObject.createDoubleField(level, 'level');
+    this._startIndex = this._mixinJSONObject.createTimeField(
+      startIndex,
+      "startIndex"
+    );
+    this._endIndex = this._mixinJSONObject.createTimeField(
+      endIndex,
+      "endIndex"
+    );
+    this._level = this._mixinJSONObject.createDoubleField(level, "level");
     this._series = series;
   }
 
@@ -19,7 +25,7 @@ class VolumeByPriceExpr extends GraphicsObj {
   }
 
   jsonName() {
-    return 'hhists';
+    return "hhists";
   }
 
   primitiveData() {
@@ -66,7 +72,7 @@ class VolumeByPriceExpr extends GraphicsObj {
   }
 }
 
-class PriceLevel {
+export class PriceLevel {
   constructor(index, level, offset) {
     this.index = index;
     this.level = level;
@@ -80,7 +86,11 @@ class PriceLevel {
   equals(level) {
     if (!(level instanceof PriceLevel)) return false;
     if (this.isNaN() || level.isNaN()) return false;
-    return this.index === level.index && this.offset === level.offset && this.level === level.level;
+    return (
+      this.index === level.index &&
+      this.offset === level.offset &&
+      this.level === level.level
+    );
   }
 
   getLevel() {
@@ -92,7 +102,7 @@ class PriceLevel {
   }
 }
 
-class Polygons extends GraphicsObj {
+export class Polygons extends GraphicsObj {
   constructor(model, points) {
     super(model);
     this._points = points || [];
@@ -122,7 +132,9 @@ class Polygons extends GraphicsObj {
   }
 
   getPoints() {
-    return this._points.map((point) => new PriceLevel(point.index, point.level, point.offset));
+    return this._points.map(
+      (point) => new PriceLevel(point.index, point.level, point.offset)
+    );
   }
 
   getPointsCount() {
@@ -155,7 +167,7 @@ class Polygons extends GraphicsObj {
   }
 
   jsonName() {
-    return 'polygons';
+    return "polygons";
   }
 
   primitiveData() {
@@ -170,14 +182,26 @@ class Polygons extends GraphicsObj {
   }
 }
 
-class HorizLines {
+export class HorizLines {
   constructor(model, startIndex, endIndex, level, extendLeft, extendRight) {
     super(model);
-    this._startIndex = this._mixinJSONObject.createTimeField(startIndex, 'startIndex');
-    this._endIndex = this._mixinJSONObject.createTimeField(endIndex, 'endIndex');
-    this._level = this._mixinJSONObject.createDoubleField(level, 'level');
-    this._extendLeft = this._mixinJSONObject.createField(extendLeft, 'extendLeft');
-    this._extendRight = this._mixinJSONObject.createField(extendRight, 'extendRight');
+    this._startIndex = this._mixinJSONObject.createTimeField(
+      startIndex,
+      "startIndex"
+    );
+    this._endIndex = this._mixinJSONObject.createTimeField(
+      endIndex,
+      "endIndex"
+    );
+    this._level = this._mixinJSONObject.createDoubleField(level, "level");
+    this._extendLeft = this._mixinJSONObject.createField(
+      extendLeft,
+      "extendLeft"
+    );
+    this._extendRight = this._mixinJSONObject.createField(
+      extendRight,
+      "extendRight"
+    );
   }
 
   isNaN() {
@@ -186,12 +210,14 @@ class HorizLines {
       Number.isNaN(this._level.get()) ||
       this._startIndex.get() < 0 ||
       this._endIndex.get() < 0 ||
-      (this._startIndex.get() === this._endIndex.get() && !this._extendLeft.get() && !this._extendRight.get())
+      (this._startIndex.get() === this._endIndex.get() &&
+        !this._extendLeft.get() &&
+        !this._extendRight.get())
     );
   }
 
   jsonName() {
-    return 'horizlines';
+    return "horizlines";
   }
 
   primitiveData() {
@@ -246,5 +272,6 @@ class HorizLines {
   }
 
   isExtendRight() {
-    return this._
-
+    return this._;
+  }
+}

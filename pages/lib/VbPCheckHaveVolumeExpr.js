@@ -1,8 +1,6 @@
+import { Std } from "./someModule";
 
-
-import { Std } from './someModule';
-
-class VbPCheckHaveVolumeExpr {
+export class VbPCheckHaveVolumeExpr {
   constructor(seriesGetter) {
     this._haveAnyVolume = false;
     this._isDisabled = false;
@@ -19,11 +17,11 @@ class VbPCheckHaveVolumeExpr {
     }
     if (isDataVendorProvided) {
       if (!this._haveAnyVolume) {
-        Std.error("The data vendor doesn't provide volume data for this symbol.");
+        Std.error(
+          "The data vendor doesn't provide volume data for this symbol."
+        );
       }
       this._isDisabled = true;
     }
   }
 }
-
-
