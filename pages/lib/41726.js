@@ -1,16 +1,16 @@
-import { clearStyle, createEmptyStyle } from "path/to/clearStyle";
-import { ensureDefined } from "path/to/ensureDefined";
+import { clearStyle, createEmptyStyle } from "./96759.js";
+import { ensureDefined } from "./assertions.js";
 import {
-  // isColorerPlot,
+  isColorerPlot,
   isOhlcColorerPlot,
-  // isTextColorerPlot,
+  isTextColorerPlot,
   isBgColorerPlot,
-  // isCandleBorderColorerPlot,
-  // isCandleWickColorerPlot,
-  // isUpColorerPlot,
-  // isDownColorerPlot,
-} from "path/to/plotUtils";
-import { rgbaFromInteger } from "path/to/rgbaFromInteger";
+  isCandleBorderColorerPlot,
+  isCandleWickColorerPlot,
+  isUpColorerPlot,
+  isDownColorerPlot,
+} from "./72877.js";
+import { rgbaFromInteger } from "./87095.js";
 
 const plotStyleMap = new Map([
   [0, "color"],
