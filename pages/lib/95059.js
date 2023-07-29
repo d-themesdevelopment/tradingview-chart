@@ -1,70 +1,69 @@
 
-var ACTION_ID;
-(function (ACTION_ID) {
-    ACTION_ID["TVActionId"] = "TVActionId";
-    ACTION_ID["ChartApplyIndicatorsToAllCharts"] = "Chart.ApplyIndicatorsToAllCharts";
-    ACTION_ID["ChartChangeTimeZone"] = "Chart.ChangeTimeZone";
-    ACTION_ID["ChartDialogsShowChangeInterval"] = "Chart.Dialogs.ShowChangeInterval";
-    ACTION_ID["ChartDialogsShowChangeSymbol"] = "Chart.Dialogs.ShowChangeSymbol";
-    ACTION_ID["ChartDialogsShowCompareOrAddSymbol"] = "Chart.Dialogs.ShowCompareOrAddSymbol";
-    ACTION_ID["ChartDialogsShowGeneralSettings"] = "Chart.Dialogs.ShowGeneralSettings";
-    ACTION_ID["ChartDialogsShowGeneralSettingsSymbolTab"] = "Chart.Dialogs.ShowGeneralSettings.SymbolTab";
-    ACTION_ID["ChartDialogsShowGoToDate"] = "Chart.Dialogs.ShowGoToDate";
-    ACTION_ID["ChartDialogsShowInsertIndicators"] = "Chart.Dialogs.ShowInsertIndicators";
-    ACTION_ID["ChartDialogsShowSymbolInfo"] = "Chart.Dialogs.ShowSymbolInfo";
-    ACTION_ID["ChartDrawingToolbarToggleVisibility"] = "Chart.DrawingToolbar.ToggleVisibility";
-    ACTION_ID["ChartLinesToggleBidAskLinesVisibility"] = "Chart.Lines.ToggleBidAskLinesVisibility";
-    ACTION_ID["ChartLinesToggleHighLowLinesVisibility"] = "Chart.Lines.ToggleHighLowLinesVisibility";
-    ACTION_ID["ChartLinesToggleAverageLineVisibility"] = "Chart.Lines.ToggleAverageLineVisibility";
-    ACTION_ID["ChartLinesToggleSeriesPrevCloseLineVisibility"] = "Chart.Lines.ToggleSeriesPrevCloseLineVisibility";
-    ACTION_ID["ChartLinesToggleSeriesPriceLineVisibility"] = "Chart.Lines.ToggleSeriesPriceLineVisibility";
-    ACTION_ID["ChartLineToolPitchforkChangeTypeToInside"] = "Chart.LineTool.Pitchfork.ChangeTypeToInside";
-    ACTION_ID["ChartLineToolPitchforkChangeTypeToModifiedSchiff"] = "Chart.LineTool.Pitchfork.ChangeTypeToModifiedSchiff";
-    ACTION_ID["ChartLineToolPitchforkChangeTypeToOriginal"] = "Chart.LineTool.Pitchfork.ChangeTypeToOriginal";
-    ACTION_ID["ChartLineToolPitchforkChangeTypeToSchiff"] = "Chart.LineTool.Pitchfork.ChangeTypeToSchiff";
-    ACTION_ID["ChartMarksToggleVisibility"] = "Chart.Marks.ToggleVisibility";
-    ACTION_ID["ChartMoveChartInLayout"] = "Chart.MoveChartInLayout";
-    ACTION_ID["ChartMoveChartInLayoutBack"] = "Chart.MoveChartInLayout.Back";
-    ACTION_ID["ChartMoveChartInLayoutForward"] = "Chart.MoveChartInLayout.Forward";
-    ACTION_ID["ChartObjectTreeShow"] = "Chart.ObjectTree.Show";
-    ACTION_ID["ChartDataWindowShow"] = "Chart.DataWindow.Show";
-    ACTION_ID["ChartPriceScaleLabelsToggleBidAskLabelsVisibility"] = "Chart.PriceScale.Labels.ToggleBidAskLabelsVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleHighLowPriceLabelsVisibility"] = "Chart.PriceScale.Labels.ToggleHighLowPriceLabelsVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleAveragePriceLabelVisibility"] = "Chart.PriceScale.Labels.ToggleAveragePriceLabelVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleIndicatorsNameLabelsVisibility"] = "Chart.PriceScale.Labels.ToggleIndicatorsNameLabelsVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleIndicatorsValueLabelsVisibility"] = "Chart.PriceScale.Labels.ToggleIndicatorsValueLabelsVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleSeriesLastValueVisibility"] = "Chart.PriceScale.Labels.ToggleSeriesLastValueVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleSymbolNameLabelsVisibility"] = "Chart.PriceScale.Labels.ToggleSymbolNameLabelsVisibility";
-    ACTION_ID["ChartPriceScaleLabelsToggleSymbolPrevCloseValueVisibility"] = "Chart.PriceScale.Labels.ToggleSymbolPrevCloseValueVisibility";
-    ACTION_ID["ChartPriceScaleMergeAllScalesToLeft"] = "Chart.PriceScale.MergeAllScalesToLeft";
-    ACTION_ID["ChartPriceScaleMergeAllScalesToRight"] = "Chart.PriceScale.MergeAllScalesToRight";
-    ACTION_ID["ChartPriceScaleMoveToLeft"] = "Chart.PriceScale.MoveToLeft";
-    ACTION_ID["ChartPriceScaleMoveToRight"] = "Chart.PriceScale.MoveToRight";
-    ACTION_ID["ChartPriceScaleToggleAddOrderPlusButtonVisibility"] = "Chart.PriceScale.ToggleAddOrderPlusButtonVisibility";
-    ACTION_ID["ChartPriceScaleToggleAutoScaleSeriesOnly"] = "Chart.PriceScale.ToggleAutoScaleSeriesOnly";
-    ACTION_ID["ChartPriceScaleToggleCountdownToBarCloseVisibility"] = "Chart.PriceScale.ToggleCountdownToBarCloseVisibility";
-    ACTION_ID["ChartRedo"] = "Chart.Redo";
-    ACTION_ID["ChartRemoveAllIndicators"] = "Chart.RemoveAllIndicators";
-    ACTION_ID["ChartRemoveAllIndicatorsAndLineTools"] = "Chart.RemoveAllIndicatorsAndLineTools";
-    ACTION_ID["ChartRemoveAllLineTools"] = "Chart.RemoveAllLineTools";
-    ACTION_ID["ChartScalesReset"] = "Chart.Scales.Reset";
-    ACTION_ID["ChartScalesToggleLockPriceToBarRatio"] = "Chart.Scales.ToggleLockPriceToBarRatio";
-    ACTION_ID["ChartSelectedObjectHide"] = "Chart.SelectedObject.Hide";
-    ACTION_ID["ChartSelectedObjectRemove"] = "Chart.SelectedObject.Remove";
-    ACTION_ID["ChartSelectedObjectShowSettingsDialog"] = "Chart.SelectedObject.ShowSettingsDialog";
-    ACTION_ID["ChartSelectedObjectToggleLocked"] = "Chart.SelectedObject.ToggleLocked";
-    ACTION_ID["ChartSeriesPriceScaleToggleAutoScale"] = "Chart.Series.PriceScale.ToggleAutoScale";
-    ACTION_ID["ChartSeriesPriceScaleToggleIndexedTo100"] = "Chart.Series.PriceScale.ToggleIndexedTo100";
-    ACTION_ID["ChartSeriesPriceScaleToggleInvertPriceScale"] = "Chart.Series.PriceScale.ToggleInvertPriceScale";
-    ACTION_ID["ChartSeriesPriceScaleToggleLogarithmic"] = "Chart.Series.PriceScale.ToggleLogarithmic";
-    ACTION_ID["ChartSeriesPriceScaleTogglePercentage"] = "Chart.Series.PriceScale.TogglePercentage";
-    ACTION_ID["ChartSeriesPriceScaleToggleRegular"] = "Chart.Series.PriceScale.ToggleRegular";
-    ACTION_ID["ChartSessionBreaksToggleVisibility"] = "Chart.SessionBreaks.ToggleVisibility";
-    ACTION_ID["ChartTimeScaleReset"] = "Chart.TimeScale.Reset";
-    ACTION_ID["ChartUndo"] = "Chart.Undo";
-    ACTION_ID["ChartSourceIntervalsVisibility"] = "Chart.Source.IntervalsVisibility";
-    ACTION_ID["ChartSourceIntervalsVisibilityCurrentAndAbove"] = "Chart.Source.IntervalsVisibility.CurrentAndAbove";
-    ACTION_ID["ChartSourceIntervalsVisibilityCurrentAndBelow"] = "Chart.Source.IntervalsVisibility.CurrentAndBelow";
-    ACTION_ID["ChartSourceIntervalsVisibilityOnlyCurrent"] = "Chart.Source.IntervalsVisibility.Current";
-    ACTION_ID["ChartSourceIntervalsVisibilityAll"] = "Chart.Source.IntervalsVisibility.All";
-})(ACTION_ID || (ACTION_ID = {}));
+const ACTION_ID = {
+    "TVActionId": "TVActionId",
+    "ChartApplyIndicatorsToAllCharts": "Chart.ApplyIndicatorsToAllCharts",
+    "ChartChangeTimeZone": "Chart.ChangeTimeZone",
+    "ChartDialogsShowChangeInterval": "Chart.Dialogs.ShowChangeInterval",
+    "ChartDialogsShowChangeSymbol": "Chart.Dialogs.ShowChangeSymbol",
+    "ChartDialogsShowCompareOrAddSymbol": "Chart.Dialogs.ShowCompareOrAddSymbol",
+    "ChartDialogsShowGeneralSettings": "Chart.Dialogs.ShowGeneralSettings",
+    "ChartDialogsShowGeneralSettingsSymbolTab": "Chart.Dialogs.ShowGeneralSettings.SymbolTab",
+    "ChartDialogsShowGoToDate": "Chart.Dialogs.ShowGoToDate",
+    "ChartDialogsShowInsertIndicators": "Chart.Dialogs.ShowInsertIndicators",
+    "ChartDialogsShowSymbolInfo": "Chart.Dialogs.ShowSymbolInfo",
+    "ChartDrawingToolbarToggleVisibility": "Chart.DrawingToolbar.ToggleVisibility",
+    "ChartLinesToggleBidAskLinesVisibility": "Chart.Lines.ToggleBidAskLinesVisibility",
+    "ChartLinesToggleHighLowLinesVisibility": "Chart.Lines.ToggleHighLowLinesVisibility",
+    "ChartLinesToggleAverageLineVisibility": "Chart.Lines.ToggleAverageLineVisibility",
+    "ChartLinesToggleSeriesPrevCloseLineVisibility": "Chart.Lines.ToggleSeriesPrevCloseLineVisibility",
+    "ChartLinesToggleSeriesPriceLineVisibility": "Chart.Lines.ToggleSeriesPriceLineVisibility",
+    "ChartLineToolPitchforkChangeTypeToInside": "Chart.LineTool.Pitchfork.ChangeTypeToInside",
+    "ChartLineToolPitchforkChangeTypeToModifiedSchiff": "Chart.LineTool.Pitchfork.ChangeTypeToModifiedSchiff",
+    "ChartLineToolPitchforkChangeTypeToOriginal": "Chart.LineTool.Pitchfork.ChangeTypeToOriginal",
+    "ChartLineToolPitchforkChangeTypeToSchiff": "Chart.LineTool.Pitchfork.ChangeTypeToSchiff",
+    "ChartMarksToggleVisibility": "Chart.Marks.ToggleVisibility",
+    "ChartMoveChartInLayout": "Chart.MoveChartInLayout",
+    "ChartMoveChartInLayoutBack": "Chart.MoveChartInLayout.Back",
+    "ChartMoveChartInLayoutForward": "Chart.MoveChartInLayout.Forward",
+    "ChartObjectTreeShow": "Chart.ObjectTree.Show",
+    "ChartDataWindowShow": "Chart.DataWindow.Show",
+    "ChartPriceScaleLabelsToggleBidAskLabelsVisibility": "Chart.PriceScale.Labels.ToggleBidAskLabelsVisibility",
+    "ChartPriceScaleLabelsToggleHighLowPriceLabelsVisibility": "Chart.PriceScale.Labels.ToggleHighLowPriceLabelsVisibility",
+    "ChartPriceScaleLabelsToggleAveragePriceLabelVisibility": "Chart.PriceScale.Labels.ToggleAveragePriceLabelVisibility",
+    "ChartPriceScaleLabelsToggleIndicatorsNameLabelsVisibility": "Chart.PriceScale.Labels.ToggleIndicatorsNameLabelsVisibility",
+    "ChartPriceScaleLabelsToggleIndicatorsValueLabelsVisibility": "Chart.PriceScale.Labels.ToggleIndicatorsValueLabelsVisibility",
+    "ChartPriceScaleLabelsToggleSeriesLastValueVisibility": "Chart.PriceScale.Labels.ToggleSeriesLastValueVisibility",
+    "ChartPriceScaleLabelsToggleSymbolNameLabelsVisibility": "Chart.PriceScale.Labels.ToggleSymbolNameLabelsVisibility",
+    "ChartPriceScaleLabelsToggleSymbolPrevCloseValueVisibility": "Chart.PriceScale.Labels.ToggleSymbolPrevCloseValueVisibility",
+    "ChartPriceScaleMergeAllScalesToLeft": "Chart.PriceScale.MergeAllScalesToLeft",
+    "ChartPriceScaleMergeAllScalesToRight": "Chart.PriceScale.MergeAllScalesToRight",
+    "ChartPriceScaleMoveToLeft": "Chart.PriceScale.MoveToLeft",
+    "ChartPriceScaleMoveToRight": "Chart.PriceScale.MoveToRight",
+    "ChartPriceScaleToggleAddOrderPlusButtonVisibility": "Chart.PriceScale.ToggleAddOrderPlusButtonVisibility",
+    "ChartPriceScaleToggleAutoScaleSeriesOnly": "Chart.PriceScale.ToggleAutoScaleSeriesOnly",
+    "ChartPriceScaleToggleCountdownToBarCloseVisibility": "Chart.PriceScale.ToggleCountdownToBarCloseVisibility",
+    "ChartRedo": "Chart.Redo",
+    "ChartRemoveAllIndicators": "Chart.RemoveAllIndicators",
+    "ChartRemoveAllIndicatorsAndLineTools": "Chart.RemoveAllIndicatorsAndLineTools",
+    "ChartRemoveAllLineTools": "Chart.RemoveAllLineTools",
+    "ChartScalesReset": "Chart.Scales.Reset",
+    "ChartScalesToggleLockPriceToBarRatio": "Chart.Scales.ToggleLockPriceToBarRatio",
+    "ChartSelectedObjectHide": "Chart.SelectedObject.Hide",
+    "ChartSelectedObjectRemove": "Chart.SelectedObject.Remove",
+    "ChartSelectedObjectShowSettingsDialog": "Chart.SelectedObject.ShowSettingsDialog",
+    "ChartSelectedObjectToggleLocked": "Chart.SelectedObject.ToggleLocked",
+    "ChartSeriesPriceScaleToggleAutoScale": "Chart.Series.PriceScale.ToggleAutoScale",
+    "ChartSeriesPriceScaleToggleIndexedTo100": "Chart.Series.PriceScale.ToggleIndexedTo100",
+    "ChartSeriesPriceScaleToggleInvertPriceScale": "Chart.Series.PriceScale.ToggleInvertPriceScale",
+    "ChartSeriesPriceScaleToggleLogarithmic": "Chart.Series.PriceScale.ToggleLogarithmic",
+    "ChartSeriesPriceScaleTogglePercentage": "Chart.Series.PriceScale.TogglePercentage",
+    "ChartSeriesPriceScaleToggleRegular": "Chart.Series.PriceScale.ToggleRegular",
+    "ChartSessionBreaksToggleVisibility": "Chart.SessionBreaks.ToggleVisibility",
+    "ChartTimeScaleReset": "Chart.TimeScale.Reset",
+    "ChartUndo": "Chart.Undo",
+    "ChartSourceIntervalsVisibility": "Chart.Source.IntervalsVisibility",
+    "ChartSourceIntervalsVisibilityCurrentAndAbove": "Chart.Source.IntervalsVisibility.CurrentAndAbove",
+    "ChartSourceIntervalsVisibilityCurrentAndBelow": "Chart.Source.IntervalsVisibility.CurrentAndBelow",
+    "ChartSourceIntervalsVisibilityOnlyCurrent": "Chart.Source.IntervalsVisibility.Current",
+    "ChartSourceIntervalsVisibilityAll": "Chart.Source.IntervalsVisibility.All"
+};

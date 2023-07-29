@@ -1,7 +1,11 @@
 "use strict";
-
 var s;
-const SeriesData = class {
+function(e) {
+  e[e.FromLeft = -1] = "FromLeft", e[e.FromRight = 1] = "FromRight"
+}(s || (s = {}));
+import {ensureDefined, ensureNotNull} from "./assertions.js";
+
+class SeriesData {
   constructor() {
     this._pressedChunks = {
       chunks: new Map(),
@@ -29,10 +33,10 @@ const SeriesData = class {
         this._rebuildPressedChunks(i);
       }
     }
-    const n = (0, r.ensureDefined)(
+    const n = ensureDefined(
       u.find((t) => t.forBarspacingLargerThen <= e)
     );
-    return (0, r.ensureDefined)(this._pressedChunks.chunks.get(n.barsToMerge));
+    return ensureDefined(this._pressedChunks.chunks.get(n.barsToMerge));
   }
 
   mergeRegularBars(e) {
@@ -81,7 +85,7 @@ const SeriesData = class {
       return this.bars().search(e, t);
     } else if (
       this.bars().isEmpty() ||
-      (0, r.ensureNotNull)(this.nsBars().firstIndex()) <= e
+      ensureNotNull(this.nsBars().firstIndex()) <= e
     ) {
       return this.nsBars().search(e, t);
     } else {
@@ -126,7 +130,7 @@ const SeriesData = class {
     this.m_bars.move(e);
     this.m_nsBars.move(e);
     if (this.m_bars.size() > 0) {
-      this._rebuildPressedChunks((0, r.ensureNotNull)(this.m_bars.first()));
+      this._rebuildPressedChunks(ensureNotNull(this.m_bars.first()));
     }
   }
 
@@ -167,13 +171,13 @@ const SeriesData = class {
       }
     };
     u.forEach((e) => {
-      const t = (0, r.ensureDefined)(
+      const t = ensureDefined(
         this._pressedChunks.chunks.get(e.barsToMerge)
       );
       const a = (0, o.lowerbound)(t, i, (e, t) => e.endTime < t);
       if (a === 0 && t.length > 0) {
         const i = t[0].startTime - 1;
-        const a = (0, r.ensureNotNull)(this.m_bars.firstIndex());
+        const a = ensureNotNull(this.m_bars.firstIndex());
         const l = this.m_bars.rangeIterator(a, i);
         const c = [];
         o(l, c, e);
@@ -181,7 +185,7 @@ const SeriesData = class {
         this._pressedChunks.chunks.set(e.barsToMerge, h);
       } else {
         t.splice(a);
-        let o = (0, r.ensureNotNull)(this.m_bars.firstIndex());
+        let o = ensureNotNull(this.m_bars.firstIndex());
         if (t.length) {
           o = t[t.length - 1].endTime + 1;
         }
@@ -192,9 +196,9 @@ const SeriesData = class {
   }
 
   _updateLatestChunks() {
-    const e = (0, r.ensureNotNull)(this.m_bars.lastIndex());
+    const e = ensureNotNull(this.m_bars.lastIndex());
     u.forEach((t) => {
-      const i = (0, r.ensureDefined)(
+      const i = ensureDefined(
         this._pressedChunks.chunks.get(t.barsToMerge)
       );
       const s = this.m_bars.rangeIterator(e, e).next();

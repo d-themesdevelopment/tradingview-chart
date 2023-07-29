@@ -1,207 +1,128 @@
 
-const logger = getLogger("Chart.Study.MetaInfo");
-const applyOverridesToStudyDefaults = require(19386).applyOverridesToStudyDefaults;
-const StudyMetaInfoBase = require(60762).StudyMetaInfoBase;
-const defaultOverrides = {};
+  import {StudyMetaInfoBase} from "./60762.js";
+  import {getLogger} from "./59224.js";
+  import {applyOverridesToStudyDefaults} from "./19386.js";
 
-class StudyMetaInfo extends StudyMetaInfoBase {
-  constructor(metaInfo) {
-    super();
-    TradingView.merge(this, {
-      palettes: {},
-      inputs: [],
-      plots: [],
-      graphics: {},
-      defaults: {}
-    });
-    TradingView.merge(this, metaInfo);
-    const idString = metaInfo.fullId || metaInfo.id;
-    TradingView.merge(this, StudyMetaInfo.parseIdString(idString));
-  }
-
-  static versionOf(metaInfo) {
-    const version = "_metainfoVersion" in metaInfo && isNumber(metaInfo._metainfoVersion) ? metaInfo._metainfoVersion : 0;
-    if (version < 0) {
-      logger.logError("Metainfo format version cannot be negative: " + version);
-    }
-    return version;
-  }
-
-  static parseIdString(idString) {
-    const parsedId = {};
-    if (idString.indexOf("@") === -1) {
-      parsedId.shortId = idString;
-      parsedId.packageId = "tv-basicstudies";
-      parsedId.id = idString + "@" + parsedId.packageId;
-      parsedId.version = 1;
-    } else {
-      const parts = idString.split("@");
-      parsedId.shortId = parts[0];
-      const packageParts = parts[1].split("-");
-      if (packageParts.length === 3) {
-        parsedId.packageId = packageParts.slice(0, 2).join("-");
-        parsedId.id = parsedId.shortId + "@" + parsedId.packageId;
-        parsedId.version = packageParts[2];
-      } else if (packageParts.length === 1 && packageParts[0] === "decisionbar") {
-        parsedId.packageId = "les-" + packageParts[0];
-        parsedId.id = parsedId.shortId + "@" + parsedId.packageId;
-        parsedId.version = 1;
-      } else {
-        if (packageParts.length !== 1) {
-          throw new Error("Unexpected study id: " + idString);
-        }
-        parsedId.packageId = "tv-" + packageParts[0];
-        parsedId.id = parsedId.shortId + "@" + parsedId.packageId;
-        parsedId.version = 1;
+  var loggerStudyMetaUInfo = getLogger("Chart.Study.MetaInfo");
+  var emptyElementStudyMetaInfo = {};
+  class StudyMetaInfo extends StudyMetaInfoBase {
+      constructor(e) {
+          super(), TradingView.merge(this, {
+              palettes: {},
+              inputs: [],
+              plots: [],
+              graphics: {},
+              defaults: {}
+          }), TradingView.merge(this, e);
+          var t = e.fullId || e.id;
+          TradingView.merge(this, StudyMetaInfo.parseIdString(t))
       }
-    }
-    parsedId.fullId = parsedId.id + "-" + parsedId.version;
-
-    if (parsedId.packageId === "tv-scripting") {
-      const shortId = parsedId.shortId;
-      if (shortId.indexOf("Script$") === 0 || shortId.indexOf("StrategyScript$") === 0) {
-        const index = shortId.indexOf("_");
-        parsedId.productId = index >= 0 ? shortId.substring(0, index) : parsedId.packageId;
-      } else {
-        parsedId.productId = parsedId.packageId;
+      static versionOf(e) {
+          var t = "_metainfoVersion" in e && isNumber(e._metainfoVersion) ? e._metainfoVersion : 0;
+          return t < 0 && loggerStudyMetaUInfo.logError("Metainfo format version cannot be negative: " + t), t
       }
-    } else {
-      parsedId.productId = parsedId.packageId;
-    }
-    return parsedId;
-  }
-
-  static getPackageName(idString) {
-    return (/^[^@]+@([^-]+-[^-]+)/.exec(idString || "") || [0, "tv-basicstudies"])[1];
-  }
-
-  static cutDollarHash(idString) {
-    const dollarIndex = idString.indexOf("$");
-    const atIndex = idString.indexOf("@");
-    if (dollarIndex === -1) {
-      return idString;
-    }
-    return idString.substring(0, dollarIndex) + (atIndex >= 0 ? idString.substring(atIndex) : "");
-  }
-
-  static hasUserIdSuffix(idString) {
-    return /^USER;[\d\w]+;\d+$/.test(idString);
-  }
-
-  static hasPubSuffix(idString) {
-    return /^PUB;.+$/.test(idString);
-  }
-
-  static hasStdSuffix(idString) {
-    return /^STD;.+$/.test(idString);
-  }
-
-  static isStandardPine(idString) {
-    return /^(Strategy)?Script\$STD;.*@tv-scripting$/.test(idString);
-  }
-
-  static getStudyIdWithLatestVersion(metaInfo) {
-    const cutId = StudyMetaInfo.cutDollarHash(metaInfo.id);
-    let idWithVersion = cutId;
-    if (cutId.indexOf("@tv-scripting") >= 0) {
-      idWithVersion += "-101!";
-    } else if (cutId.endsWith("CP@tv-basicstudies")) {
-      idWithVersion += "-" + Math.min(metaInfo.version, 207);
-    } else if (cutId.endsWith("CP@tv-chartpatterns")) {
-      idWithVersion += "-" + Math.min(metaInfo.version, 9);
-    } else {
-      idWithVersion += "-" + metaInfo.version;
-    }
-    return idWithVersion;
-  }
-
-  defaultInputs() {
-    const defaultValues = [];
-    for (let i = 0; i < this.inputs.length; i++) {
-      defaultValues.push(this.inputs[i].defval);
-    }
-    return defaultValues;
-  }
-
-  state(includeVersion) {
-    const state = {};
-    for (const prop in this) {
-      if (this.hasOwnProperty(prop)) {
-        state[prop] = this[prop];
-        if (prop === "id" && includeVersion !== true) {
-          state[prop] += "-" + this.version;
-        }
+      static parseIdString(e) {
+          var t = {};
+          if (-1 === e.indexOf("@")) t.shortId = e, t.packageId = "tv-basicstudies", t.id = e + "@" + t.packageId, t.version = 1;
+          else {
+              var i = e.split("@");
+              t.shortId = i[0];
+              var s = i[1].split("-");
+              if (3 === s.length) t.packageId = s.slice(0, 2).join("-"), t.id = t.shortId + "@" + t.packageId, t.version = s[2];
+              else if (1 === s.length && "decisionbar" === s[0]) t.packageId = "les-" + s[0], t.id = t.shortId + "@" + t.packageId, t.version = 1;
+              else {
+                  if (1 !== s.length) throw new Error("unexpected study id:" + e);
+                  t.packageId = "tv-" + s[0], t.id = t.shortId + "@" + t.packageId, t.version = 1
+              }
+          }
+          if (t.fullId = t.id + "-" + t.version, "tv-scripting" === t.packageId) {
+              var r = t.shortId;
+              if (0 === r.indexOf("Script$") || 0 === r.indexOf("StrategyScript$")) {
+                  var n = r.indexOf("_");
+                  t.productId = n >= 0 ? r.substring(0, n) : t.packageId
+              } else t.productId = t.packageId
+          } else t.productId = t.packageId;
+          return t
       }
-    }
-    return state;
-  }
-
-  symbolInputId() {
-    const symbolInput = this.inputs.filter((input) => input.type === "symbol");
-    return symbolInput.length > 0 ? symbolInput[0].id : null;
-  }
-
-  createDefaults() {
-    if (this.defaults) {
-      const defaults = TradingView.clone(this.defaults);
-      defaults.precision = "default";
-      const propertyRootName = StudyMetaInfo.getStudyPropertyRootName(this);
-      defaults.create(propertyRootName, defaults);
-    }
-  }
-
-  removeDefaults() {
-    defaults.remove(StudyMetaInfo.getStudyPropertyRootName(this));
-  }
-
-  static findStudyMetaInfoByDescription(studiesMetaInfo, description) {
-    if (studiesMetaInfo) {
-      for (let i = 0; i < studiesMetaInfo.length; ++i) {
-        if (studiesMetaInfo[i].description.toLowerCase() === description.toLowerCase()) {
-          return studiesMetaInfo[i];
-        }
+      static getPackageName(e) {
+          return (/^[^@]+@([^-]+-[^-]+)/.exec(e || "") || [0, "tv-basicstudies"])[1]
       }
-      throw new Error("Unexpected study id: " + description);
-    }
-    throw new Error("There is no studies metainfo");
+      static cutDollarHash(e) {
+          var t = e.indexOf("$"),
+              i = e.indexOf("@");
+          return -1 === t ? e : e.substring(0, t) + (i >= 0 ? e.substring(i) : "")
+      }
+      static hasUserIdSuffix(e) {
+          return /^USER;[\d\w]+;\d+$/.test(e)
+      }
+      static hasPubSuffix(e) {
+          return /^PUB;.+$/.test(e)
+      }
+      static hasStdSuffix(e) {
+          return /^STD;.+$/.test(e)
+      }
+      static isStandardPine(e) {
+          return /^(Strategy)?Script\$STD;.*@tv-scripting$/.test(e)
+      }
+      static getStudyIdWithLatestVersion(e) {
+          const t = StudyMetaInfo.cutDollarHash(e.id);
+          let i = t;
+          return t.indexOf("@tv-scripting") >= 0 ? i += "-101!" : t.endsWith("CP@tv-basicstudies") ? i += "-" + Math.min(e.version, 207) : t.endsWith("CP@tv-chartpatterns") ? i += "-" + Math.min(e.version, 9) : i += "-" + e.version, i
+      }
+      defaultInputs() {
+          for (var e = [], t = 0; t < this.inputs.length; t++) e.push(this.inputs[t].defval);
+          return e
+      }
+      state(e) {
+          var t = {};
+          for (var i in this) this.hasOwnProperty(i) && (t[i] = this[i], !0 !== e && "id" === i && (t[i] += "-" + this.version));
+          return t
+      }
+      symbolInputId() {
+          var e = this.inputs.filter((function(e) {
+              return "symbol" === e.type
+          }));
+          return e.length > 0 ? e[0].id : null
+      }
+      createDefaults() {
+          if (this.defaults) {
+              var e = TradingView.clone(this.defaults);
+              e.precision = "default";
+              var t = StudyMetaInfo.getStudyPropertyRootName(this);
+              defaults.create(t, e)
+          }
+      }
+      removeDefaults() {
+          defaults.remove(StudyMetaInfo.getStudyPropertyRootName(this))
+      }
+      static findStudyMetaInfoByDescription(e, t) {
+          if (e) {
+              for (var i = 0; i < e.length; ++i)
+                  if (e[i].description.toLowerCase() === t.toLowerCase()) return e[i];
+              throw new Error("unexpected study id:" + t)
+          }
+          throw new Error("There is no studies metainfo")
+      }
+      static isParentSourceId(e) {
+          return "string" == typeof e && /^[^\$]+\$\d+$/.test(e)
+      }
+      static overrideDefaults(e) {
+          0 !== e.length && applyOverridesToStudyDefaults(emptyElementStudyMetaInfo, e, (function(e) {
+              return TradingView.defaultProperties[StudyMetaInfo.getStudyPropertyRootName(e)] || null
+          }))
+      }
+      static mergeDefaultsOverrides(e) {
+          TradingView.merge(emptyElementStudyMetaInfo, e)
+      }
+      static isScriptStrategy(e) {
+          return !1
+      }
+      static getOrderedInputIds(e) {
+          for (var t = [], i = e.inputs, s = 0; s < i.length; ++s) {
+              var r = i[s];
+              t.push(r.id)
+          }
+          return t
+      }
   }
-
-  static isParentSourceId(sourceId) {
-    return typeof sourceId === "string" && /^[^\$]+\$\d+$/.test(sourceId);
-  }
-
-  static overrideDefaults(overrides) {
-    if (overrides.length !== 0) {
-      applyOverridesToStudyDefaults(defaultOverrides, overrides, (study) => TradingView.defaultProperties[StudyMetaInfo.getStudyPropertyRootName(study)] || null);
-    }
-  }
-
-  static mergeDefaultsOverrides(overrides) {
-    TradingView.merge(defaultOverrides, overrides);
-  }
-
-  static isScriptStrategy(metaInfo) {
-    return false;
-  }
-
-  static getOrderedInputIds(metaInfo) {
-    const inputIds = [];
-    const inputs = metaInfo.inputs;
-    for (let i = 0; i < inputs.length; ++i) {
-      const input = inputs[i];
-      inputIds.push(input.id);
-    }
-    return inputIds;
-  }
-}
-
-StudyMetaInfo.VERSION_STUDY_ARG_SOURCE = 41;
-StudyMetaInfo.METAINFO_FORMAT_VERSION_SOS_V2 = 42;
-StudyMetaInfo.VERSION_PINE_PROTECT_TV_4164 = 43;
-StudyMetaInfo.CURRENT_METAINFO_FORMAT_VERSION = 52;
-StudyMetaInfo.VERSION_NEW_STUDY_PRECISION_FORMAT = 46;
-StudyMetaInfo.FilledArea = {};
-StudyMetaInfo.FilledArea.TYPE_PLOTS = "plot_plot";
-StudyMetaInfo.FilledArea.TYPE_HLINES = "hline_hline";
-
-module.exports = StudyMetaInfo;
+  StudyMetaInfo.VERSION_STUDY_ARG_SOURCE = 41, StudyMetaInfo.METAINFO_FORMAT_VERSION_SOS_V2 = 42, StudyMetaInfo.VERSION_PINE_PROTECT_TV_4164 = 43, StudyMetaInfo.CURRENT_METAINFO_FORMAT_VERSION = 52, StudyMetaInfo.VERSION_NEW_STUDY_PRECISION_FORMAT = 46, StudyMetaInfo.FilledArea = {}, StudyMetaInfo.FilledArea.TYPE_PLOTS = "plot_plot", StudyMetaInfo.FilledArea.TYPE_HLINES = "hline_hline", TradingView.StudyMetaInfo = StudyMetaInfo

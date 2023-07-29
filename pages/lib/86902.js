@@ -1,10 +1,9 @@
-import { ensureNotNull } from "path/to/util";
-import { distanceToLine } from "path/to/math";
-import { Point } from "path/to/point";
-import { LineDataSource, LineToolColorsProperty } from "path/to/lineDataSource";
-import { DefaultProperty } from "path/to/defaultProperty";
-import { GeneralFiguresDefinitionsViewModelBase } from "path/to/generalFiguresDefinitionsViewModelBase";
-
+import { ensureNotNull } from "./assertions.js";
+import { distanceToLine } from "./4652.js";
+import { LineDataSource } from "./13087.js";
+import { LineToolColorsProperty } from "./68806.js";
+import { DefaultProperty } from "./46100.js";
+import {translationMatrix, transformPoint} from "./25422.js"
 class LineToolArc extends LineDataSource {
   constructor(chartApi, properties, source, priceScale) {
     const defaultProperties = properties || LineToolArc.createProperties();
@@ -157,20 +156,7 @@ class LineToolArc extends LineDataSource {
   }
 
   async getPropertyDefinitionsViewModelClass() {
-    const [
-      PropertyDefinitionsViewModelBase,
-      DrawingStyleProperty,
-      FillBackgroundProperty,
-      TransparencyProperty,
-      LineStyleProperty,
-    ] = await Promise.all([
-      import(7201),
-      import(3753),
-      import(5871),
-      import(8167),
-      import(8537),
-    ]);
-    return GeneralFiguresDefinitionsViewModelBase;
+    return (await Promise.all([i.e(7201), i.e(3753), i.e(5871), i.e(8167), i.e(8537)]).then(i.bind(i, 20061))).GeneralFiguresDefinitionsViewModelBase
   }
 
   static configureProperties(properties) {

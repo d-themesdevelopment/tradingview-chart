@@ -1,4 +1,4 @@
-import { ensureNotNull } from 'utils';
+import { ensureNotNull } from './assertions.js';
 import { UndoCommand } from 'undoCommand';
 import { TranslatedString } from 'translatedString';
 import { isLineTool, isStudy } from 'utils/checker';
@@ -60,7 +60,7 @@ const logger = getLogger("Chart.RemoveSourcesCommand");
 const REMOVE_SOURCES_TRANSLATION = new TranslatedString(
   "remove line data sources",
   null,
-  'localized string here'
+  'remove line data sources'
 );
 
 class RemoveSourcesCommand extends UndoCommand {

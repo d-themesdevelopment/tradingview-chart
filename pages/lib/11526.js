@@ -1,6 +1,5 @@
 
 
-(e, t, i) => {
     "use strict";
     const Version = i(18923).Version;
     const getLogger = i(59224).getLogger("Chart.StudyMigration");
@@ -201,6 +200,4 @@
       return inputs;
     };
   
-    return StudyMigration;
-  };
-  
+    

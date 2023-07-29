@@ -3,22 +3,21 @@
 const regexResolution = /^(\d*)([TSHDWMR])$/;
 const regexMultiplier = /^(\d+)$/;
 
-var ResolutionKind;
-(function (ResolutionKind) {
-  ResolutionKind.Ticks = "ticks";
-  ResolutionKind.Seconds = "seconds";
-  ResolutionKind.Minutes = "minutes";
-  ResolutionKind.Days = "days";
-  ResolutionKind.Weeks = "weeks";
-  ResolutionKind.Months = "months";
-  ResolutionKind.Range = "range";
-  ResolutionKind.Invalid = "invalid";
-})(ResolutionKind || (ResolutionKind = {}));
+const ResolutionKind = {
+  Ticks: "ticks",
+  Seconds: "seconds",
+  Minutes: "minutes",
+  Days: "days",
+  Weeks: "weeks",
+  Months: "months",
+  Range: "range",
+  Invalid: "invalid",
+};
 
-var SpecialResolutionKind;
-(function (SpecialResolutionKind) {
-  SpecialResolutionKind.Hours = "hours";
-})(SpecialResolutionKind || (SpecialResolutionKind = {}));
+const SpecialResolutionKind = {
+  Hours: "hours",
+};
+
 
 const intervalMultiplier = {};
 intervalMultiplier[ResolutionKind.Ticks] = 1e3;

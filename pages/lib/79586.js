@@ -1,12 +1,15 @@
-import { lowerbound, makeFont, measureText } from 'some-library';
-import {
-  MediaCoordinatesPaneRenderer,
-  optimalHiLoWidth,
-  interactionTolerance,
-  HitTestResult,
-  HitTarget
-} from 'some-other-library';
-import { CompositeRenderer, PaneRendererCandles } from 'yet-another-library';
+import {makeFont} from "./29764.js";
+import {lowerbound, lowerboundExt} from "./78071.js";
+import {optimalHiLoWidth, interactionTolerance} from "./45197.js";
+import {HitTestResult} from "./18807.js";
+import {MediaCoordinatesPaneRenderer} from "./MediaCoordinatesPaneRenderer.js";
+import {CHART_FONT_FAMILY} from "./46501.js";
+import {measureText} from "./74359.js";
+import {PaneRendererCandles} from "./PaneRendererCandles.js";
+import {SeriesBarCandlesPaneView} from "./4502.js";
+
+
+
 
 class HiLoPaneView extends MediaCoordinatesPaneRenderer {
   constructor() {

@@ -1,8 +1,8 @@
-let r = false;
+let applyOverridesToStudyDefaults = false;
 
 try {
   localStorage.getItem("");
-  r = true;
+  applyOverridesToStudyDefaults = true;
 } catch (e) {}
 
 let n;
@@ -14,7 +14,7 @@ let n;
   n[(n.DEBUG = 5)] = "DEBUG";
 })(n || (n = {}));
 
-let o = 0;
+let emptyElementStudyMetaInfo = 0;
 const a = "tv.logger.loglevel";
 const l = "tv.logger.logHighRate";
 const c = [];
@@ -104,13 +104,13 @@ function logEntry(time, message, logEntries, subSystemId, maxCount) {
       }
 
       const logEntry = {
-        id: o,
+        id: emptyElementStudyMetaInfo,
         message: message,
         subSystemId: subSystemId,
         timestamp: Number(time),
       };
 
-      o += 1;
+      emptyElementStudyMetaInfo += 1;
       logEntries.push(logEntry);
 
       if (typeof maxCount !== "undefined" && logEntries.length > maxCount) {
@@ -204,7 +204,7 @@ function loggingOff() {
 
 function saveLoggerState() {
   try {
-    if (r) {
+    if (applyOverridesToStudyDefaults) {
       localStorage.setItem(l, String(m));
       localStorage.setItem(a, String(_));
     }
@@ -216,8 +216,8 @@ function saveLoggerState() {
 }
 
 (function () {
-  m = !!r && localStorage.getItem(l) === "true";
-  let level = parseInt((r && localStorage.getItem(a)) || "");
+  m = !!applyOverridesToStudyDefaults && localStorage.getItem(l) === "true";
+  let level = parseInt((applyOverridesToStudyDefaults && localStorage.getItem(a)) || "");
   if (Number.isNaN(level)) {
     level = n.WARNING;
   }

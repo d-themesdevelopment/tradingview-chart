@@ -1,6 +1,6 @@
-import { isNumber } from "lodash";
-import { CheckMobile } from "check-mobile-module";
-import { enabled } from "feature-toggle-module";
+import { isNumber } from "./1722.js";
+import { CheckMobile } from "./49483.js";
+import { isEnabled } from "./14483.js";
 import { ensureDefined } from "utility-module";
 import { createStudyPlotColorProvider } from "color-provider-module";
 import {
@@ -8,14 +8,16 @@ import {
   isOhlcPlot,
   isArrowsPlot,
 } from "plot-helper-module";
-import { LineStudyPlotStyle, PlotRowSearchMode } from "study-plot-module";
-import { notAvailable, resetTransparency } from "color-module";
+import { PlotRowSearchMode } from "./86094.js";
+import { LineStudyPlotStyle } from "study-plot-module";
+import { resetTransparency } from "./87095.js";
+import { notAvailable } from "color-module";
 import { getPriceValueFormatterForSource } from "price-value-formatter-module";
-import { tool } from "line-tool-module";
-import { isLineToolName } from "line-tool-helper-module";
+import { tool } from "./88348.js";
+import { isLineToolName } from "./15367.js";
 
 const isMobile = CheckMobile.any();
-const hideLastNaStudyOutput = enabled("hide_last_na_study_output");
+const hideLastNaStudyOutput = isEnabled("hide_last_na_study_output");
 
 class StudyValuesProvider {
   constructor(study, model) {

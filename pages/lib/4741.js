@@ -1,7 +1,9 @@
-import { WatchedValue } from "./WatchedValue";
-import { hashFromEvent, modifiersFromEvent, isMacKeyboard } from "./68335";
-import { isNativeUIInteraction } from "./54717";
-import { trackEvent } from "analytics"; // ! not correct
+import { WatchedValue } from "./WatchedValue.js";
+import { humanReadableHash, modifiersFromEvent, isMacKeyboard} from "./3343.js";
+import { isNativeUIInteraction } from "./54717.js";
+import { trackEvent } from "./51768.js"; // ! not correct
+
+
 
 class KeyCombination {
   constructor(modifiers, code) {
@@ -116,7 +118,7 @@ class HotkeyActionGroup {
   }
 }
 
-const keyboardManager = new (class {
+class keyboardManager {
   constructor() {
     this._groups = [];
     this._pressedKeys = new WatchedValue(0);
@@ -127,7 +129,7 @@ const keyboardManager = new (class {
     this._keyDownListener = (event) => {
       if (event.defaultPrevented) return;
 
-      const keyCombination = hashFromEvent(event);
+      const keyCombination = humanReadableHash(event);
       this._pressedKeys.setValue(keyCombination);
       this._keyboardPressedKeysState.setValue(
         new KeyCombination(modifiersFromEvent(event), event.code)
@@ -145,7 +147,7 @@ const keyboardManager = new (class {
     };
 
     this._keyUpListener = (event) => {
-      const keyCombination = hashFromEvent(event);
+      const keyCombination = humanReadableHash(event);
       this._pressedKeys.setValue(keyCombination);
       this._keyboardPressedKeysState.setValue(
         new KeyCombination(modifiersFromEvent(event), "")
@@ -213,7 +215,7 @@ const keyboardManager = new (class {
   keyboardPressedKeysState() {
     return this._keyboardPressedKeysState.readonly();
   }
-})();
+};
 
 export function createGroup(options) {
   return new HotkeyActionGroup(keyboardManager, options);
@@ -233,5 +235,5 @@ const keyboardPressedKeysState = keyboardManager.keyboardPressedKeysState();
 registerWindow(window);
 
 HotkeyActionGroup.setMatchedHotkeyHandler((keyCombination) => {
-  trackEvent("Keyboard Shortcuts", hashFromEvent(keyCombination));
+  trackEvent("Keyboard Shortcuts", humanReadableHash(keyCombination));
 });

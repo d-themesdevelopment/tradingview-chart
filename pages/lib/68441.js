@@ -1,28 +1,40 @@
 "use strict";
+import {LineStyle} from ("./79849.js");
+import { LINESTYLE_SOLID } from ("./95586.js");
 
-// const graphicsUtils = () => {
-
-// };
-const lineUtils = {
-  addHorizontalLineToPath: () => addHorizontalLine,
-  addLineToPath: () => addLine,
-  addVerticalLineToPath: () => addVerticalLine,
-  clearRectWithGradient: () => clearRectWithGradient,
-  createCircle: () => createCircle,
-  drawHorizontalLine: () => drawHorizontalLine,
-  drawLine: () => drawLine,
-  drawPoly: () => drawPoly,
-  drawRoundRect: () => drawRoundRect,
-  drawRoundRectWithInnerBorder: () => drawRoundRectWithInnerBorder,
-  drawVerticalLine: () => drawVerticalLine,
-  fillRectInnerBorder: () => fillRectInnerBorder,
-  fillRectWithBorder: () => fillRectWithBorder,
-  setLineStyle: () => setLineStyle,
-};
-
-const pointUtils = require(86441);
-const LineStyle = require(79849);
-const { LINESTYLE_SOLID } = require(95586);
+function fillRectWithBorder(e, t, i, r, n, o, a, l, c, h, d, u, p, _, m) {
+  const g = h ? 0 : t,
+      f = d ? p : r;
+  if (void 0 !== o && (e.fillStyle = o, e.fillRect(g, i, f - g + _, n - i)), void 0 !== a && l > 0) {
+      if (e.beginPath(), v(e, c), void 0 !== m) {
+          const t = m.map((e => e * l));
+          e.setLineDash(t)
+      }
+      let o = point(0, 0),
+          h = point(0, 0),
+          d = point(0, 0),
+          p = point(0, 0);
+      switch (u) {
+          case "outer": {
+              const e = .5 * l;
+              d = point(0, e), p = point(0, e), o = point(e, -l), h = point(e, -l);
+              break
+          }
+          case "center": {
+              const e = l % 2 ? .5 : 0,
+                  t = l % 2 ? .5 : _;
+              d = point(.5 * l - e, -e), p = point(t + .5 * l, -e), o = point(-e, e + .5 * l), h = point(t, e + .5 * l);
+              break
+          }
+          case "inner": {
+              const e = .5 * l;
+              d = point(0, -e), p = point(1, -e), o = point(-e, l), h = point(1 - e, l);
+              break
+          }
+      }
+      e.lineWidth = l, e.strokeStyle = a, e.moveTo(g - d.x, i - d.y), e.lineTo(f + p.x, i - p.y), e.moveTo(r + h.x, i + h.y), e.lineTo(r + h.x, n - h.y), e.moveTo(g - d.x, n + d.y), e.lineTo(f + p.x, n + p.y), e.moveTo(t - o.x, i + o.y), e.lineTo(t - o.x, n - o.y), e.stroke()
+  }
+}
 
 function clearRectWithGradient(
   context,
@@ -250,6 +262,3 @@ function drawLine(context, x1, y1, x2, y2) {
   }
 }
 
-// return {
-//   ...lineUtils,
-// };
