@@ -1,4 +1,4 @@
-import { isNumber } from "lodash";
+import { isNumber } from "./helpers.js";
 import { t } from "i18n-library"; // !
 
 import { PercentageFormatter } from "./PercentageFormatter";

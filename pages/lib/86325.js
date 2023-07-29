@@ -1,6 +1,7 @@
-import { LineDataSource } from 'path/to/lineDataSource';
-import { LevelsProperty } from 'path/to/levelsProperty';
-import { LineToolColorsProperty } from 'path/to/lineToolColorsProperty';
+import { LineDataSource } from './13087.js';
+import { LevelsProperty } from './53801.js';
+import { LineToolColorsProperty } from './68806.js';
+
 
 const horizontalLevels = [4.5, 9, 11.25, 18, 22.5, 36, 45];
 const verticalLevels = (() => {
@@ -142,20 +143,7 @@ class LineToolGannSquare extends LineDataSource {
   }
 
   async getPropertyDefinitionsViewModelClass() {
-    const [
-      PropertyDefinitionsViewModelBase,
-      DrawingStyleProperty,
-      FillBackgroundProperty,
-      TransparencyProperty,
-      LineStyleProperty,
-    ] = await Promise.all([
-      import(7201),
-      import(3753),
-      import(5871),
-      import(8167),
-      import(8537),
-    ]);
-    return GannSquareDefinitionsViewModel;
+    return (await Promise.all([i.e(7201), i.e(3753), i.e(5871), i.e(8167), i.e(8537)]).then(i.bind(i, 41854))).GannSquareDefinitionsViewModel
   }
 
   static createProperties(defaults) {

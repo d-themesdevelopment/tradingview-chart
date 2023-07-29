@@ -1,237 +1,130 @@
-let applyOverridesToStudyDefaults = false;
 
+const s = "undefined" != typeof window ? window : {};
+let applyOverridesToStudyDefaults = !1;
 try {
-  localStorage.getItem("");
-  applyOverridesToStudyDefaults = true;
+  localStorage.getItem(""), applyOverridesToStudyDefaults = !0
 } catch (e) {}
-
-let n;
-(function (n) {
-  n[(n.ERROR = 1)] = "ERROR";
-  n[(n.WARNING = 2)] = "WARNING";
-  n[(n.INFO = 3)] = "INFO";
-  n[(n.NORMAL = 4)] = "NORMAL";
-  n[(n.DEBUG = 5)] = "DEBUG";
-})(n || (n = {}));
-
+const LOGLEVEL = {
+  "1": "ERROR",
+  "2": "WARNING",
+  "3": "INFO",
+  "4": "NORMAL",
+  "5": "DEBUG",
+  "ERROR": 1,
+  "WARNING": 2,
+  "INFO": 3,
+  "NORMAL": 4,
+  "DEBUG": 5
+};
 let emptyElementStudyMetaInfo = 0;
-const a = "tv.logger.loglevel";
-const l = "tv.logger.logHighRate";
-const c = [];
-let h = null;
-let d = null;
-let u = null;
-let p = NaN;
-let _ = n.WARNING;
-let m = false;
+const loglevelStr = "tv.logger.loglevel",
+  logHighRate = "tv.logger.logHighRate",
+  logArray = [];
+let hObjectLogger = null,
+  dObjectLogger = null,
+  uObjectLogger = null,
+  pObjectLogger = NaN,
+  warningStrLevel = LOGLEVEL.WARNING,
+  mBoolLogger = !1;
 
 function getLogLevel() {
-  return _;
+  return warningStrLevel
 }
 
 function isHighRateEnabled() {
-  return m;
+  return mBoolLogger
 }
 
-function setLogLevel(level) {
-  level = Math.max(n.ERROR, Math.min(n.DEBUG, level));
-  _ = level;
-  saveLoggerState();
+function setLogLevel(e) {
+  e = Math.max(LOGLEVEL.ERROR, Math.min(LOGLEVEL.DEBUG, e)), warningStrLevel = e, saveLoggerState()
 }
 
-function getRawLogHistory() {
-  let logEntries = c.reduce(
-    (accumulator, currentValue) => accumulator.concat(currentValue),
-    []
-  );
-  logEntries.sort((a, b) => a.id - b.id);
-
-  if (typeof arguments[0] !== "undefined") {
-    logEntries = logEntries.filter(
-      (entry) => entry.subSystemId === arguments[0]
-    );
-  }
-
-  if (typeof arguments[1] === "number") {
-    logEntries = logEntries.slice(-arguments[1]);
-  }
-
-  return logEntries;
+function getRawLogHistory(e, t) {
+  let i = logArray.reduce(((e, t) => e.concat(t)), []);
+  return i.sort(((e, t) => e.id - t.id)), void 0 !== t && (i = i.filter((e => e.subSystemId === t))), "number" == typeof e && (i = i.slice(-e)), i
 }
 
-function serializeLogHistoryEntry(entry) {
-  return (
-    new Date(entry.timestamp).toISOString() +
-    ":" +
-    entry.subSystemId +
-    ":" +
-    entry.message.replace(/"/g, "'")
-  );
+function serializeLogHistoryEntry(e) {
+  return new Date(e.timestamp).toISOString() + ":" + e.subSystemId + ":" + e.message.replace(/"/g, "'")
 }
 
-function getLogHistory() {
-  return (function (logEntries, maxBytes) {
-    const serializedEntries = logEntries.map(serializeLogHistoryEntry);
-    let bytesCount = 0;
-
-    for (
-      let i = logEntries.length - 1;
-      i >= 1 &&
-      ((bytesCount +=
-        8 * (1 + encodeURIComponent(serializedEntries[i]).length)),
-      !(
-        i - 1 > 0 &&
-        ((bytesCount +=
-          8 * (1 + encodeURIComponent(serializedEntries[i - 1]).length)),
-        bytesCount > maxBytes)
-      ));
-      i--
-    );
-
-    return logEntries.slice(i);
-  })(getRawLogHistory.apply(null, arguments), 75497472);
+function getLogHistory(e, t) {
+  return function(e, t) {
+      let i, s = 0,
+          r = 0;
+      for (i = e.length - 1; i >= 1 && (s += 8 * (1 + encodeURIComponent(e[i]).length), !(i - 1 > 0 && (r = 8 * (1 + encodeURIComponent(e[i - 1]).length), s + r > t))); i--);
+      return e.slice(i)
+  }(getRawLogHistory(e, t).map(serializeLogHistoryEntry), 75497472)
 }
 
-function logEntry(time, message, logEntries, subSystemId, maxCount) {
-  if (arguments[1] === d && arguments[3] === u) return;
-
-  const timestamp = new Date(time);
-
-  if (arguments[0] <= n.NORMAL) {
-    (function (time, message, logEntries, subSystemId, maxCount) {
-      if (typeof structuredClone === "function") {
-        message = structuredClone(message);
+function logEntry(e, t, i, s) {
+  if (t === dObjectLogger && s.id === uObjectLogger) return;
+  const r = new Date;
+  if (e <= LOGLEVEL.NORMAL && function(e, t, i, s, r) {
+          "function" == typeof structuredClone && (t = structuredClone(t));
+          const n = {
+              id: emptyElementStudyMetaInfo,
+              message: t,
+              subSystemId: s,
+              timestamp: Number(e)
+          };
+          emptyElementStudyMetaInfo += 1, i.push(n), void 0 !== r && i.length > r && i.splice(0, 1)
+      }(r, t, i, s.id, s.maxCount), e <= warningStrLevel && (!s.highRate || isHighRateEnabled()) && (!hObjectLogger || s.id.match(hObjectLogger))) {
+      const i = r.toISOString() + ":" + s.id + ":" + t;
+      switch (e) {
+          case LOGLEVEL.DEBUG:
+              console.debug(i);
+              break;
+          case LOGLEVEL.INFO:
+          case LOGLEVEL.NORMAL:
+              s.color ? console.log("%c" + i, "color: " + s.color) : console.log(i);
+              break;
+          case LOGLEVEL.WARNING:
+              console.warn(i);
+              break;
+          case LOGLEVEL.ERROR:
+              console.error(i)
       }
-
-      const logEntry = {
-        id: emptyElementStudyMetaInfo,
-        message: message,
-        subSystemId: subSystemId,
-        timestamp: Number(time),
-      };
-
-      emptyElementStudyMetaInfo += 1;
-      logEntries.push(logEntry);
-
-      if (typeof maxCount !== "undefined" && logEntries.length > maxCount) {
-        logEntries.splice(0, 1);
-      }
-    })(timestamp, message, logEntries, subSystemId, maxCount);
-  }
-
-  if (
-    arguments[0] <= _ &&
-    (!maxCount.highRate || isHighRateEnabled()) &&
-    (!h || subSystemId.match(h))
-  ) {
-    const logString =
-      timestamp.toISOString() + ":" + subSystemId + ":" + message;
-
-    switch (arguments[0]) {
-      case n.DEBUG:
-        console.debug(logString);
-        break;
-      case n.INFO:
-      case n.NORMAL:
-        if (maxCount.color) {
-          console.log("%c" + logString, "color: " + maxCount.color);
-        } else {
-          console.log(logString);
-        }
-        break;
-      case n.WARNING:
-        console.warn(logString);
-        break;
-      case n.ERROR:
-        console.error(logString);
-        break;
-    }
-
-    d = message;
-    u = subSystemId;
-
-    if (!isNaN(p)) {
-      clearTimeout(p);
-    }
-
-    p = setTimeout(() => {
-      d = null;
-      u = null;
-      p = NaN;
-    }, 1000);
+      dObjectLogger = t, uObjectLogger = s.id, pObjectLogger && clearTimeout(pObjectLogger), pObjectLogger = setTimeout((() => {
+          dObjectLogger = null, uObjectLogger = null, pObjectLogger = NaN
+      }), 1e3)
   }
 }
 
-function getLogger(id, options = {}) {
-  const logEntries = [];
-  c.push(logEntries);
-  const subsystem = Object.assign(options, { id: id });
+function getLogger(e, t = {}) {
+  const i = [];
+  logArray.push(i);
+  const s = Object.assign(t, {
+      id: e
+  });
 
-  function log(level) {
-    return (message) =>
-      logEntry(
-        level,
-        String(message),
-        logEntries,
-        subsystem.id,
-        subsystem.maxCount
-      );
+  function r(e) {
+      return t => logEntry(e, String(t), i, s)
   }
-
   return {
-    logDebug: log(n.DEBUG),
-    logError: log(n.ERROR),
-    logInfo: log(n.INFO),
-    logNormal: log(n.NORMAL),
-    logWarn: log(n.WARNING),
+      logDebug: r(LOGLEVEL.DEBUG),
+      logError: r(LOGLEVEL.ERROR),
+      logInfo: r(LOGLEVEL.INFO),
+      logNormal: r(LOGLEVEL.NORMAL),
+      logWarn: r(LOGLEVEL.WARNING)
+  }
+}
+const globalLogger = getLogger("logger"),
+  loggingOn = s.lon = (e, t) => {
+      setLogLevel(LOGLEVEL.DEBUG), globalLogger.logNormal("Debug logging enabled"), mBoolLogger = Boolean(e), hObjectLogger = t || null, saveLoggerState()
+  },
+  loggingOff = s.loff = () => {
+      setLogLevel(LOGLEVEL.INFO), globalLogger.logInfo("Debug logging disabled")
   };
-}
-
-const globalLogger = getLogger("logger");
-
-function loggingOn(enabled, subsystem) {
-  setLogLevel(n.DEBUG);
-  globalLogger.logNormal("Debug logging enabled");
-  m = Boolean(enabled);
-  h = subsystem || null;
-  saveLoggerState();
-}
-
-function loggingOff() {
-  setLogLevel(n.INFO);
-  globalLogger.logInfo("Debug logging disabled");
-}
 
 function saveLoggerState() {
   try {
-    if (applyOverridesToStudyDefaults) {
-      localStorage.setItem(l, String(m));
-      localStorage.setItem(a, String(_));
-    }
+      applyOverridesToStudyDefaults && (localStorage.setItem(logHighRate, String(mBoolLogger)), localStorage.setItem(loglevelStr, String(warningStrLevel)))
   } catch (e) {
-    globalLogger.logWarn(
-      `Cannot save logger state (level: ${_}, high-rate: ${m}) to localStorage: ${e.message}`
-    );
+      globalLogger.logWarn(`Cannot save logger state (level: ${warningStrLevel}, high-rate: ${mBoolLogger}) to localStorage: ${e.message}`)
   }
-}
-
-(function () {
-  m = !!applyOverridesToStudyDefaults && localStorage.getItem(l) === "true";
-  let level = parseInt((applyOverridesToStudyDefaults && localStorage.getItem(a)) || "");
-  if (Number.isNaN(level)) {
-    level = n.WARNING;
-  }
-  setLogLevel(level);
-  globalLogger.logNormal(`Init with settings - level: ${_}, high-rate: ${m}`);
-})();
-
-if (
-  typeof s.performance !== "undefined" &&
-  typeof s.performance.now === "function"
-) {
-  globalLogger.logNormal(
-    `Sync logger and perf times, now is ${s.performance.now()}`
-  );
-} else {
-  globalLogger.logWarn("Perf time is not available");
-}
+}! function() {
+  mBoolLogger = !!applyOverridesToStudyDefaults && "true" === localStorage.getItem(logHighRate);
+  let e = parseInt(applyOverridesToStudyDefaults && localStorage.getItem(loglevelStr) || "");
+  Number.isNaN(e) && (e = LOGLEVEL.WARNING), setLogLevel(e), globalLogger.logNormal(`Init with settings - level: ${warningStrLevel}, high-rate: ${mBoolLogger}`)
+}(), s.performance && s.performance.now ? globalLogger.logNormal(`Sync logger and perf times, now is ${s.performance.now()}`) : globalLogger.logWarn("Perf time is not available")

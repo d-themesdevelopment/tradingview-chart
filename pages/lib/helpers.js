@@ -626,3 +626,12 @@ export class VolumeFormatter {
       .replace(/(\.[1-9]*)0+$/, (e, t) => t);
   }
 }
+
+
+
+
+// Define the exported function directly
+function defaultFunc(e) {
+    // Check if the argument is a string or an object with the tag "[object String]"
+    return typeof e === "string" || (!isObject(e) && toStringTag(e) === "[object String]");
+}

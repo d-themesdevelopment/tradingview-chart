@@ -86,9 +86,7 @@ const lineToolsLocalizedNames = {
   LineToolInfoLine: translateMessage(null, undefined, importModule(27677)),
   LineToolTriangle: translateMessage(null, undefined, importModule(29245)),
   LineToolTrianglePattern: translateMessage(null, undefined, importModule(12390)),
-  LineToolVertLine
-
-: translateMessage(null, undefined, importModule(56211)),
+  LineToolVertLine: translateMessage(null, undefined, importModule(56211)),
   LineToolCrossLine: translateMessage(null, undefined, importModule(60997)),
   LineToolHighlighter: translateMessage(null, undefined, importModule(31895)),
   LineToolPriceNote: translateMessage(null, undefined, importModule(28625)),

@@ -1,213 +1,114 @@
-import { ensureDefined, ensureNotNull } from "some-library";
-import { LineDataSource, Point, sourceChangeEvent } from "another-library";
-import { TextPaneView } from "yet-another-library";
-import { DefaultProperty, LineToolColorsProperty } from "property-library";
-import { t } from "translation-library";
+import {LineDataSource} from "./13087.js";
+import {ensureNotNull, ensureDefined} from "./assertions.js";
+import {translateMessage} from "./44352.js";
+import {CustomData} from "./59452.js";
+import {DefaultProperty} from "./46100.js";
+import {LineToolColorsProperty} from "./68806.js";
+import {sourceChangeEvent} from "./28558.js";
 
 class LineToolText extends LineDataSource {
-  constructor(chartWidget, properties, sourceId, internalId) {
-    const defaultProperties = properties || LineToolText.createProperties();
-    super(chartWidget, defaultProperties, sourceId, internalId);
-    this.barSpacing = chartWidget.timeScale().barSpacing();
-    this.recalculatePointsOnCenter = false;
-
-    import(
-      /* webpackChunkName: "chart-pane-view" */ "chart-pane-view-library"
-    ).then(({ TextPaneView }) => {
-      const onCenterPositionChange = this.recalculatePointsOnCenter
-        ? (x, y) => {
-            if (this.recalculatePointsOnCenter) {
-              this.recalculateCenterPosition(x, y);
-            }
+      constructor(e, t, s, r) {
+          const n = t || LineToolText.createProperties();
+          super(e, n, s, r), this._barSpacing = e.timeScale().barSpacing(), this._recalculatePointsOnCenter = !1, i.e(1583).then(i.bind(i, 62912)).then((({
+              TextPaneView: t
+          }) => {
+              const i = this._recalculatePointsOnCenter ? (e, t) => {
+                  this._recalculatePointsOnCenter && this._recalculateCenterPosition(e, t)
+              } : void 0;
+              this._setPaneViews([new t(this, e, void 0, void 0, void 0, void 0, void 0, i)])
+          }))
+      }
+      centerPosition() {
+          this._recalculatePointsOnCenter = !0
+      }
+      setPoint(e, t, i) {
+          const r = this.properties().childs();
+          let n;
+          if (1 === e && r.wordWrapWidth.value()) {
+              const e = this.model().timeScale();
+              n = this.isFixed() ? ensureDefined(this.fixedPoint()).x : e.indexToCoordinate(this.points()[0].index);
+              const i = e.indexToCoordinate(t.index) - n - ~~(r.fontsize.value() / 6);
+              if (!isFinite(i)) return;
+              r.wordWrapWidth.setValue(Math.max(100, i))
           }
-        : undefined;
-
-      this.setPaneViews([
-        new TextPaneView(
-          this,
-          chartWidget,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          onCenterPositionChange
-        ),
-      ]);
-    });
-  }
-
-  centerPosition() {
-    this.recalculatePointsOnCenter = true;
-  }
-
-  setPoint(index, point, overrideProperties) {
-    const childProperties = this.properties().childs();
-    if (index === 1 && childProperties.wordWrapWidth.value()) {
-      const timeScale = this.model().timeScale();
-      const anchorX = this.isFixed()
-        ? ensureDefined(this.fixedPoint()).x
-        : timeScale.indexToCoordinate(this.points()[0].index);
-      const width =
-        timeScale.indexToCoordinate(point.index) -
-        anchorX -
-        ~~(childProperties.fontsize.value() / 6);
-      if (!isFinite(width)) return;
-      childProperties.wordWrapWidth.setValue(Math.max(100, width));
-    }
-  }
-
-  pointsCount() {
-    return 1;
-  }
-
-  name() {
-    return "Text";
-  }
-
-  setPriceScale(priceScale) {
-    super.setPriceScale(priceScale);
-    if (priceScale && priceScale.priceRange()) {
-      this.priceDensity =
-        priceScale.height() / ensureNotNull(priceScale.priceRange()).length();
-      this.isPriceDensityLog = priceScale.isLog();
-    }
-  }
-
-  restoreSize() {
-    const priceScale = ensureNotNull(this.priceScale());
-    this.barSpacing = this.model().timeScale().barSpacing();
-    this.priceDensity =
-      priceScale.height() / ensureNotNull(priceScale.priceRange()).length();
-    this.redraw(sourceChangeEvent(this.id()));
-  }
-
-  redraw(event) {
-    this.updateAllViews(event);
-    this.model().updateSource(this);
-  }
-
-  template() {
-    const template = super.template();
-    template.text = this.properties().childs().text.value();
-    return template;
-  }
-
-  state(event) {
-    const state = super.state(event);
-    if (event) {
-      state.state.fixedSize = false;
-    }
-    return state;
-  }
-
-  barSpacing() {
-    return this.barSpacing;
-  }
-
-  priceDensity() {
-    return this.priceDensity;
-  }
-
-  isPriceDensityLog() {
-    return this.isPriceDensityLog;
-  }
-
-  hasEditableCoordinates() {
-    return false;
-  }
-
-  shouldBeRemovedOnDeselect() {
-    return this.properties().childs().text.value().trim() === "";
-  }
-
-  static createProperties(properties) {
-    const defaultProperties = new DefaultProperty("linetooltext", properties);
-    this.configureProperties(defaultProperties);
-    return defaultProperties;
-  }
-
-  _applyTemplateImpl(template) {
-    super._applyTemplateImpl(template);
-    this.properties().childs().text.setValue(template.text);
-  }
-
-  _getPropertyDefinitionsViewModelClass() {
-    return import(
-      /* webpackChunkName: "text-definitions-view-model" */ "text-definitions-view-model-library"
-    ).then(({ TextDefinitionsViewModel }) => TextDefinitionsViewModel);
-  }
-
-  static configureProperties(properties) {
-    super.configureProperties(properties);
-    if (!properties.hasChild("text")) {
-      properties.addChild(
-        "text",
-        new TextProperty(
-          t(
-            null,
-            undefined,
-            import(
-              /* webpackChunkName: "translation-library" */ "translation-library"
-            )
-          )
-        )
-      );
-    }
-    properties.addChild(
-      "linesColors",
-      new LineToolColorsProperty([properties.childs().borderColor])
-    );
-    properties.addChild(
-      "textsColors",
-      new LineToolColorsProperty([properties.childs().color])
-    );
-    properties.addExclusion("text");
-    properties.addExclusion("linesColors");
-    properties.addExclusion("textsColors");
-  }
-
-  recalculateCenterPosition(width, height) {
-    const fixedPoint = this.isFixed()
-      ? ensureDefined(this.fixedPoint())
-      : ensureNotNull(this.pointToScreenPoint(this._points[0]));
-    const newPoint = new Point(
-      fixedPoint.x - width / 2,
-      fixedPoint.y - height / 2
-    );
-    const newCoordinates = ensureNotNull(this.screenPointToPoint(newPoint));
-    this.setPoints([newCoordinates]);
-    this.normalizePoints();
-    this.createServerPoints();
-    this.redraw(sourceChangeEvent(this.id()));
-  }
+      }
+      pointsCount() {
+          return 1
+      }
+      name() {
+          return "Text"
+      }
+      setPriceScale(e) {
+          super.setPriceScale(e), e && e.priceRange() && (this._priceDencity = e.height() / ensureNotNull(e.priceRange()).length(), this._isPriceDencityLog = e.isLog())
+      }
+      restoreSize() {
+          const e = ensureNotNull(this.priceScale());
+          this._barSpacing = this.model().timeScale().barSpacing(), this._priceDencity = e.height() / ensureNotNull(e.priceRange()).length(), this.redraw(sourceChangeEvent(this.id()))
+      }
+      redraw(e) {
+          this.updateAllViews(e), this._model.updateSource(this)
+      }
+      template() {
+          const e = super.template();
+          return e.text = this.properties().childs().text.value(), e
+      }
+      state(e) {
+          const t = super.state(e);
+          return e && (t.state.fixedSize = !1), t
+      }
+      barSpacing() {
+          return this._barSpacing
+      }
+      priceDencity() {
+          return this._priceDencity
+      }
+      isPriceDencityLog() {
+          return this._isPriceDencityLog
+      }
+      hasEditableCoordinates() {
+          return !1
+      }
+      shouldBeRemovedOnDeselect() {
+          return "" === this._properties.childs().text.value().trim()
+      }
+      static createProperties(e) {
+          const t = new DefaultProperty("linetooltext", e);
+          return this._configureProperties(t), t
+      }
+      _applyTemplateImpl(e) {
+          super._applyTemplateImpl(e), this.properties().childs().text.setValue(e.text)
+      }
+      _getPropertyDefinitionsViewModelClass() {
+          return Promise.all([i.e(7201), i.e(3753), i.e(5871), i.e(8167), i.e(8537)]).then(i.bind(i, 94625)).then((e => e.TextDefinitionsViewModel))
+      }
+      static _configureProperties(e) {
+          super._configureProperties(e), e.hasChild("text") || e.addChild("text", new CustomData(translateMessage(null, void 0, "Text"))), 
+          e.addChild("linesColors", new LineToolColorsProperty([e.childs().borderColor])), 
+          e.addChild("textsColors", new LineToolColorsProperty([e.childs().color])), 
+          e.addExclusion("text"), e.addExclusion("linesColors"), e.addExclusion("textsColors")
+      }
+      _recalculateCenterPosition(e, t) {
+          const i = this.isFixed() ? ensureDefined(this.fixedPoint()) : ensureNotNull(this.pointToScreenPoint(this._points[0])),
+              n = new Point(i.x - e / 2, i.y - t / 2),
+              o = ensureNotNull(this.screenPointToPoint(n));
+          this.setPoints([o]), this.normalizePoints(), this.createServerPoints(), this.redraw(sourceChangeEvent(this.id()))
+      }
 }
-
-export class LineToolTextAbsolute extends LineToolText {
-  constructor(chartWidget, properties) {
-    super(chartWidget, properties || LineToolTextAbsolute.createProperties());
-  }
-
-  name() {
-    return "Anchored Text";
-  }
-
-  hasEditableCoordinates() {
-    return false;
-  }
-
-  isFixed() {
-    return true;
-  }
-
-  static createProperties(properties) {
-    const defaultProperties = new DefaultProperty(
-      "linetooltextabsolute",
-      properties
-    );
-    this.configureProperties(defaultProperties);
-    return defaultProperties;
-  }
+class LineToolTextAbsolute extends LineToolText {
+      constructor(e, t) {
+          super(e, t || LineToolTextAbsolute.createProperties())
+      }
+      name() {
+          return "Anchored Text"
+      }
+      hasEditableCoordinates() {
+          return !1
+      }
+      isFixed() {
+          return !0
+      }
+      static createProperties(e) {
+          const t = new DefaultProperty("linetooltextabsolute", e);
+          return this._configureProperties(t), t
+      }
 }
-
-export { LineToolText, LineToolTextAbsolute };

@@ -1,163 +1,83 @@
-"use strict";
-
-const { ensureNotNull, ensureDefined } = require(50151);
-const { distanceToSegment } = require(4652);
-const { HitTestResult, HitTarget } = require(73436);
-const { extendAndClipLineSegment, addVerticalLineToPath, addHorizontalLineToPath, addLineToPath } = require(68441);
-const { setLineStyle } = require(74359);
-const { getArrowPoints } = require(18807);
-const { LineEnd, LINESTYLE_SOLID } = require(79849);
-
-function drawCircle(point, context, radius, style, ratio) {
-  context.save();
-  context.fillStyle = "#000000";
-  context.beginPath();
-  context.arc(point.x * ratio, point.y * ratio, radius * ratio, 0, 2 * Math.PI, false);
-  context.fill();
-  if (style.strokeWidth) {
-    context.lineWidth = style.strokeWidth;
-    context.stroke();
-  }
-  context.restore();
-}
-
-function drawArrow(start, end, context, style, ratio, reverse = false) {
-  if (start.subtract(end).length() < 1) return;
+  import {ensureNotNull, ensureDefined} from "./assertions.js";
+  import {distanceToSegment} from "./4652.js";
+  import {LineEnd} from "./LineEnd.js"
+  import {HitTestResult, HitTarget} from "./18807.js";
+  import {setLineStyle, addHorizontalLineToPath, addVerticalLineToPath, addLineToPath} from "./68441.js";
+  import {getArrowPoints, interactionTolerance, extendAndClipLineSegment} from "./45197.js";
+  import {addExclusionArea} from "./74359.js";
+  import {LINESTYLE_SOLID} from "./79849.js";
   
-  const arrowPoints = getArrowPoints(start, end, style, reverse, true).slice(0, 2);
-  let prevPoint = null;
-
-  for (let i = 0; i < arrowPoints.length; ++i) {
-    const startPoint = arrowPoints[i][0];
-    const endPoint = arrowPoints[i][1];
-    
-    if (prevPoint === null || prevPoint.subtract(startPoint).length() > 1) {
-      context.moveTo(startPoint.x * ratio, startPoint.y * ratio);
-    }
-    
-    context.lineTo(endPoint.x * ratio, endPoint.y * ratio);
-    prevPoint = endPoint;
-  }
-}
-
-class TrendLineRenderer {
-  constructor() {
-    this._data = null;
-    this._hittest = new HitTestResult(HitTarget.MovePoint);
+  function drawCircle(e, t, i, s, r) {
+      t.save(), t.fillStyle = "#000000", t.beginPath(), t.arc(e.x * r, e.y * r, i * r, 0, 2 * Math.PI, !1), t.fill(), s.strokeWidth && (t.lineWidth = s.strokeWidth, t.stroke()), t.restore()
   }
 
-  setData(data) {
-    this._data = data;
-  }
-
-  setHitTest(hittest) {
-    this._hittest = hittest;
-  }
-
-  draw(context, options) {
-    const data = this._data;
-
-    if (data === null) return;
-    if ("points" in data && data.points.length < 2) return;
-
-    const ratio = options.pixelRatio;
-
-    if (data.excludeBoundaries !== undefined) {
-      context.save();
-      addExclusionArea(context, options, data.excludeBoundaries);
-    }
-
-    context.lineCap = data.linestyle === LINESTYLE_SOLID ? "round" : "butt";
-    context.lineJoin = "round";
-    context.strokeStyle = data.color;
-    context.lineWidth = Math.max(1, Math.floor(data.linewidth * ratio));
-    setLineStyle(context, data.linestyle);
-
-    const startPoint = data.points[0];
-    const endPoint = data.points[1];
-
-    let endPoints = [];
-
-    context.beginPath();
-    if (data.overlayLineEndings) {
-      endPoints = [startPoint.clone(), endPoint.clone()];
-    } else {
-      this._drawEnds(context, [startPoint, endPoint], data.linewidth, ratio);
-    }
-
-    const clippedSegment = this._extendAndClipLineSegment(startPoint, endPoint, options);
-    
-    if (clippedSegment !== null && data.linewidth > 0) {
-      if (clippedSegment[0].x === clippedSegment[1].x) {
-        addVerticalLineToPath(context, Math.round(clippedSegment[0].x * ratio), clippedSegment[0].y * ratio, clippedSegment[1].y * ratio);
-      } else if (clippedSegment[0].y === clippedSegment[1].y) {
-        addHorizontalLineToPath(context, Math.round(clippedSegment[0].y * ratio), clippedSegment[0].x * ratio, clippedSegment[1].x * ratio);
-      } else {
-        addLineToPath(context, clippedSegment[0].x * ratio, clippedSegment[0].y * ratio, clippedSegment[1].x * ratio, clippedSegment[1].y * ratio);
+  function drawArrow(e, t, i, s, r, n = !1) {
+      if (t.subtract(e).length() < 1) return;
+      const o = getArrowPoints(e, t, s, n, !0).slice(0, 2);
+      let a = null;
+      for (let e = 0; e < o.length; ++e) {
+          const t = o[e][0],
+              s = o[e][1];
+          (null === a || a.subtract(t).length() > 1) && i.moveTo(t.x * r, t.y * r), i.lineTo(s.x * r, s.y * r), a = s
       }
-    }
-
-    if (data.overlayLineEndings) {
-      this._drawEnds(context, endPoints, data.linewidth, ratio);
-    }
-
-    context.stroke();
-
-    if (data.excludeBoundaries !== undefined) {
-      context.restore();
-    }
   }
-
-  hitTest(point, options) {
-    const data = this._data;
-
-    if (data === null) return null;
-    if ("points" in data && data.points.length < 2) return null;
-
-    const tolerance = ensureDefined(options).interactionTolerance().line;
-    const startPoint = data.points[0];
-    const endPoint = data.points[1];
-    const clippedSegment = this._extendAndClipLineSegment(startPoint, endPoint, options);
-
-    if (clippedSegment !== null) {
-      const distance = distanceToSegment(clippedSegment[0], clippedSegment[1], point).distance;
-      if (distance <= tolerance) return this._hittest;
-    }
-
-    return null;
+  class TrendLineRenderer {
+      constructor() {
+          this._data = null, this._hittest = new HitTestResult(HitTarget.MovePoint)
+      }
+      setData(e) {
+          this._data = e
+      }
+      setHitTest(e) {
+          this._hittest = e
+      }
+      draw(e, t) {
+          const i = this._data;
+          if (null === i) return;
+          if ("points" in i && i.points.length < 2) return;
+          const s = t.pixelRatio;
+          void 0 !== i.excludeBoundaries && (e.save(), addExclusionArea(e, t, i.excludeBoundaries)), e.lineCap = i.linestyle === LINESTYLE_SOLID ? "round" : "butt", e.lineJoin = "round", e.strokeStyle = i.color, e.lineWidth = Math.max(1, Math.floor(i.linewidth * s)), setLineStyle(e, i.linestyle);
+          const r = i.points[0],
+              n = i.points[1];
+          let o = [];
+          e.beginPath(), i.overlayLineEndings ? o = [r.clone(), n.clone()] : this._drawEnds(e, [r, n], i.linewidth, s);
+          const l = this._extendAndClipLineSegment(r, n, t);
+          null !== l && i.linewidth > 0 && (l[0].x === l[1].x ? addVerticalLineToPath(e, Math.round(l[0].x * s), l[0].y * s, l[1].y * s) : l[0].y === l[1].y ? addHorizontalLineToPath(e, Math.round(l[0].y * s), l[0].x * s, l[1].x * s) : addLineToPath(e, l[0].x * s, l[0].y * s, l[1].x * s, l[1].y * s)), i.overlayLineEndings && this._drawEnds(e, o, i.linewidth, s), e.stroke(), void 0 !== i.excludeBoundaries && e.restore()
+      }
+      hitTest(e, t) {
+          const i = this._data;
+          if (null === i) return null;
+          if ("points" in i && i.points.length < 2) return null;
+          const s = interactionTolerance().line,
+              n = i.points[0],
+              o = i.points[1],
+              a = this._extendAndClipLineSegment(n, o, t);
+          if (null !== a) {
+              if (distanceToSegment(a[0], a[1], e).distance <= s) return this._hittest
+          }
+          return null
+      }
+      _extendAndClipLineSegment(e, t, i) {
+          const r = ensureNotNull(this._data);
+          return extendAndClipLineSegment(e, t, i.cssWidth, i.cssHeight, r.extendleft, r.extendright)
+      }
+      _drawEnds(e, t, i, r) {
+          const o = t[0],
+              a = t[1],
+              l = ensureNotNull(this._data);
+          switch (l.leftend) {
+              case LineEnd.Arrow:
+                  drawArrow(a, o, e, i, r);
+                  break;
+              case LineEnd.Circle:
+                  drawCircle(o, e, i, ensureDefined(l.endstyle), r)
+          }
+          switch (l.rightend) {
+              case LineEnd.Arrow:
+                  drawArrow(o, a, e, i, r);
+                  break;
+              case LineEnd.Circle:
+                  drawCircle(a, e, i, ensureDefined(l.endstyle), r)
+          }
+      }
   }
-
-  _extendAndClipLineSegment(start, end, options) {
-    const data = ensureNotNull(this._data);
-    return extendAndClipLineSegment(start, end, options.cssWidth, options.cssHeight, data.extendleft, data.extendright);
-  }
-
-  _drawEnds(context, points, linewidth, ratio) {
-    const startPoint = points[0];
-    const endPoint = points[1];
-    const data = ensureNotNull(this._data);
-
-    switch (data.leftend) {
-      case LineEnd.Arrow:
-        drawArrow(endPoint, startPoint, context, linewidth, ratio);
-        break;
-      case LineEnd.Circle:
-        drawCircle(startPoint, context, linewidth, ensureDefined(data.endstyle), ratio);
-        break;
-    }
-
-    switch (data.rightend) {
-      case LineEnd.Arrow:
-        drawArrow(startPoint, endPoint, context, linewidth, ratio);
-        break;
-      case LineEnd.Circle:
-        drawCircle(endPoint, context, linewidth, ensureDefined(data.endstyle), ratio);
-        break;
-    }
-  }
-}
-
-module.exports = {
-  TrendLineRenderer,
-  drawArrow
-};

@@ -1,176 +1,91 @@
-
-
-import { assert } from '50151';
-import { Observer } from '58275';
+import {assert} from "./assertions.js";
+import {WatchedValue} from "./58275.js";
 
 class ResizerDetacherState {
-  constructor(owner) {
-    this._alive = new Observer();
-    this._container = new Observer();
-    this._width = new Observer();
-    this._height = new Observer();
-    this._fullscreen = new Observer();
-    this._detachable = new Observer();
-    this._fullscreenable = new Observer();
-    this._visible = new Observer();
-    this._availWidth = new Observer();
-    this._availHeight = new Observer();
-    this._owner = new Observer();
-    this._ownersStack = [];
-    this.owner = this._owner.readonly();
-
-    this._bridge = {
-      alive: this._alive.readonly(),
-      container: this._container.readonly(),
-      width: this._width.readonly(),
-      height: this._height.readonly(),
-      fullscreen: this._fullscreen.readonly(),
-      detachable: this._detachable.readonly(),
-      fullscreenable: this._fullscreenable.readonly(),
-      visible: this._visible.readonly(),
-      availWidth: this._availWidth.readonly(),
-      availHeight: this._availHeight.readonly(),
-      remove: () => {
-        const owner = this._owner.value();
-        if (owner && owner.remove) {
-          owner.remove();
-        }
-      },
-      negotiateWidth: width => {
-        const owner = this._owner.value();
-        if (owner && owner.negotiateWidth) {
-          owner.negotiateWidth(width);
-        }
-      },
-      negotiateHeight: height => {
-        const owner = this._owner.value();
-        if (owner && owner.negotiateHeight) {
-          owner.negotiateHeight(height);
-        }
-      },
-      requestFullscreen: () => {
-        const owner = this._owner.value();
-        if (owner && owner.requestFullscreen) {
-          owner.requestFullscreen();
-        }
-      },
-      exitFullscreen: () => {
-        const owner = this._owner.value();
-        if (owner && owner.exitFullscreen) {
-          owner.exitFullscreen();
-        }
-      },
-      detach: element => {
-        const owner = this._owner.value();
-        if (owner && owner.detach) {
-          owner.detach(element);
-        }
-      },
-      attach: () => {
-        const owner = this._owner.value();
-        if (owner && owner.attach) {
-          owner.attach();
-        }
+      constructor(e) {
+          this._alive = new WatchedValue(), this._container = new WatchedValue(), this._width = new WatchedValue(), this._height = new WatchedValue(), this._fullscreen = new WatchedValue(), this._detachable = new WatchedValue(), this._fullscreenable = new WatchedValue(), this._visible = new WatchedValue(), this._availWidth = new WatchedValue(), this._availHeight = new WatchedValue(), this._owner = new WatchedValue(), this._ownersStack = [], this.owner = this._owner.readonly(), this._bridge = {
+              alive: this._alive.readonly(),
+              container: this._container.readonly(),
+              width: this._width.readonly(),
+              height: this._height.readonly(),
+              fullscreen: this._fullscreen.readonly(),
+              detachable: this._detachable.readonly(),
+              fullscreenable: this._fullscreenable.readonly(),
+              visible: this._visible.readonly(),
+              availWidth: this._availWidth.readonly(),
+              availHeight: this._availHeight.readonly(),
+              remove: () => {
+                  const e = this._owner.value();
+                  e && e.remove && e.remove()
+              },
+              negotiateWidth: e => {
+                  const t = this._owner.value();
+                  t && t.negotiateWidth && t.negotiateWidth(e)
+              },
+              negotiateHeight: e => {
+                  const t = this._owner.value();
+                  t && t.negotiateHeight && t.negotiateHeight(e)
+              },
+              requestFullscreen: () => {
+                  const e = this._owner.value();
+                  e && e.requestFullscreen && e.requestFullscreen()
+              },
+              exitFullscreen: () => {
+                  const e = this._owner.value();
+                  e && e.exitFullscreen && e.exitFullscreen()
+              },
+              detach: e => {
+                  const t = this._owner.value();
+                  t && t.detach && t.detach(e)
+              },
+              attach: () => {
+                  const e = this._owner.value();
+                  e && e.attach && e.attach()
+              }
+          }, e && this.pushOwner(e)
       }
-    };
-
-    if (owner) {
-      this.pushOwner(owner);
-    }
-  }
-
-  bridge() {
-    return this._bridge;
-  }
-
-  pushOwner(owner) {
-    if (!owner.alive.value()) {
-      return;
-    }
-
-    for (const existingOwner of this._ownersStack) {
-      this._unsubscribeOwner(existingOwner);
-    }
-
-    const stackItem = { owner };
-    this._ownersStack.push(stackItem);
-    this._subscribeOwner(stackItem);
-  }
-
-  _subscribeOwner(stackItem) {
-    const owner = stackItem.owner;
-
-    if (!stackItem.deathWatcher) {
-      this._alive.setValue(true);
-      stackItem.deathWatcher = owner.alive.spawn();
-      stackItem.deathWatcher.subscribe(isAlive => {
-        if (!isAlive) {
-          this._deadHandler(stackItem);
-        }
-      });
-    }
-
-    this._owner.setValue(owner);
-
-    if (!stackItem.subscriptions) {
-      const subscriptions = (stackItem.subscriptions = []);
-      this._visible.setValue(false);
-
-      const subscribeToObserver = (observer, target) => {
-        if (observer) {
-          const spawnedObserver = observer.spawn();
-          subscriptions.push(spawnedObserver);
-          spawnedObserver.subscribe(value => {
-            target.setValue(value);
-          }, { callWithLast: true });
-        } else {
-          target.deleteValue();
-        }
-      };
-
-      subscribeToObserver(owner.container, this._container);
-      subscribeToObserver(owner.width, this._width);
-      subscribeToObserver(owner.height, this._height);
-      subscribeToObserver(owner.fullscreen, this._fullscreen);
-      subscribeToObserver(owner.detachable, this._detachable);
-      subscribeToObserver(owner.fullscreenable, this._fullscreenable);
-      subscribeToObserver(owner.availWidth, this._availWidth);
-      subscribeToObserver(owner.availHeight, this._availHeight);
-      subscribeToObserver(owner.visible, this._visible);
-    }
-  }
-
-  _unsubscribeOwner(stackItem, removeDeathWatcher) {
-    if (stackItem.subscriptions) {
-      for (const subscription of stackItem.subscriptions) {
-        subscription.unsubscribe();
+      bridge() {
+          return this._bridge
       }
-      stackItem.subscriptions = null;
-    }
-
-    if (removeDeathWatcher && stackItem.deathWatcher) {
-      stackItem.deathWatcher.unsubscribe();
-      stackItem.deathWatcher = null;
-    }
-  }
-
-  _deadHandler(stackItem) {
-    const index = this._ownersStack.indexOf(stackItem);
-    assert(index !== -1, "sanitized owner should be in stack");
-
-    for (let i = this._ownersStack.length - 1; i >= index; i--) {
-      this._unsubscribeOwner(this._ownersStack[i], true);
-    }
-
-    this._ownersStack.length = index;
-
-    if (index > 0) {
-      this._subscribeOwner(this._ownersStack[index - 1]);
-    } else {
-      this._alive.setValue(false);
-      this._owner.deleteValue();
-    }
-  }
+      pushOwner(e) {
+          if (!e.alive.value()) return;
+          for (const e of this._ownersStack) this._unsubscribeOwner(e);
+          const t = {
+              owner: e
+          };
+          this._ownersStack.push(t), this._subscribeOwner(t)
+      }
+      _subscribeOwner(e) {
+          const t = e.owner;
+          if (e.deathWatcher || (this._alive.setValue(!0), e.deathWatcher = t.alive.spawn(), e.deathWatcher.subscribe((t => {
+                  t || this._deadHandler(e)
+              }))), this._owner.setValue(t), !e.subscriptions) {
+              const i = e.subscriptions = [];
+              this._visible.setValue(!1);
+              const s = (e, t) => {
+                  if (e) {
+                      const s = e.spawn();
+                      i.push(s), s.subscribe((e => {
+                          t.setValue(e)
+                      }), {
+                          callWithLast: !0
+                      })
+                  } else t.deleteValue()
+              };
+              s(t.container, this._container), s(t.width, this._width), s(t.height, this._height), s(t.fullscreen, this._fullscreen), s(t.detachable, this._detachable), s(t.fullscreenable, this._fullscreenable), s(t.availWidth, this._availWidth), s(t.availHeight, this._availHeight), s(t.visible, this._visible)
+          }
+      }
+      _unsubscribeOwner(e, t) {
+          if (e.subscriptions) {
+              for (const t of e.subscriptions) t.unsubscribe();
+              e.subscriptions = null
+          }
+          t && e.deathWatcher && (e.deathWatcher.unsubscribe(), e.deathWatcher = null)
+      }
+      _deadHandler(e) {
+          const t = this._ownersStack.indexOf(e);
+          assert(-1 !== t, "sanitized owner should be in stack");
+          for (let e = this._ownersStack.length - 1; e >= t; e--) this._unsubscribeOwner(this._ownersStack[e], !0);
+          this._ownersStack.length = t, t > 0 ? this._subscribeOwner(this._ownersStack[t - 1]) : (this._alive.setValue(!1), this._owner.deleteValue())
+      }
 }
-
-export { ResizerDetacherState };

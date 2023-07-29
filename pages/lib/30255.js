@@ -1,170 +1,86 @@
-import { translatedIntervalString } from "./translatedIntervalString";
-import { getTranslatedSymbolDescription } from "./getTranslatedSymbolDescription";
-import { CHART_FONT_FAMILY } from "./46501";
+import {translatedIntervalString} from "./translatedIntervalString.js";
+import {getTranslatedSymbolDescription} from "./getTranslatedSymbolDescription.js";
+import {CHART_FONT_FAMILY} from "./46501.js";
+import {watermarkProperty, restoreWatermarkPropertyDefaults} from "./65632.js";
+import {drawScaled} from "./74359.js";
+import {applyDefaultsOverrides, applyPropertiesOverrides} from "./85804.js";
+            const WATERMARK_TYPE = "symbolWatermark";
+            Watermark = function(e, t) {
+                var i = {},
+                    o = watermarkProperty();
 
-import { restoreWatermarkPropertyDefaults } from "./65632";
-import { drawScaled } from "./74359";
-
-import {
-  watermarkProperty,
-  applyDefaultsOverrides,
-  applyPropertiesOverrides,
-} from "./74359"; // ! not correct
-
-const WATERMARK_TYPE = "symbolWatermark";
-
-class Watermark {
-  constructor(chartWidget, symbolInfoProvider) {
-    const properties = {};
-    const watermarkProperties = watermarkProperty();
-
-    function measureTextWidth(ctx, font, text) {
-      if (!properties.hasOwnProperty(font)) {
-        properties[font] = {};
-      }
-      if (!properties[font].hasOwnProperty(text)) {
-        properties[font][text] = ctx.measureText(text).width;
-      }
-      return properties[font][text];
-    }
-
-    applyDefaultsOverrides(
-      watermarkProperties,
-      undefined,
-      false,
-      WATERMARK_TYPE
-    );
-
-    watermarkProperties.listeners().subscribe(this, () => {
-      chartWidget.updateSource(this);
-    });
-
-    this.destroy = function () {
-      watermarkProperties.listeners().unsubscribeAll(this);
-    };
-
-    this.properties = function () {
-      return watermarkProperties;
-    };
-
-    this.restorePropertiesDefaults = function () {
-      restoreWatermarkPropertyDefaults();
-    };
-
-    this.applyOverrides = function (overrides) {
-      applyPropertiesOverrides(
-        watermarkProperties,
-        undefined,
-        false,
-        overrides,
-        WATERMARK_TYPE
-      );
-    };
-
-    const renderer = {
-      draw: function (ctx, pixelRatio) {
-        return {
-          draw: function (width, height) {
-            drawScaled(ctx, pixelRatio, pixelRatio, function () {
-              const symbol = symbolInfoProvider.symbolInfo();
-              ctx.fillStyle = watermarkProperties.color.value();
-              let displayName = symbol.name;
-
-              // Check for QUANDL exchange and display only the last part of the name
-              if (/QUANDL/.test(symbol.exchange)) {
-                const nameParts = displayName.split(/\//);
-                if (nameParts.length) {
-                  displayName = nameParts[nameParts.length - 1];
+                function p(e, t) {
+                    var s = e.font;
+                    return i.hasOwnProperty(s) || (i[s] = {}), i[s].hasOwnProperty(t) || (i[s][t] = e.measureText(t).width), i[s][t]
                 }
-              }
-
-              const symbolDescription = {
-                description: symbol.description,
-                short_description: symbol.short_description,
-                pro_name: symbol.pro_name,
-                short_name: symbol.name,
-                local_description: symbol.local_description,
-                language: symbol.language,
-              };
-
-              const watermarkContentProvider =
-                chartWidget.watermarkContentProvider();
-              const customContent = watermarkContentProvider
-                ? watermarkContentProvider({
-                    symbolInfo: symbol,
-                    interval: symbolInfoProvider.interval(),
-                  })
-                : null;
-
-              const lines = (customContent
-                ? customContent.map((content) => ({
-                    text: content.text,
-                    font: `${content.fontSize}px ${CHART_FONT_FAMILY}`,
-                    lineHeight: content.lineHeight,
-                    vertOffset: content.vertOffset,
-                  }))
-                : null) || [
-                {
-                  text: displayName
-                    ? displayName +
-                      ", " +
-                      translatedIntervalString(symbolInfoProvider.interval())
-                    : "",
-                  font: `96px ${CHART_FONT_FAMILY}`,
-                  lineHeight: 117,
-                  vertOffset: 0,
-                },
-                {
-                  text: getTranslatedSymbolDescription(symbolDescription) || "",
-                  font: `48px ${CHART_FONT_FAMILY}`,
-                  lineHeight: 58,
-                  vertOffset: 5,
-                },
-              ];
-
-              let yOffset = 0;
-              for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                if (line.text) {
-                  ctx.font = line.font;
-                  const zoom =
-                    measureTextWidth(ctx, line.font, line.text) > width
-                      ? width / measureTextWidth(ctx, line.font, line.text)
-                      : 1;
-                  yOffset += line.lineHeight * zoom;
+                applyDefaultsOverrides(o, void 0, !1, WATERMARK_TYPE), o.listeners().subscribe(this, (function() {
+                    e.updateSource(this)
+                })), this.destroy = function() {
+                    o.listeners().unsubscribeAll(this)
+                }, this.properties = function() {
+                    return o
+                }, this.restorePropertiesDefaults = function() {
+                    restoreWatermarkPropertyDefaults()
+                }, this.applyOverrides = function(e) {
+                    applyPropertiesOverrides(o, void 0, !1, e, WATERMARK_TYPE)
+                };
+                var _ = {
+                    renderer: function(i, a) {
+                        return {
+                            draw: function(l, h) {
+                                drawScaled(l, h.pixelRatio, h.pixelRatio, (function() {
+                                    var c = t.symbolInfo();
+                                    l.fillStyle = o.color.value();
+                                    var h, d = c.name;
+                                    /QUANDL/.test(c.exchange) && ((h = d.split(/\//)).length && (d = h[h.length - 1]));
+                                    var u = {
+                                        description: c.description,
+                                        short_description: c.short_description,
+                                        pro_name: c.pro_name,
+                                        short_name: c.name,
+                                        local_description: c.local_description,
+                                        language: c.language
+                                    };
+                                    const _ = e.watermarkContentProvider(),
+                                        m = _ ? _({
+                                            symbolInfo: c,
+                                            interval: t.interval()
+                                        }) : null;
+                                    for (var g = (m ? m.map((e => ({
+                                            text: e.text,
+                                            font: `${e.fontSize}px ${CHART_FONT_FAMILY}`,
+                                            lineHeight: e.lineHeight,
+                                            vertOffset: e.vertOffset
+                                        }))) : null) || [{
+                                            text: d ? d + ", " + translatedIntervalString(t.interval()) : "",
+                                            font: "96px " + CHART_FONT_FAMILY,
+                                            lineHeight: 117,
+                                            vertOffset: 0
+                                        }, {
+                                            text: getTranslatedSymbolDescription(u) || "",
+                                            font: "48px " + CHART_FONT_FAMILY,
+                                            lineHeight: 58,
+                                            vertOffset: 5
+                                        }], f = 0, v = 0; v < g.length; v++) {
+                                        if ((b = g[v]).text) {
+                                            l.font = b.font;
+                                            var S = p(l, b.text);
+                                            b.zoom = S > a ? a / S : 1, f += b.lineHeight * b.zoom
+                                        }
+                                    }
+                                    var y = Math.max((i - f) / 2, 0);
+                                    for (v = 0; v < g.length; v++) {
+                                        var b;
+                                        (b = g[v]).text && (l.save(), l.translate(a / 2, y), l.textBaseline = "top", l.textAlign = "center", l.font = b.font, l.scale(b.zoom, b.zoom), l.fillText(b.text, 0, b.vertOffset), l.restore(), y += b.lineHeight * b.zoom)
+                                    }
+                                }))
+                            }
+                        }
+                    },
+                    update: function() {}
+                };
+                this.paneViews = function() {
+                    return t.symbolInfo() && o.visibility.value() ? [_] : []
                 }
-              }
-
-              const y = Math.max((height - yOffset) / 2, 0);
-
-              for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                if (line.text) {
-                  ctx.save();
-                  ctx.translate(width / 2, y);
-                  ctx.textBaseline = "top";
-                  ctx.textAlign = "center";
-                  ctx.font = line.font;
-                  ctx.scale(line.zoom, line.zoom);
-                  ctx.fillText(line.text, 0, line.vertOffset);
-                  ctx.restore();
-                  y += line.lineHeight * line.zoom;
-                }
-              }
-            });
-          },
-        };
-      },
-      update: function () {},
-    };
-
-    this.paneViews = function () {
-      return symbolInfoProvider.symbolInfo() &&
-        watermarkProperties.visibility.value()
-        ? [renderer]
-        : [];
-    };
-  }
-}
-
-export { Watermark };
+            }
+        

@@ -1,6 +1,6 @@
 
-import { BitmapCoordinatesPaneRenderer } from '<path_to_BitmapCoordinatesPaneRenderer_module>';
-import { HitTestResult, HitTarget } from '<path_to_HitTestResult_module>';
+import { BitmapCoordinatesPaneRenderer } from './BitmapCoordinatesPaneRenderer.js';
+import { HitTestResult, HitTarget } from './18807.js';
 
 class PaneRendererColumns extends BitmapCoordinatesPaneRenderer {
   constructor(data) {

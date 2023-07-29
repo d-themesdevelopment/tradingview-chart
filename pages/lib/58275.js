@@ -1,7 +1,7 @@
 "use strict";
-
+import {getLogger} from "./59224.js";
 const isNodeEnvironment = typeof window === 'undefined';
-const logger = isNodeEnvironment ? require(59224).getLogger("Common.WatchedValue") : null;
+const logger = isNodeEnvironment ? getLogger("Common.WatchedValue") : null;
 
 function ReadonlyInstance() {}
 

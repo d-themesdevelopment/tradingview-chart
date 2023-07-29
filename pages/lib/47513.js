@@ -1,10 +1,13 @@
 import { ensureNotNull } from './assertions.js';
-import { UndoCommand } from 'undoCommand';
-import { TranslatedString } from 'translatedString';
-import { isLineTool, isStudy } from 'utils/checker';
-import { closeSourcesSet } from 'utils/closeSourcesSet';
-import { getLogger } from 'logger';
-import { ExcludeLineToolsFromGroupUndoCommand } from 'excludeLineToolsFromGroupUndoCommand';
+import { UndoCommand } from './UndoCommand.js';
+import {translateMessage} from "./44352.js";
+import {isLineTool} from "./18341.js";
+
+import { TranslatedString } from './TranslatedString.js';
+import { isStudy } from './28853.js';
+import { closeSourcesSet } from './closeSourcesSet.js';
+import { getLogger } from './59224.js';
+import { ExcludeLineToolsFromGroupUndoCommand } from './93562.js';
 
 class RemoveSourcesCommand extends UndoCommand {
   constructor({ title, chartModel, lineDataSourceIds }) {
@@ -59,8 +62,7 @@ class RemoveSourcesCommand extends UndoCommand {
 const logger = getLogger("Chart.RemoveSourcesCommand");
 const REMOVE_SOURCES_TRANSLATION = new TranslatedString(
   "remove line data sources",
-  null,
-  'remove line data sources'
+  translateMessage(null, void 0,  "remove line data sources")
 );
 
 class RemoveSourcesCommand extends UndoCommand {
@@ -110,10 +112,11 @@ class RemoveSourcesCommand extends UndoCommand {
     this._paneIndexes = panes.map((pane) => this._chartModel.panes().indexOf(pane));
 
     if (this._lineDataSourceIds.length > 0) {
-      this._removeLineDataSourcesUndoCommand = new RemoveLineDataSourcesUndoCommand(
-        this._chartModel,
-        this._lineDataSourceIds
-      );
+      this._removeLineDataSourcesUndoCommand = new RemoveLineDataSourcesUndoCommand({
+        title: REMOVE_SOURCES_TRANSLATION,
+        chartModel: this._chartModel,
+        lineDataSourceIds:this._lineDataSourceIds
+      });
       this._removeLineDataSourcesUndoCommand.redo();
     }
 
