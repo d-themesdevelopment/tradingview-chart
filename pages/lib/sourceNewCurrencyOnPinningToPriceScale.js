@@ -1,8 +1,6 @@
 "use strict";
 
-import {
-  isActingAsSymbolSource,
-} from "./18611.js";
+import { isActingAsSymbolSource } from "./18611.js";
 
 function sourceNewCurrencyOnPinningToPriceScale(e, t, i, r) {
   let newCurrency = null;

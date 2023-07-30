@@ -1,24 +1,22 @@
+import { getLogger } from "some-library"; // Replace 'some-library' with the actual library you're using
+import { UndoCommand } from "some-library"; // Replace 'some-library' with the actual library you're using
 
-
-
-
-import { getLogger } from 'some-library'; // Replace 'some-library' with the actual library you're using
-import { UndoCommand } from 'some-library'; // Replace 'some-library' with the actual library you're using
-
-const logger = getLogger('Chart.ChartUndoModel');
+const logger = getLogger("Chart.ChartUndoModel");
 
 class TimeScaleChangeUndoCommand extends UndoCommand {
   constructor(model, rightOffsetAndBarSpacing, customFlag) {
     super(customFlag, false);
     this._newRightOffsetAndBarSpacing = null;
-    this.setCustomFlag('doesnt_affect_save', true);
+    this.setCustomFlag("doesnt_affect_save", true);
     this._model = model;
     this._rightOffsetAndBarSpacing = rightOffsetAndBarSpacing;
   }
 
   undo() {
     if (this._newRightOffsetAndBarSpacing !== null) {
-      logger.logDebug('TimeScaleChangeUndoCommand.undo: Command is already undone');
+      logger.logDebug(
+        "TimeScaleChangeUndoCommand.undo: Command is already undone"
+      );
       return;
     }
 
@@ -34,7 +32,7 @@ class TimeScaleChangeUndoCommand extends UndoCommand {
 
   redo() {
     if (this._newRightOffsetAndBarSpacing === null) {
-      logger.logDebug('TimeScaleChangeUndoCommand.redo: Command is not undone');
+      logger.logDebug("TimeScaleChangeUndoCommand.redo: Command is not undone");
       return;
     }
 
