@@ -1,5 +1,5 @@
-import { LineDataSource } from "./13087.js";
-import {alignToStep} from "./alignToStep.js"
+import { LineDataSource } from "<path_to_LineDataSource_module>";
+
 export class LineToolTrading extends LineDataSource {
   constructor(model, customization) {
     super(model, customization);
@@ -14,7 +14,7 @@ export class LineToolTrading extends LineDataSource {
   }
 
   pointsCount() {
-    return POINTS_COUNT;
+    return LineToolTrading.POINTS_COUNT;
   }
 
   hasContextMenu() {

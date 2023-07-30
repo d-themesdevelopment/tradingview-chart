@@ -1,59 +1,92 @@
-  import {Std} from "./74649.js";
-
-  class SpreadRatioBase {
-      init(e, t) {
-          e.new_sym(t(1), Std.period(e)), this._source = t(0), this._scaleFactor1 = 1, this._scaleFactor2 = 1
-      }
-      main(e, t) {
-          const i = e.symbol.time,
-              r = Std[this._source](e);
-          e.select_sym(1);
-          const n = Std[this._source](e),
-              o = e.new_unlimited_var(n),
-              a = e.new_unlimited_var(e.symbol.time);
-          if (e.select_sym(0), isNaN(i)) return null;
-          let l = a.indexOf(i); - 1 !== l && a.get(l) !== i && (l = -1);
-          const c = l < 0 ? NaN : o.get(l);
-          return [this._doCalculation(this._scaleFactor1, r, this._scaleFactor2, c)]
-      }
+export class SpreadRatioBase {
+  init(context, inputCallback) {
+    context.new_sym(inputCallback(1), Std.period(context));
+    this._source = inputCallback(0);
+    this._scaleFactor1 = 1;
+    this._scaleFactor2 = 1;
   }
-  const spreadRatioDefaults = {
-          styles: {
-              plot1: {
-                  linestyle: 0,
-                  linewidth: 2,
-                  plottype: 0,
-                  trackPrice: !1,
-                  transparency: 35,
-                  color: "#800080",
-                  display: 15
-              }
-          },
-          precision: 2,
-          inputs: {
-              source: "close",
-              symbol2: ""
-          }
-      },
-      spreadRatioInputs = [{
-          defval: "close",
-          id: "source",
-          name: "Source",
-          options: ["open", "high", "low", "close", "hl2", "hlc3", "ohlc4"],
-          type: "text"
-      }, {
-          id: "symbol2",
-          name: "Symbol",
-          type: "symbol",
-          confirm: !0
-      }],
-      spreadRatioPlots = [{
-          id: "plot1",
-          type: "line"
-      }],
-      spreadRatioStyles = {
-          plot1: {
-              title: "Plot",
-              histogramBase: 0
-          }
-      }
+
+  main(context, inputCallback) {
+    const currentTime = context.symbol.time;
+    const currentValue = Std[this._source](context);
+
+    context.select_sym(1);
+    const referenceValue = Std[this._source](context);
+    const unlimitedVar1 = context.new_unlimited_var(referenceValue);
+    const unlimitedVar2 = context.new_unlimited_var(context.symbol.time);
+
+    context.select_sym(0);
+    if (isNaN(currentTime)) {
+      return null;
+    }
+
+    let index = unlimitedVar2.indexOf(currentTime);
+    if (index === -1 || unlimitedVar2.get(index) !== currentTime) {
+      index = -1;
+    }
+
+    const referencePrice = index < 0 ? NaN : unlimitedVar1.get(index);
+
+    return [
+      this._doCalculation(
+        this._scaleFactor1,
+        currentValue,
+        this._scaleFactor2,
+        referencePrice
+      ),
+    ];
+  }
+
+  _doCalculation(scaleFactor1, value1, scaleFactor2, value2) {
+    return (scaleFactor1 * value1) / (scaleFactor2 * value2);
+  }
+}
+
+export const spreadRatioDefaults = {
+  styles: {
+    plot1: {
+      linestyle: 0,
+      linewidth: 2,
+      plottype: 0,
+      trackPrice: false,
+      transparency: 35,
+      color: "#800080",
+      display: 15,
+    },
+  },
+  precision: 2,
+  inputs: {
+    source: "close",
+    symbol2: "",
+  },
+};
+
+export const spreadRatioInputs = [
+  {
+    defval: "close",
+    id: "source",
+    name: "Source",
+    options: ["open", "high", "low", "close", "hl2", "hlc3", "ohlc4"],
+    type: "text",
+  },
+  {
+    id: "symbol2",
+    name: "Symbol",
+    type: "symbol",
+    confirm: true,
+  },
+];
+
+export const spreadRatioPlots = [
+  {
+    id: "plot1",
+    type: "line",
+  },
+];
+
+const spreadRatioStyles = {
+  plot1: {
+    title: "Plot",
+    histogramBase: 0,
+  },
+};

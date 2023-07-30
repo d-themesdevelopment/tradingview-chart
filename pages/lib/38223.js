@@ -1,4 +1,4 @@
-import { getNormalizedScrollLeft, detectScrollType } from "./64531.js"; // ! not correct
+import { getNormalizedScrollLeft, detectScrollType } from "./64531"; // ! not correct
 
 const isRtl = () => window.document.dir === "rtl";
 const ltrMark = "‎";
