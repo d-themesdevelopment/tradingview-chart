@@ -76,6 +76,7 @@ export class ResizerDetacherState {
     const t = {
       owner: e,
     };
+
     this._ownersStack.push(t), this._subscribeOwner(t);
   }
 
