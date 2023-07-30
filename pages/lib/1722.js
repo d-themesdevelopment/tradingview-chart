@@ -13,7 +13,7 @@ function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }
 
-function isFunction(value) {
+export function isFunction(value) {
   return (
     typeof value === "function" ||
     Object.prototype.toString.call(value) === "[object Function]"

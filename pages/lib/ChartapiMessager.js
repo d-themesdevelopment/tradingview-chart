@@ -1,5 +1,4 @@
-
-import { Delegate } from '57898';
+import { Delegate } from "./57898";
 
 class ChartapiMessager {
   constructor(server, session) {
@@ -12,47 +11,51 @@ class ChartapiMessager {
   onRequestMetadata(symbol, metadata) {
     this._server.receiveLocalResponse({
       method: "studies_metadata",
-      params: [this._session, symbol, {
-        errors: [],
-        hash: "",
-        metainfo: metadata,
-        migrations: []
-      }]
+      params: [
+        this._session,
+        symbol,
+        {
+          errors: [],
+          hash: "",
+          metainfo: metadata,
+          migrations: [],
+        },
+      ],
     });
   }
 
   onSymbolResolved(symbol, resolved) {
     this._server.receiveLocalResponse({
       method: "symbol_resolved",
-      params: [this._session, symbol, resolved]
+      params: [this._session, symbol, resolved],
     });
   }
 
   onSymbolError(symbol, error) {
     this._server.receiveLocalResponse({
       method: "symbol_error",
-      params: [this._session, symbol, error]
+      params: [this._session, symbol, error],
     });
   }
 
   onStudyError(symbol, studyId, error) {
     this._server.receiveLocalResponse({
       method: "study_error",
-      params: [this._session, symbol, studyId, error]
+      params: [this._session, symbol, studyId, error],
     });
   }
 
   onSeriesLoading(symbol, seriesId) {
     this._server.receiveLocalResponse({
       method: "series_loading",
-      params: [this._session, symbol, seriesId]
+      params: [this._session, symbol, seriesId],
     });
   }
 
   onSeriesCompleted(symbol, seriesId, completionStatus) {
     this._server.receiveLocalResponse({
       method: "series_completed",
-      params: [this._session, symbol, completionStatus, seriesId]
+      params: [this._session, symbol, completionStatus, seriesId],
     });
     this.seriesCompleted.fire(symbol, seriesId);
   }
@@ -60,7 +63,7 @@ class ChartapiMessager {
   onSeriesError(symbol, seriesId, error) {
     this._server.receiveLocalResponse({
       method: "series_error",
-      params: [this._session, symbol, seriesId, error]
+      params: [this._session, symbol, seriesId, error],
     });
     this.seriesError.fire(symbol, seriesId);
   }
@@ -68,14 +71,14 @@ class ChartapiMessager {
   onStudyCompleted(symbol, studyId) {
     this._server.receiveLocalResponse({
       method: "study_completed",
-      params: [this._session, symbol, studyId]
+      params: [this._session, symbol, studyId],
     });
   }
 
   onStudyLoading(symbol, studyId) {
     this._server.receiveLocalResponse({
       method: "study_loading",
-      params: [this._session, symbol, studyId]
+      params: [this._session, symbol, studyId],
     });
   }
 
@@ -85,11 +88,11 @@ class ChartapiMessager {
       zoffset: 0,
       changes: [],
       marks: marks,
-      index_diff: []
+      index_diff: [],
     };
     const response = {
       method: "tickmark_update",
-      params: [this._session, params]
+      params: [this._session, params],
     };
     this._server.receiveLocalResponse(response);
   }
@@ -101,11 +104,11 @@ class ChartapiMessager {
       changes: timescale.points,
       marks: timescale.marks,
       index_diff: timescale.indexChange,
-      baseIndex: timescale.baseIndex
+      baseIndex: timescale.baseIndex,
     };
     const response = {
       method: "timescale_update",
-      params: [this._session, this._prepareDataUpdateObjects(data), params]
+      params: [this._session, this._prepareDataUpdateObjects(data), params],
     };
     this._server.receiveLocalResponse(response);
   }
@@ -113,14 +116,23 @@ class ChartapiMessager {
   onTimescaleCompleted(completionStatus) {
     this._server.receiveLocalResponse({
       method: "timescale_completed",
-      params: [this._session, completionStatus]
+      params: [this._session, completionStatus],
     });
   }
 
   onSeriesTimeframeUpdate(symbol, seriesId, resolution, timeframe, points) {
     const params = {
       method: "series_timeframe",
-      params: [this._session, symbol, seriesId, resolution, timeframe, null, true, points]
+      params: [
+        this._session,
+        symbol,
+        seriesId,
+        resolution,
+        timeframe,
+        null,
+        true,
+        points,
+      ],
     };
     this._server.receiveLocalResponse(params);
   }
@@ -131,20 +143,22 @@ class ChartapiMessager {
 
   _prepareDataUpdateObjects(data) {
     const updateObjects = {};
-    data.forEach(item => {
+    data.forEach((item) => {
       updateObjects[item.objId] = {
         series: item.data,
-        turnaround: item.turnaround
+        turnaround: item.turnaround,
       };
       if (item.nonSeriesData) {
         updateObjects[item.objId].nonseries = {
-          d: item.nonSeriesData.data ? JSON.stringify(item.nonSeriesData.data) : "",
-          indexes: item.nonSeriesData.indexes || []
+          d: item.nonSeriesData.data
+            ? JSON.stringify(item.nonSeriesData.data)
+            : "",
+          indexes: item.nonSeriesData.indexes || [],
         };
       } else {
         updateObjects[item.objId].nonseries = {
           d: "",
-          indexes: []
+          indexes: [],
         };
       }
     });
@@ -156,11 +170,11 @@ class ChartapiMessager {
       objId: objId,
       turnaround: turnaround,
       data: data,
-      nonSeriesData: nonSeriesData
+      nonSeriesData: nonSeriesData,
     };
     const params = {
       method: "data_update",
-      params: [this._session, this._prepareDataUpdateObjects([update])]
+      params: [this._session, this._prepareDataUpdateObjects([update])],
     };
     this._server.receiveLocalResponse(params);
   }
@@ -168,28 +182,28 @@ class ChartapiMessager {
   onQuotesData(data) {
     this._server.receiveLocalResponse({
       method: "quote_symbol_data",
-      params: data
+      params: data,
     });
   }
 
   onDepthData(data) {
     this._server.receiveLocalResponse({
       method: "dd",
-      params: data
+      params: data,
     });
   }
 
   onDepthUpdate(data) {
     this._server.receiveLocalResponse({
       method: "dpu",
-      params: data
+      params: data,
     });
   }
 
   onClearData(data) {
     this._server.receiveLocalResponse({
       method: "clear_data",
-      params: [this._session, data]
+      params: [this._session, data],
     });
   }
 }
