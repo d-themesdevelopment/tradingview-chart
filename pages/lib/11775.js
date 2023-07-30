@@ -1,32 +1,24 @@
-"use strict";
-const { HorizontalLinePaneView } = require("./38003.js");
-const { PaneCursorType } = require("./PaneCursorType.js");
-const { HitTestResult, HitTarget } = require("./18807.js");
-const { LINESTYLE_SPARSE_DOTTED } = require("./79849.js");
 
-class SeriesWaterlinePaneView extends HorizontalLinePaneView {
-  constructor(getters) {
-    super();
-    this._getters = getters;
-
-    const hitTestOptions = {
-      cursorType: PaneCursorType.VerticalResize,
-      activeItem: 0,
-      areaName: HitTarget.SourceItemMove,
-    };
-    this._lineRenderer.setHitTest(
-      new HitTestResult(HitTarget.MovePoint, hitTestOptions)
-    );
-    this._lineRendererData.visible = true;
-    this._lineRendererData.linestyle = LINESTYLE_SPARSE_DOTTED;
+  import {HorizontalLinePaneView} from "./38003.js";
+  import {PaneCursorType} from "./PaneCursorType.js";
+  import {AreaName, HitTarget, HitTarget} from "./18807.js";
+  import {LINESTYLE_SPARSE_DOTTED} from "./79849.js";
+  class SeriesWaterlinePaneView extends HorizontalLinePaneView {
+      constructor(e) {
+          super(), this._getters = e;
+          const t = {
+              cursorType: PaneCursorType.VerticalResize,
+              activeItem: 0,
+              areaName: AreaName.SourceItemMove
+          };
+          this._lineRenderer.setHitTest(new HitTestResult(HitTarget.MovePoint, t)), this._lineRendererData.visible = !0, this._lineRendererData.linestyle = LINESTYLE_SPARSE_DOTTED
+      }
+      _updateImpl() {
+          const {
+              baseLevelPercentage: e,
+              paneHeight: t,
+              color: i
+          } = this._getters, s = Math.abs(100 - e());
+          this._lineRendererData.y = Math.round(t() * (s / 100)), this._lineRendererData.color = i()
+      }
   }
-
-  _updateImpl() {
-    const { baseLevelPercentage, paneHeight, color } = this._getters;
-    const absPercentage = Math.abs(100 - baseLevelPercentage());
-    this._lineRendererData.y = Math.round(paneHeight() * (absPercentage / 100));
-    this._lineRendererData.color = color();
-  }
-}
-
-export { SeriesWaterlinePaneView };

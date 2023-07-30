@@ -1,7 +1,7 @@
-import { CompositeRenderer } from 'some-module';
-import { PaneRendererCandles } from 'some-other-module';
-import { SelectionRenderer } from 'another-module';
-import { optimalBarWidth } from 'some-utils-module';
+import { CompositeRenderer } from './CompositeRenderer.js';
+import { PaneRendererCandles } from './PaneRendererCandles.js';
+import { SelectionRenderer } from './80101.js';
+import { optimalBarWidth } from './45197.js';
 
 class SeriesCandlesPaneView extends SeriesBarCandlesPaneView {
   renderer(context, invalidated) {
