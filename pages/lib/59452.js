@@ -1,4 +1,4 @@
-import { isFunction } from 'some-library'; // Replace 'some-library' with the actual library you're using
+import { isFunction } from "./1722"; // Replace 'some-library' with the actual library you're using
 
 class CustomData {
   constructor(data) {
@@ -111,7 +111,9 @@ class CustomData {
       let childState;
 
       if (excluded) {
-        const filteredExcluded = excluded.filter((key) => key.startsWith(childKey + '.'));
+        const filteredExcluded = excluded.filter((key) =>
+          key.startsWith(childKey + ".")
+        );
         childState = this[childKey].state(filteredExcluded);
       } else {
         childState = this[childKey].state();
@@ -134,7 +136,12 @@ class CustomData {
   }
 
   isPrimitiveType(value) {
-    return value === null || isNumber(value) || typeof value === 'string' || typeof value === 'boolean';
+    return (
+      value === null ||
+      isNumber(value) ||
+      typeof value === "string" ||
+      typeof value === "boolean"
+    );
   }
 
   value() {

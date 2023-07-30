@@ -1,19 +1,27 @@
-import { bind, e } from 'import-module';
-import { LineDataSource } from 'line-data-source-module';
-import { CalloutPaneView } from 'callout-pane-view-module';
-import { LineToolColorsProperty, DefaultProperty } from 'property-modules';
-import { t } from 't-module';
+import { bind, e } from "import-module";
+import { LineDataSource } from "./13087";
+// import { CalloutPaneView } from "callout-pane-view-module";
+import { LineToolColorsProperty } from "./68806";
+import { DefaultProperty } from "./68806";
+import { t } from "t-module";
 
 class LineToolCallout extends LineDataSource {
   constructor(source, model, properties, options) {
-    super(source, properties || LineToolCallout.createProperties(), model, options);
+    super(
+      source,
+      properties || LineToolCallout.createProperties(),
+      model,
+      options
+    );
     this._barOffset = 0;
     this._dragStartLeftEdgeIndex = NaN;
     this._timeScale = source.timeScale();
 
-    e(1583).then(bind(70326)).then((CalloutPaneView) => {
-      this._setPaneViews([new CalloutPaneView(this, this._model)]);
-    });
+    e(1583)
+      .then(bind(70326))
+      .then((CalloutPaneView) => {
+        this._setPaneViews([new CalloutPaneView(this, this._model)]);
+      });
   }
 
   pointsCount() {
@@ -65,13 +73,19 @@ class LineToolCallout extends LineDataSource {
         if (Number.isFinite(dragStartIndex) && Number.isFinite(middleIndex)) {
           points[1] = {
             index: dragStartIndex + middleIndex,
-            price: points[1].price
+            price: points[1].price,
           };
 
           this._calculateBarOffset();
           this.normalizePoints();
 
-          const wrapWidth = this._timeScale.indexToCoordinate(dragStartIndex + 2 * middleIndex) - this._timeScale.indexToCoordinate(dragStartIndex) - 8 - 2;
+          const wrapWidth =
+            this._timeScale.indexToCoordinate(
+              dragStartIndex + 2 * middleIndex
+            ) -
+            this._timeScale.indexToCoordinate(dragStartIndex) -
+            8 -
+            2;
           if (Number.isFinite(wrapWidth)) {
             properties.wordWrapWidth.setValue(Math.max(100, wrapWidth));
             break;
@@ -97,7 +111,11 @@ class LineToolCallout extends LineDataSource {
     this.normalizePoints();
 
     if (Number.isFinite(dragStartIndex) && Number.isFinite(middleIndex)) {
-      const wrapWidth = this._timeScale.indexToCoordinate(dragStartIndex + 2 * middleIndex) - this._timeScale.indexToCoordinate(dragStartIndex) - 8 - 2;
+      const wrapWidth =
+        this._timeScale.indexToCoordinate(dragStartIndex + 2 * middleIndex) -
+        this._timeScale.indexToCoordinate(dragStartIndex) -
+        8 -
+        2;
       if (Number.isFinite(wrapWidth)) {
         properties.wordWrapWidth.setValue(Math.max(100, wrapWidth));
       }
@@ -138,7 +156,10 @@ class LineToolCallout extends LineDataSource {
   }
 
   calculatePoint2() {
-    if (this._model.lineBeingEdited() === this || this._model.sourcesBeingMoved().includes(this)) {
+    if (
+      this._model.lineBeingEdited() === this ||
+      this._model.sourcesBeingMoved().includes(this)
+    ) {
       return;
     }
     if (this._points.length < 2) {
@@ -147,7 +168,7 @@ class LineToolCallout extends LineDataSource {
     const [p1, p2] = this.points();
     this._points[1] = {
       price: p2.price,
-      index: p1.index + this._barOffset
+      index: p1.index + this._barOffset,
     };
   }
 
@@ -163,7 +184,10 @@ class LineToolCallout extends LineDataSource {
       properties.addChild("text", new n()(t(null, undefined, i(37229))));
     }
     properties.addExclusion("text");
-    properties.addChild("textsColors", new LineToolColorsProperty([properties.childs().color]));
+    properties.addChild(
+      "textsColors",
+      new LineToolColorsProperty([properties.childs().color])
+    );
   }
 
   _calculateBarOffset() {

@@ -1,7 +1,6 @@
+const Logger = require("./someModule").getLogger("Common.Delegate");
 
-const Logger = require('./someModule').getLogger('Common.Delegate');
-
-class Delegate {
+export class Delegate {
   constructor() {
     this._listeners = [];
   }
@@ -11,7 +10,7 @@ class Delegate {
       object,
       member,
       singleshot: !!singleshot,
-      skip: false
+      skip: false,
     };
     this._listeners.push(listener);
   }
@@ -57,4 +56,3 @@ class Delegate {
     }
   }
 }
-
